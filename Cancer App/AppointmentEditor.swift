@@ -13,33 +13,34 @@ struct AppointmentEditor: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     var appointment: Appointment
     
-    var aptIndex: Int {
-        userData.appointments.firstIndex(where: {$0.id == appointment.id})!
+    var aptIndex: Int? {
+        userData.appointments.firstIndex(where: {$0.id == appointment.id})
     }
     
     func delete() -> Void {
-        userData.appointments.remove(at: aptIndex)
+        userData.appointments.remove(at: aptIndex!)
         self.presentationMode.wrappedValue.dismiss()
     }
     
     var body: some View {
         List {
-            HStack {
-                Text("Doctor")
-                Divider()
-                TextField("Doctor", text: $userData.appointments[aptIndex].doctor)
-            }
-            
-            HStack {
-                Text("Location")
-                Divider()
-                TextField("Location", text: $userData.appointments[aptIndex].location)
-            }
-            
-            Button(action: {self.delete()}) {
-                Text("Delete")
-            }
+            if (aptIndex != nil) {
+                HStack {
+                    Text("Doctor")
+                    Divider()
+                    TextField("Doctor", text: $userData.appointments[aptIndex!].doctor)
+                }
 
+                HStack {
+                    Text("Location")
+                    Divider()
+                    TextField("Location", text: $userData.appointments[aptIndex!].location)
+                }
+
+                Button(action: {self.delete()}) {
+                    Image(systemName: "trash")
+                }
+            }
         }
     }
 }

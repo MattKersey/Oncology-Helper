@@ -12,6 +12,7 @@ struct AppointmentDetail: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.editMode) var mode
+    @State private var editMode = false
     var id: Int
     
     var appointment: Appointment? {
@@ -25,14 +26,17 @@ struct AppointmentDetail: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            if self.mode?.wrappedValue == .inactive {
+            if (appointment != nil) {
                 AppointmentRow(appointment: appointment!)
-                Spacer()
             } else {
-                AppointmentEditor(appointment: appointment!).environmentObject(self.userData)
+                Text("Appointment unavailable")
             }
+            Spacer()
         }
-        .navigationBarItems(trailing: EditButton())
+        .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
+        .sheet(isPresented: self.$editMode){
+            AppointmentEditor(appointment: self.appointment!).environmentObject(self.userData)
+        }
     }
 }
 

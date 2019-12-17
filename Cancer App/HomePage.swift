@@ -13,25 +13,25 @@ struct HomePage: View {
     var currentDate = Date()
     
     var body: some View {
-        List {
-            ForEach(userData.appointments) { appointment in
-                if appointment.date > self.currentDate {
-                    NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)
-                    ) {
-                        AppointmentRow(appointment: appointment)
+        NavigationView {
+            List {
+                ForEach(userData.appointments) { appointment in
+                    if appointment.date > self.currentDate {
+                        NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)
+                        ) {
+                            AppointmentRow(appointment: appointment)
+                        }
                     }
                 }
             }
+            .navigationBarTitle(Text("Upcoming"))
         }
-        .navigationBarTitle(Text("Upcoming"))
     }
 }
 
 struct HomePage_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            HomePage()
-                .environmentObject(UserData())
-        }
+        HomePage()
+            .environmentObject(UserData())
     }
 }
