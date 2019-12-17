@@ -10,14 +10,13 @@ import SwiftUI
 
 struct HomePage: View {
     @EnvironmentObject var userData: UserData
-
     var currentDate = Date()
     
     var body: some View {
         List {
             ForEach(userData.appointments) { appointment in
                 if appointment.date > self.currentDate {
-                    NavigationLink(destination: AppointmentDetail(appointment: appointment).environmentObject(self.userData)
+                    NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)
                     ) {
                         AppointmentRow(appointment: appointment)
                     }

@@ -10,10 +10,16 @@ import SwiftUI
 
 struct AppointmentEditor: View {
     @EnvironmentObject var userData: UserData
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     var appointment: Appointment
     
     var aptIndex: Int {
         userData.appointments.firstIndex(where: {$0.id == appointment.id})!
+    }
+    
+    func delete() -> Void {
+        userData.appointments.remove(at: aptIndex)
+        self.presentationMode.wrappedValue.dismiss()
     }
     
     var body: some View {
@@ -29,6 +35,11 @@ struct AppointmentEditor: View {
                 Divider()
                 TextField("Location", text: $userData.appointments[aptIndex].location)
             }
+            
+            Button(action: {self.delete()}) {
+                Text("Delete")
+            }
+
         }
     }
 }
