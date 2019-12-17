@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "doctor": "Shefali Gladson",
+        "location": "Kingsbrook Jewish Medical Center",
+        "RC3339date": "2020-03-15T13:30:00+03:00",
+        "coordinates": {
+            "longitude": 0.00000,
+            "latitude": 0.00000
+        }
+    },
+    {
+        "id": 2,
+        "doctor": "John Parker",
+        "location": "Brooklyn Med",
+        "RC3339date": "2020-05-16T13:30:00+03:00",
+        "coordinates": {
+            "longitude": 0.00000,
+            "latitude": 0.00000
+        }
+    }
+]

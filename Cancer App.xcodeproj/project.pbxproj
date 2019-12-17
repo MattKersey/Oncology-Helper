@@ -15,6 +15,27 @@
 		B2447A7623A7F2AE004AAD1F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2447A7423A7F2AE004AAD1F /* LaunchScreen.storyboard */; };
 		B2447A8123A7F2AE004AAD1F /* Cancer_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A8023A7F2AE004AAD1F /* Cancer_AppTests.swift */; };
 		B2447A8C23A7F2AE004AAD1F /* Cancer_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A8B23A7F2AE004AAD1F /* Cancer_AppUITests.swift */; };
+		B2447A9A23A7F35D004AAD1F /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A9923A7F35D004AAD1F /* HomePage.swift */; };
+		B2447A9E23A7F7B6004AAD1F /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A9D23A7F7B6004AAD1F /* UserData.swift */; };
+		B2447A9F23A7F7EC004AAD1F /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A9923A7F35D004AAD1F /* HomePage.swift */; };
+		B2447AA023A7F7EC004AAD1F /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A9923A7F35D004AAD1F /* HomePage.swift */; };
+		B2447AA123A7F7F0004AAD1F /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A9D23A7F7B6004AAD1F /* UserData.swift */; };
+		B2447AA223A7F7F1004AAD1F /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A9D23A7F7B6004AAD1F /* UserData.swift */; };
+		B2447AA423A7F9D6004AAD1F /* appointmentData.json in Resources */ = {isa = PBXBuildFile; fileRef = B2447AA323A7F9D6004AAD1F /* appointmentData.json */; };
+		B2447AA523A7FA4E004AAD1F /* appointmentData.json in Resources */ = {isa = PBXBuildFile; fileRef = B2447AA323A7F9D6004AAD1F /* appointmentData.json */; };
+		B2447AA623A7FA50004AAD1F /* appointmentData.json in Resources */ = {isa = PBXBuildFile; fileRef = B2447AA323A7F9D6004AAD1F /* appointmentData.json */; };
+		B2447AA823A80534004AAD1F /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AA723A80534004AAD1F /* Data.swift */; };
+		B2447AAA23A805A7004AAD1F /* Appointment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AA923A805A7004AAD1F /* Appointment.swift */; };
+		B2447AAB23A80893004AAD1F /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AA723A80534004AAD1F /* Data.swift */; };
+		B2447AAC23A80894004AAD1F /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AA723A80534004AAD1F /* Data.swift */; };
+		B2447AAD23A80A87004AAD1F /* Appointment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AA923A805A7004AAD1F /* Appointment.swift */; };
+		B2447AAE23A80A88004AAD1F /* Appointment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AA923A805A7004AAD1F /* Appointment.swift */; };
+		B2447AB023A81654004AAD1F /* AppointmentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AAF23A81654004AAD1F /* AppointmentRow.swift */; };
+		B2447AB123A816D4004AAD1F /* AppointmentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AAF23A81654004AAD1F /* AppointmentRow.swift */; };
+		B2447AB223A816D5004AAD1F /* AppointmentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AAF23A81654004AAD1F /* AppointmentRow.swift */; };
+		B2447AB423A8243D004AAD1F /* AppointmentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */; };
+		B2447AB523A82484004AAD1F /* AppointmentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */; };
+		B2447AB623A82485004AAD1F /* AppointmentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +70,13 @@
 		B2447A8723A7F2AE004AAD1F /* Cancer AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cancer AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2447A8B23A7F2AE004AAD1F /* Cancer_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancer_AppUITests.swift; sourceTree = "<group>"; };
 		B2447A8D23A7F2AE004AAD1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B2447A9923A7F35D004AAD1F /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
+		B2447A9D23A7F7B6004AAD1F /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = SOURCE_ROOT; };
+		B2447AA323A7F9D6004AAD1F /* appointmentData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = appointmentData.json; sourceTree = "<group>"; };
+		B2447AA723A80534004AAD1F /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		B2447AA923A805A7004AAD1F /* Appointment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appointment.swift; sourceTree = "<group>"; };
+		B2447AAF23A81654004AAD1F /* AppointmentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRow.swift; sourceTree = "<group>"; };
+		B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentDetail.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +127,13 @@
 		B2447A6823A7F2AB004AAD1F /* Cancer App */ = {
 			isa = PBXGroup;
 			children = (
+				B2447A9D23A7F7B6004AAD1F /* UserData.swift */,
+				B2447A9923A7F35D004AAD1F /* HomePage.swift */,
+				B2447AAF23A81654004AAD1F /* AppointmentRow.swift */,
+				B2447AA923A805A7004AAD1F /* Appointment.swift */,
+				B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */,
+				B2447AA323A7F9D6004AAD1F /* appointmentData.json */,
+				B2447AA723A80534004AAD1F /* Data.swift */,
 				B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */,
 				B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */,
 				B2447A6D23A7F2AB004AAD1F /* ContentView.swift */,
@@ -241,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2447A7623A7F2AE004AAD1F /* LaunchScreen.storyboard in Resources */,
+				B2447AA423A7F9D6004AAD1F /* appointmentData.json in Resources */,
 				B2447A7323A7F2AE004AAD1F /* Preview Assets.xcassets in Resources */,
 				B2447A7023A7F2AE004AAD1F /* Assets.xcassets in Resources */,
 			);
@@ -250,6 +286,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2447AA523A7FA4E004AAD1F /* appointmentData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +294,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2447AA623A7FA50004AAD1F /* appointmentData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,8 +306,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */,
+				B2447AA823A80534004AAD1F /* Data.swift in Sources */,
 				B2447A6C23A7F2AB004AAD1F /* SceneDelegate.swift in Sources */,
+				B2447AB423A8243D004AAD1F /* AppointmentDetail.swift in Sources */,
 				B2447A6E23A7F2AB004AAD1F /* ContentView.swift in Sources */,
+				B2447A9A23A7F35D004AAD1F /* HomePage.swift in Sources */,
+				B2447AAA23A805A7004AAD1F /* Appointment.swift in Sources */,
+				B2447AB023A81654004AAD1F /* AppointmentRow.swift in Sources */,
+				B2447A9E23A7F7B6004AAD1F /* UserData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +322,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2447A8123A7F2AE004AAD1F /* Cancer_AppTests.swift in Sources */,
+				B2447A9F23A7F7EC004AAD1F /* HomePage.swift in Sources */,
+				B2447AB523A82484004AAD1F /* AppointmentDetail.swift in Sources */,
+				B2447AB223A816D5004AAD1F /* AppointmentRow.swift in Sources */,
+				B2447AA123A7F7F0004AAD1F /* UserData.swift in Sources */,
+				B2447AAB23A80893004AAD1F /* Data.swift in Sources */,
+				B2447AAD23A80A87004AAD1F /* Appointment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +336,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2447A8C23A7F2AE004AAD1F /* Cancer_AppUITests.swift in Sources */,
+				B2447AA023A7F7EC004AAD1F /* HomePage.swift in Sources */,
+				B2447AB623A82485004AAD1F /* AppointmentDetail.swift in Sources */,
+				B2447AB123A816D4004AAD1F /* AppointmentRow.swift in Sources */,
+				B2447AA223A7F7F1004AAD1F /* UserData.swift in Sources */,
+				B2447AAC23A80894004AAD1F /* Data.swift in Sources */,
+				B2447AAE23A80A88004AAD1F /* Appointment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
