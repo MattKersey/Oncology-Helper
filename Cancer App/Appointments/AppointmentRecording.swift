@@ -30,6 +30,8 @@ struct AppointmentRecording: View {
                 if (!audioRecorder.isRecording) {
                     Button(action: {self.record()}) {
                         Image("RecordButton")
+                            .renderingMode(.original)
+                            .scaleEffect(0.1)
                     }
                 } else {
                     Button(action: {self.pause()}) {
