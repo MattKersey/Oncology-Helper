@@ -35,6 +35,7 @@
 		B2447AB423A8243D004AAD1F /* AppointmentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */; };
 		B2447AB523A82484004AAD1F /* AppointmentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */; };
 		B2447AB623A82485004AAD1F /* AppointmentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */; };
+		B2447AB823A93D92004AAD1F /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AB723A93D92004AAD1F /* CalendarView.swift */; };
 		B26AB12123A8799C00359769 /* AppointmentEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26AB12023A8799C00359769 /* AppointmentEditor.swift */; };
 		B26AB12223A8799C00359769 /* AppointmentEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26AB12023A8799C00359769 /* AppointmentEditor.swift */; };
 		B26AB12323A8799C00359769 /* AppointmentEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26AB12023A8799C00359769 /* AppointmentEditor.swift */; };
@@ -78,6 +79,7 @@
 		B2447AA923A805A7004AAD1F /* Appointment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appointment.swift; sourceTree = "<group>"; };
 		B2447AAF23A81654004AAD1F /* AppointmentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRow.swift; sourceTree = "<group>"; };
 		B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentDetail.swift; sourceTree = "<group>"; };
+		B2447AB723A93D92004AAD1F /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		B26AB12023A8799C00359769 /* AppointmentEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentEditor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -131,10 +133,8 @@
 			children = (
 				B2447A9D23A7F7B6004AAD1F /* UserData.swift */,
 				B2447A9923A7F35D004AAD1F /* HomePage.swift */,
-				B2447AAF23A81654004AAD1F /* AppointmentRow.swift */,
-				B2447AA923A805A7004AAD1F /* Appointment.swift */,
-				B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */,
-				B26AB12023A8799C00359769 /* AppointmentEditor.swift */,
+				B2447AB723A93D92004AAD1F /* CalendarView.swift */,
+				B2447AB923A93D9F004AAD1F /* Appointments */,
 				B2447AA323A7F9D6004AAD1F /* appointmentData.json */,
 				B2447AA723A80534004AAD1F /* Data.swift */,
 				B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */,
@@ -171,6 +171,17 @@
 				B2447A8D23A7F2AE004AAD1F /* Info.plist */,
 			);
 			path = "Cancer AppUITests";
+			sourceTree = "<group>";
+		};
+		B2447AB923A93D9F004AAD1F /* Appointments */ = {
+			isa = PBXGroup;
+			children = (
+				B2447AA923A805A7004AAD1F /* Appointment.swift */,
+				B2447AAF23A81654004AAD1F /* AppointmentRow.swift */,
+				B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */,
+				B26AB12023A8799C00359769 /* AppointmentEditor.swift */,
+			);
+			path = Appointments;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -307,6 +318,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2447AB823A93D92004AAD1F /* CalendarView.swift in Sources */,
 				B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */,
 				B2447AA823A80534004AAD1F /* Data.swift in Sources */,
 				B2447A6C23A7F2AB004AAD1F /* SceneDelegate.swift in Sources */,
