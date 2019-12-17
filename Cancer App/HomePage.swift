@@ -17,7 +17,7 @@ struct HomePage: View {
         List {
             ForEach(userData.appointments) { appointment in
                 if appointment.date > self.currentDate {
-                    NavigationLink(destination: AppointmentDetail(appointment: appointment)
+                    NavigationLink(destination: AppointmentDetail(appointment: appointment).environmentObject(self.userData)
                     ) {
                         AppointmentRow(appointment: appointment)
                     }

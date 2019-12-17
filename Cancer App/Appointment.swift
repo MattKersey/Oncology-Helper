@@ -16,6 +16,8 @@ struct Appointment: Hashable, Codable, Identifiable {
     fileprivate var RC3339date: String
     fileprivate var coordinates: Coordinates
     
+    static let `default` = UserData().appointments[0]//Self(id: 1, doctor: "Shefali Gladson", location: "Kingsbrook Jewish Medical Center", RC3339date: "2020-03-15T13:30:00+03:00", coordinates: Coordinates(longitude: 0.000, latitude: 0.000))
+    
     var date: Date {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
