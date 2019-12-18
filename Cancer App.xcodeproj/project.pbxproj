@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B22F973923AAA7C60023BBC6 /* AppointmentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */; };
+		B22F973A23AAA7C90023BBC6 /* AppointmentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */; };
+		B22F973B23AAA7C90023BBC6 /* AppointmentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */; };
 		B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */; };
 		B2447A6C23A7F2AB004AAD1F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */; };
 		B2447A7023A7F2AE004AAD1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2447A6F23A7F2AE004AAD1F /* Assets.xcassets */; };
@@ -65,6 +68,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentPage.swift; sourceTree = "<group>"; };
 		B2447A6623A7F2AB004AAD1F /* Cancer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cancer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -88,7 +92,7 @@
 		B2447AB723A93D92004AAD1F /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		B2447ABE23A96602004AAD1F /* AppointmentRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRecording.swift; sourceTree = "<group>"; };
 		B26AB12023A8799C00359769 /* AppointmentEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentEditor.swift; sourceTree = "<group>"; };
-		B2EB449A23A99DCE0096DA95 /* RecordButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RecordButton.png; path = ../../../../RecordButton.png; sourceTree = "<group>"; };
+		B2EB449A23A99DCE0096DA95 /* RecordButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordButton.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +192,7 @@
 				B2447AA923A805A7004AAD1F /* Appointment.swift */,
 				B2447AAF23A81654004AAD1F /* AppointmentRow.swift */,
 				B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */,
+				B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */,
 				B26AB12023A8799C00359769 /* AppointmentEditor.swift */,
 			);
 			path = Appointments;
@@ -339,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B22F973923AAA7C60023BBC6 /* AppointmentPage.swift in Sources */,
 				B2447AB823A93D92004AAD1F /* CalendarView.swift in Sources */,
 				B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */,
 				B2447AA823A80534004AAD1F /* Data.swift in Sources */,
@@ -357,6 +363,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B22F973A23AAA7C90023BBC6 /* AppointmentPage.swift in Sources */,
 				B26AB12223A8799C00359769 /* AppointmentEditor.swift in Sources */,
 				B2447A8123A7F2AE004AAD1F /* Cancer_AppTests.swift in Sources */,
 				B2447AC023A96602004AAD1F /* AppointmentRecording.swift in Sources */,
@@ -373,6 +380,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B22F973B23AAA7C90023BBC6 /* AppointmentPage.swift in Sources */,
 				B26AB12323A8799C00359769 /* AppointmentEditor.swift in Sources */,
 				B2447A8C23A7F2AE004AAD1F /* Cancer_AppUITests.swift in Sources */,
 				B2447AC123A96602004AAD1F /* AppointmentRecording.swift in Sources */,

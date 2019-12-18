@@ -68,6 +68,7 @@ struct AppointmentEditor: View {
                             Button(action: {self.deletePressed.toggle()}) {
                                 Text("No")
                                     .foregroundColor(.blue)
+                                    .font(.headline)
                             }
                             Divider()
                             Button(action: {self.delete()}) {

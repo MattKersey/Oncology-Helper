@@ -25,9 +25,9 @@ struct AppointmentDetail: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack {
             if (appointment != nil) {
-                AppointmentRow(appointment: appointment!)
+                AppointmentPage(appointment: appointment!)
             } else {
                 Text("Appointment unavailable")
             }
