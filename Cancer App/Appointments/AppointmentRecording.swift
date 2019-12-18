@@ -15,6 +15,7 @@ struct AppointmentRecording: View {
     @State var endPressed = false
     @State var hasRecording = false
     @State var reRecordPressed = false
+    @State var playPressed = false
     var audioRecorder = AVAudioRecorder()
     
     func record() -> Void {
@@ -79,11 +80,11 @@ struct AppointmentRecording: View {
                             .foregroundColor(.red)
                     }
                     .scaleEffect(2.0)
-                    .padding()
+                    .padding(.leading)
                 }
                 Spacer()
                 if (self.hasRecording) {
-                    Button(action: {self.endPressed.toggle()}) {
+                    Button(action: {self.playPressed.toggle()}) {
                         Image(systemName: "play.circle.fill")
                             .foregroundColor(.gray)
                     }
@@ -127,6 +128,9 @@ struct AppointmentRecording: View {
         }
         .padding()
         .buttonStyle(BorderlessButtonStyle())
+        .sheet(isPresented: self.$playPressed){
+            AppointmentRecordingPlay(hasRecording: self.$hasRecording)
+        }
     }
 }
 

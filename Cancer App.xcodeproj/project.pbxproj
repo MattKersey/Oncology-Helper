@@ -10,6 +10,7 @@
 		B22F973923AAA7C60023BBC6 /* AppointmentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */; };
 		B22F973A23AAA7C90023BBC6 /* AppointmentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */; };
 		B22F973B23AAA7C90023BBC6 /* AppointmentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */; };
+		B22F973D23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973C23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift */; };
 		B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */; };
 		B2447A6C23A7F2AB004AAD1F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */; };
 		B2447A7023A7F2AE004AAD1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2447A6F23A7F2AE004AAD1F /* Assets.xcassets */; };
@@ -69,6 +70,7 @@
 
 /* Begin PBXFileReference section */
 		B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentPage.swift; sourceTree = "<group>"; };
+		B22F973C23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRecordingPlay.swift; sourceTree = "<group>"; };
 		B2447A6623A7F2AB004AAD1F /* Cancer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cancer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				B2447ABE23A96602004AAD1F /* AppointmentRecording.swift */,
+				B22F973C23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift */,
 				B2447AA923A805A7004AAD1F /* Appointment.swift */,
 				B2447AAF23A81654004AAD1F /* AppointmentRow.swift */,
 				B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */,
@@ -356,6 +359,7 @@
 				B2447AB023A81654004AAD1F /* AppointmentRow.swift in Sources */,
 				B2447ABF23A96602004AAD1F /* AppointmentRecording.swift in Sources */,
 				B2447A9E23A7F7B6004AAD1F /* UserData.swift in Sources */,
+				B22F973D23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
