@@ -10,22 +10,38 @@ import SwiftUI
 
 struct HomePage: View {
     @EnvironmentObject var userData: UserData
+    @State var showAll = false
     var currentDate = Date()
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(userData.appointments) { appointment in
+                ForEach(self.userData.appointments) { appointment in
                     if appointment.date > self.currentDate {
                         NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)
                         ) {
                             AppointmentRow(appointment: appointment)
                         }
                     }
-                }
+                }.onDelete(perform: self.delete)
             }
             .navigationBarTitle(Text("Upcoming"))
+            .navigationBarItems(trailing: Button(action: {self.showAll = true}){Text("Show All")})
+            .sheet(isPresented: self.$showAll){
+                List {
+                    ForEach(self.userData.appointments) { appointment in
+                        NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)
+                        ) {
+                            AppointmentRow(appointment: appointment)
+                        }
+                    }.onDelete(perform: self.delete)
+                }
+            }
         }
+    }
+    
+    func delete(at offsets: IndexSet) {
+        userData.appointments.remove(atOffsets: offsets)
     }
 }
 
