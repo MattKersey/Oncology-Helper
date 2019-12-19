@@ -14,7 +14,7 @@ struct AppointmentPage: View {
     var body: some View {
         List {
             AppointmentRow(appointment: appointment)
-            AppointmentRecording()
+            AppointmentRecording(id: 0).environmentObject(UserData())
         }
     }
 }
