@@ -24,6 +24,15 @@ struct AppointmentRecording: View {
     @State var reRecordPressed = false          // If record has been pressed with recording in memory
     @State var playPressed = false              // If the play button has been pressed
     
+    var aptIndex: Int? {
+        if let index = userData.appointments.firstIndex(where: {$0.id == id}) {
+            return index
+        } else {
+            print("index is nil")
+            return nil
+        }
+    }
+    
     var audioRecorder = AVAudioRecorder()       // Audio recorder object
                                                     // TODO: Initialize with URL from appointment
     
@@ -70,7 +79,7 @@ struct AppointmentRecording: View {
      TODO: set up timestamp storage, look into possibly adding NSSpeechRecognizer functionality
      */
     func mark() -> Void {
-        audioRecorder.currentTime
+        userData.appointments[aptIndex!].timestamps.append(audioRecorder.currentTime)
     }
     
     /*
@@ -171,7 +180,7 @@ struct AppointmentRecording: View {
         .padding()
         .buttonStyle(BorderlessButtonStyle())
         .sheet(isPresented: self.$playPressed){
-            AppointmentRecordingPlay(hasRecording: self.$hasRecording)  // Sheet for playing an audio file
+            AppointmentRecordingPlay(hasRecording: self.$hasRecording, appointment: self.userData.appointments[self.aptIndex!])  // Sheet for playing an audio file
         }
     }
 }

@@ -14,9 +14,12 @@ struct Appointment: Hashable, Codable, Identifiable {
     var doctor: String
     var location: String
     fileprivate var RC3339date: String
-    fileprivate var coordinates: Coordinates
+    var timestamps: [TimeInterval]
+    var recordingURL: URL{
+        URL(fileURLWithPath: "audioRecording\(self.id)")
+    }
     
-    static let `default` = UserData().appointments[0]//Self(id: 1, doctor: "Shefali Gladson", location: "Kingsbrook Jewish Medical Center", RC3339date: "2020-03-15T13:30:00+03:00", coordinates: Coordinates(longitude: 0.000, latitude: 0.000))
+    static let `default` = UserData().appointments[0]
     
     var date: Date {
         get {
@@ -40,16 +43,4 @@ struct Appointment: Hashable, Codable, Identifiable {
         
         return formatter.string(from: date)
     }
-    
-    var locationCoordinates: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude
-        )
-    }
-}
-
-struct Coordinates: Hashable, Codable {
-    var longitude: Double
-    var latitude: Double
 }
