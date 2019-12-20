@@ -1,6 +1,6 @@
 //
 //  Appointment.swift
-//  Cancer App
+//  Oncology Helper
 //
 //  Created by Matt Kersey on 12/16/19.
 //  Copyright © 2019 Matt Kersey. All rights reserved.
@@ -42,5 +42,13 @@ struct Appointment: Hashable, Codable, Identifiable {
         formatter.dateFormat = "HH:mm MM/dd/yyyy"
         
         return formatter.string(from: date)
+    }
+    
+    init(id: Int, doctor: String, location: String, RC3339date: String) {
+        self.id = id
+        self.doctor = doctor
+        self.location = location
+        self.RC3339date = RC3339date
+        self.timestamps = []
     }
 }

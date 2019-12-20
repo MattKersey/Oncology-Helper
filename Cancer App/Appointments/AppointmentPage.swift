@@ -1,6 +1,6 @@
 //
 //  AppointmentPage.swift
-//  Cancer App
+//  Oncology Helper
 //
 //  Created by Matt Kersey on 12/18/19.
 //  Copyright © 2019 Matt Kersey. All rights reserved.
