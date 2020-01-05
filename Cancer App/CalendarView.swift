@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CalendarView: View {
     @EnvironmentObject var userData: UserData
-    @State var selected: Date? = nil
+    @Binding var selected: Date?
     @State var day: Date
     @State var increment = true
     
@@ -68,6 +68,6 @@ struct CalendarView: View {
 
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView(day: Date()).environmentObject(UserData())
+        CalendarView(selected: .constant(nil), day: Date()).environmentObject(UserData())
     }
 }

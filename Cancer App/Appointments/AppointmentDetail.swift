@@ -36,7 +36,7 @@ struct AppointmentDetail: View {
         .navigationBarTitle(Text(appointment!.doctor))
         .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
         .sheet(isPresented: self.$editMode){
-            AppointmentEditor(appointment: self.appointment!).environmentObject(self.userData)
+            AppointmentEditor(appointment: self.appointment!, selectedTime:  self.appointment!.date).environmentObject(self.userData)
         }
     }
 }

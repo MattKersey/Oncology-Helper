@@ -73,12 +73,12 @@ struct CalendarDay: View {
                     Image(systemName: "circle.fill")
                         .imageScale(.medium)
                         .foregroundColor(.red)
-                        .opacity(0.5)
+                        .opacity(0.25)
                 } else if (currentCalendar.isDate(date, inSameDayAs: currentDate)) {
                     Image(systemName: "circle.fill")
                         .imageScale(.medium)
                         .foregroundColor(aptDay ? .green : .blue)
-                        .opacity(0.5)
+                        .opacity(0.25)
                 } else if aptDay {
                     Image(systemName: "circle.fill")
                         .imageScale(.medium)
