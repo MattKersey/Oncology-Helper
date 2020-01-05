@@ -14,6 +14,9 @@
 		B23FE11223C226360026BE03 /* CalendarMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23FE11123C226360026BE03 /* CalendarMonth.swift */; };
 		B23FE11323C226360026BE03 /* CalendarMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23FE11123C226360026BE03 /* CalendarMonth.swift */; };
 		B23FE11423C226360026BE03 /* CalendarMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23FE11123C226360026BE03 /* CalendarMonth.swift */; };
+		B23FE11623C26E200026BE03 /* CalendarDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23FE11523C26E200026BE03 /* CalendarDay.swift */; };
+		B23FE11723C26E200026BE03 /* CalendarDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23FE11523C26E200026BE03 /* CalendarDay.swift */; };
+		B23FE11823C26E200026BE03 /* CalendarDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23FE11523C26E200026BE03 /* CalendarDay.swift */; };
 		B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */; };
 		B2447A6C23A7F2AB004AAD1F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */; };
 		B2447A7023A7F2AE004AAD1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2447A6F23A7F2AE004AAD1F /* Assets.xcassets */; };
@@ -82,6 +85,7 @@
 		B22F973823AAA7C60023BBC6 /* AppointmentPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentPage.swift; sourceTree = "<group>"; };
 		B22F973C23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRecordingPlay.swift; sourceTree = "<group>"; };
 		B23FE11123C226360026BE03 /* CalendarMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarMonth.swift; sourceTree = "<group>"; };
+		B23FE11523C26E200026BE03 /* CalendarDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDay.swift; sourceTree = "<group>"; };
 		B2447A6623A7F2AB004AAD1F /* Cancer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cancer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -161,6 +165,7 @@
 				B2447A9923A7F35D004AAD1F /* HomePage.swift */,
 				B2447AB723A93D92004AAD1F /* CalendarView.swift */,
 				B23FE11123C226360026BE03 /* CalendarMonth.swift */,
+				B23FE11523C26E200026BE03 /* CalendarDay.swift */,
 				B2447AB923A93D9F004AAD1F /* Appointments */,
 				B2447AA723A80534004AAD1F /* Data.swift */,
 				B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */,
@@ -365,6 +370,7 @@
 				B2447AB823A93D92004AAD1F /* CalendarView.swift in Sources */,
 				B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */,
 				B2447AA823A80534004AAD1F /* Data.swift in Sources */,
+				B23FE11623C26E200026BE03 /* CalendarDay.swift in Sources */,
 				B2D4055323AC5A1200605D6D /* AppointmentAdder.swift in Sources */,
 				B23FE11223C226360026BE03 /* CalendarMonth.swift in Sources */,
 				B2447A6C23A7F2AB004AAD1F /* SceneDelegate.swift in Sources */,
@@ -391,6 +397,7 @@
 				B2447AC023A96602004AAD1F /* AppointmentRecording.swift in Sources */,
 				B2447A9F23A7F7EC004AAD1F /* HomePage.swift in Sources */,
 				B2D4055423AC5A1200605D6D /* AppointmentAdder.swift in Sources */,
+				B23FE11723C26E200026BE03 /* CalendarDay.swift in Sources */,
 				B2447AB523A82484004AAD1F /* AppointmentDetail.swift in Sources */,
 				B278C37423AAF8BD00F82DD8 /* AppointmentRecordingPlay.swift in Sources */,
 				B2447AB223A816D5004AAD1F /* AppointmentRow.swift in Sources */,
@@ -412,6 +419,7 @@
 				B2447AC123A96602004AAD1F /* AppointmentRecording.swift in Sources */,
 				B2447AA023A7F7EC004AAD1F /* HomePage.swift in Sources */,
 				B2D4055523AC5A1200605D6D /* AppointmentAdder.swift in Sources */,
+				B23FE11823C26E200026BE03 /* CalendarDay.swift in Sources */,
 				B2447AB623A82485004AAD1F /* AppointmentDetail.swift in Sources */,
 				B278C37523AAF8BF00F82DD8 /* AppointmentRecordingPlay.swift in Sources */,
 				B2447AB123A816D4004AAD1F /* AppointmentRow.swift in Sources */,

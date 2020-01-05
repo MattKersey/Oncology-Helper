@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct CalendarMonth: View {
+    @EnvironmentObject var userData: UserData
     var day: Date
     
     var weekDays: [String] = ["S", "M", "T", "W", "T", "F", "S"]
@@ -47,33 +48,16 @@ struct CalendarMonth: View {
         let currentMonthDays = currentMonthDays_C
         let previousMonthDays = previousMonthDays_C
         let firstDayIndex = firstDayIndex_C
+        let firstDay = firstDay_C
         let numWeeks = Int(ceil(Double((firstDayIndex + currentMonthDays)) / 7.0))
-        var relativeDate = 0
         
-        return HStack(alignment: .top, spacing: 10) {
+        return HStack(alignment: .top, spacing: 20) {
             ForEach(self.weekDays.indices) { index in
                 VStack {
                     Text(self.weekDays[index])
                         .font(.subheadline)
                     ForEach(0 ..< numWeeks) { ordinal in
-//                        if (index + 7 * ordinal - firstDayIndex < 0) {
-//                            Text("\(previousMonthDays + 1 + index + 7 * ordinal - firstDayIndex)")
-//                            .font(.footnote)
-//                        } else if (1 + index + 7 * ordinal - firstDayIndex > currentMonthDays) {
-//                            Text("\(1 + index + 7 * ordinal - firstDayIndex - currentMonthDays)")
-//                            .font(.footnote)
-//                        } else {
-//                            Text("\(1 + index + 7 * ordinal - firstDayIndex)")
-//                            .font(.footnote)
-//                        }
-                        ZStack {
-                            Image(systemName: "circle.fill")
-                                .imageScale(.medium)
-                                .foregroundColor(.blue)
-                                .opacity(0.5)
-                            Text("\(1 + index + 7 * ordinal - firstDayIndex)")
-                                .font(.footnote)
-                        }
+                        CalendarDay(currentMonthDays: currentMonthDays, previousMonthDays: previousMonthDays, firstDayIndex: firstDayIndex, index: index, ordinal: ordinal, currentDate: Date(), firstDay: firstDay, currentCalendar: self.currentCalendar).environmentObject(self.userData)
                     }
                 }
                 if (index < self.weekDays.count - 1) {
@@ -86,6 +70,6 @@ struct CalendarMonth: View {
 
 struct CalendarMonth_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarMonth(day: Date())
+        CalendarMonth(day: Date()).environmentObject(UserData())
     }
 }
