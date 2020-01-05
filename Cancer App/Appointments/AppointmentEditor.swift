@@ -15,7 +15,7 @@ struct AppointmentEditor: View {
     
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    var appointment: Appointment                // Temporary storage for possible cancellation
+    @State var appointment: Appointment                // Temporary storage for possible cancellation
     
     var aptIndex: Int? {                        // Index of the appointment in the array
         // Check to see if something went wrong, if so dismiss this view
@@ -34,10 +34,19 @@ struct AppointmentEditor: View {
      TODO: Make this actually work
      */
     func cancel() -> Void {
+        appointment.doctor = userData.appointments[aptIndex!].doctor
+        appointment.location = userData.appointments[aptIndex!].location
+        appointment.date = userData.appointments[aptIndex!].date
+        self.presentationMode.wrappedValue.dismiss()
+    }
+    
+    /*
+     Function for saving changes, automatically called when the view disappears
+     */
+    func save() -> Void {
         userData.appointments[aptIndex!].doctor = appointment.doctor
         userData.appointments[aptIndex!].location = appointment.location
         userData.appointments[aptIndex!].date = appointment.date
-        self.presentationMode.wrappedValue.dismiss()
     }
     
 /**************************************** Main View ********************************************/
@@ -49,17 +58,28 @@ struct AppointmentEditor: View {
                 Text("Doctor")
                     .font(.headline)
                 Divider()
-                TextField("Doctor", text: $userData.appointments[aptIndex!].doctor)
+                TextField("Doctor", text: $appointment.doctor)
             }
             // Location name field
             HStack {
                 Text("Location")
                     .font(.headline)
                 Divider()
-                TextField("Location", text: $userData.appointments[aptIndex!].location)
+                TextField("Location", text: $appointment.location)
             }
             // Date picker for appointment
-            DatePicker(selection: $userData.appointments[aptIndex!].date, label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
+            DatePicker(selection: $appointment.date, label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
+            
+            // Done button
+            Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+                HStack {
+                    Spacer()
+                    Text("Done")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+                    Spacer()
+                }
+            }
             
             // Cancel button
             Button(action: {self.cancel()}) {
@@ -72,7 +92,7 @@ struct AppointmentEditor: View {
             }
         }
         // For ensuring that the array is sorted on a date change
-        .onDisappear(perform: {self.userData.appointments.sort(by: {$0.date < $1.date})})
+            .onDisappear(perform: {self.save(); self.userData.appointments.sort(by: {$0.date < $1.date})})
     }
 }
 

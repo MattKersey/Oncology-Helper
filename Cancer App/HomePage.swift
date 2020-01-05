@@ -43,10 +43,12 @@ struct HomePage: View {
                 }
                 .onDelete(perform: self.delete)
             }
-            .navigationBarTitle(self.showAll ? Text("All Appointments") : Text("Upcoming"))
-            .navigationBarItems(leading: Button(action: {self.showAll.toggle()}){self.showAll ? Text("Show Upcoming") : Text("Show All")}, trailing: Button(action: {self.addAppointment = true}) {
-                    Image(systemName: "plus")
-            })
+            .navigationBarTitle(self.showAll ? Text("All") : Text("Upcoming"))
+            .navigationBarItems(
+                leading: Button(action: {self.showAll.toggle()}){self.showAll ? Text("Show Upcoming") : Text("Show All")},
+                trailing: Button(action: {self.addAppointment = true}) {
+                    Image(systemName: "plus")}
+            )
             .sheet(isPresented: self.$addAppointment) {
                         AppointmentAdder().environmentObject(self.userData)
             }
