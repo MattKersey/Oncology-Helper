@@ -2,6 +2,9 @@
 //  AppointmentRecording.swift
 //  Oncology Helper
 //
+//  Code for audio recording adapted from
+//  https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
+//
 //  Created by Matt Kersey on 12/17/19.
 //  Copyright © 2019 Matt Kersey. All rights reserved.
 //
@@ -19,12 +22,11 @@ struct AppointmentRecording: View {
                                                     // TODO: Replace with audioRecorder.isRecording
     @State var beganRecording = false           // If this session has been started
     @State var endPressed = false               // If stop has been pressed (for warning)
-    @State var hasRecording = false             // If there is a recording in memory
-                                                    // TODO: Replace with var in appointment
+
     @State var reRecordPressed = false          // If record has been pressed with recording in memory
     @State var playPressed = false              // If the play button has been pressed
     
-    var aptIndex: Int? {
+    var aptIndex: Int? {                        // Index variable for appointment in the array
         if let index = userData.appointments.firstIndex(where: {$0.id == id}) {
             return index
         } else {
@@ -33,8 +35,25 @@ struct AppointmentRecording: View {
         }
     }
     
-    var audioRecorder = AVAudioRecorder()       // Audio recorder object
-                                                    // TODO: Initialize with URL from appointment
+    var audioRecorder: AVAudioRecorder? {       // Audio recorder object
+        // Settings for the recorder
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 12000,
+            AVNumberOfChannelsKey: 1,
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+        ]
+        var recorder: AVAudioRecorder? = nil
+        // Attempt to initialize the recorder
+        do {
+            recorder = try AVAudioRecorder(url: userData.appointments[aptIndex!].recordingURL, settings: settings)
+        } catch {
+            // If there is an error, print message and return nil
+            print("Error initializing recorder")
+            return nil
+        }
+        return recorder
+    }
     
 /**************************************** Functions ********************************************/
     
@@ -43,17 +62,17 @@ struct AppointmentRecording: View {
      */
     func record() -> Void {
         // Check to see if we are erasing a file so we can warn the user
-        if (self.hasRecording) {
+        if (userData.appointments[aptIndex!].hasRecording) {
             self.reRecordPressed = true
         } else {
             // Check to see if we are beginning a new recording
             if (!self.beganRecording) {
                 // Initialize audio file
-                audioRecorder.prepareToRecord()
+                audioRecorder!.prepareToRecord()
                 self.beganRecording = true
             }
             self.testBool = true
-            audioRecorder.record()
+            audioRecorder!.record()
         }
     }
     
@@ -61,7 +80,7 @@ struct AppointmentRecording: View {
      Function for recording a new session over one that already exists
      */
     func reRecord() -> Void {
-        self.hasRecording = false
+        userData.appointments[aptIndex!].hasRecording = false
         self.reRecordPressed = false
         self.record()
     }
@@ -71,7 +90,7 @@ struct AppointmentRecording: View {
      */
     func pause() -> Void {
         self.testBool = false
-        audioRecorder.pause()
+        audioRecorder!.pause()
     }
     
     /*
@@ -79,7 +98,7 @@ struct AppointmentRecording: View {
      TODO: set up timestamp storage, look into possibly adding NSSpeechRecognizer functionality
      */
     func mark() -> Void {
-        userData.appointments[aptIndex!].timestamps.append(audioRecorder.currentTime)
+        userData.appointments[aptIndex!].timestamps.append(audioRecorder!.currentTime)
     }
     
     /*
@@ -89,8 +108,8 @@ struct AppointmentRecording: View {
         self.testBool = false
         self.beganRecording = false
         self.endPressed = false
-        self.hasRecording = true
-        audioRecorder.stop()
+        userData.appointments[aptIndex!].hasRecording = true
+        audioRecorder!.stop()
     }
     
 /**************************************** Main View ********************************************/
@@ -99,9 +118,11 @@ struct AppointmentRecording: View {
         HStack {
             // Record/Pause button, check first to see if we are in a warning mode
             if (!self.endPressed && !self.reRecordPressed) {
-                // Check to see if we are currently recording
-                if (!self.testBool) {
-                    // If not, display a record button
+                // Check to confirm that the recorder is set up
+                if (audioRecorder == nil) {
+                    Text("Recorder Error")
+                } else if (!self.testBool) {
+                    // If not currently recording, display a record button
                     Button(action: {self.record()}) {
                         ZStack {
                             Image(systemName: "circle.fill")
@@ -114,7 +135,7 @@ struct AppointmentRecording: View {
                     }
                     .scaleEffect(2.0)
                 } else {
-                    // If so, display a pause button
+                    // If currently recording, display a pause button
                     Button(action: {self.pause()}) {
                         Image(systemName: "pause.circle.fill")
                             .foregroundColor(.red)
@@ -130,7 +151,7 @@ struct AppointmentRecording: View {
                 }
                 Spacer()
                 // If we have a recording, display the play button
-                if (self.hasRecording) {
+                if (userData.appointments[aptIndex!].hasRecording) {
                     Button(action: {self.playPressed.toggle()}) {
                         Image(systemName: "play.circle.fill")
                             .foregroundColor(.gray)
@@ -180,7 +201,7 @@ struct AppointmentRecording: View {
         .padding()
         .buttonStyle(BorderlessButtonStyle())
         .sheet(isPresented: self.$playPressed){
-            AppointmentRecordingPlay(hasRecording: self.$hasRecording, appointment: self.userData.appointments[self.aptIndex!])  // Sheet for playing an audio file
+            AppointmentRecordingPlay(appointment: self.userData.appointments[self.aptIndex!])  // Sheet for playing an audio file
         }
     }
 }

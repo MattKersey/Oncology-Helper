@@ -10,16 +10,22 @@ import SwiftUI
 import CoreLocation
 
 struct Appointment: Hashable, Codable, Identifiable {
-    var id: Int
-    var doctor: String
-    var location: String
-    fileprivate var RC3339date: String
-    var timestamps: [TimeInterval]
-    var recordingURL: URL{
-        URL(fileURLWithPath: "audioRecording\(self.id)")
-    }
+/*********************************** Variables from JSON File ***************************************/
+    
+    var id: Int                                 // The appointment's id
+    var doctor: String                          // Doctor's name
+    var location: String                        // Name of hospital or practice
+    fileprivate var RC3339date: String          // Date in yyyy-MM-dd'T'HH:mm:ssZZZZZ format
+    var hasRecording: Bool                      // Is there a recording of the appointment?
+    var timestamps: [TimeInterval]              // List of timestamps in recording
+    
+/************************************ Computed Properties ****************************************/
     
     static let `default` = UserData().appointments[0]
+    
+    var recordingURL: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("audioRecording\(self.id).m4a")
+    }
     
     var date: Date {
         get {
@@ -49,6 +55,7 @@ struct Appointment: Hashable, Codable, Identifiable {
         self.doctor = doctor
         self.location = location
         self.RC3339date = RC3339date
+        self.hasRecording = false
         self.timestamps = []
     }
 }

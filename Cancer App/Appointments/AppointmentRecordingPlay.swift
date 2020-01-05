@@ -10,7 +10,6 @@
 import SwiftUI
 
 struct AppointmentRecordingPlay: View {
-    @Binding var hasRecording: Bool
     var appointment: Appointment
     
     var body: some View {
@@ -25,6 +24,6 @@ struct AppointmentRecordingPlay: View {
 
 struct AppointmentRecordingPlay_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecordingPlay(hasRecording: .constant(true), appointment: UserData().appointments[0])
+        AppointmentRecordingPlay(appointment: UserData().appointments[0])
     }
 }
