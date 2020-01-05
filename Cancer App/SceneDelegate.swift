@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: CalendarView(monthYear: Date())) //HomePage().environmentObject(UserData()))
+            window.rootViewController = UIHostingController(rootView: CalendarView(day: Date())) //HomePage().environmentObject(UserData()))
             self.window = window
             window.makeKeyAndVisible()
         }
