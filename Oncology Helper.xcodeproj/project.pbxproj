@@ -86,17 +86,17 @@
 		B22F973C23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRecordingPlay.swift; sourceTree = "<group>"; };
 		B23FE11123C226360026BE03 /* CalendarMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarMonth.swift; sourceTree = "<group>"; };
 		B23FE11523C26E200026BE03 /* CalendarDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDay.swift; sourceTree = "<group>"; };
-		B2447A6623A7F2AB004AAD1F /* Cancer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cancer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2447A6623A7F2AB004AAD1F /* Oncology Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Oncology Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B2447A6F23A7F2AE004AAD1F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2447A7223A7F2AE004AAD1F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B2447A7523A7F2AE004AAD1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B2447A7723A7F2AE004AAD1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B2447A7C23A7F2AE004AAD1F /* Cancer AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cancer AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2447A7C23A7F2AE004AAD1F /* Oncology HelperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Oncology HelperTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2447A8023A7F2AE004AAD1F /* Cancer_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancer_AppTests.swift; sourceTree = "<group>"; };
 		B2447A8223A7F2AE004AAD1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B2447A8723A7F2AE004AAD1F /* Cancer AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cancer AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2447A8723A7F2AE004AAD1F /* Oncology HelperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Oncology HelperUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2447A8B23A7F2AE004AAD1F /* Cancer_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancer_AppUITests.swift; sourceTree = "<group>"; };
 		B2447A8D23A7F2AE004AAD1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B2447A9923A7F35D004AAD1F /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
@@ -141,9 +141,9 @@
 		B2447A5D23A7F2AB004AAD1F = {
 			isa = PBXGroup;
 			children = (
-				B2447A6823A7F2AB004AAD1F /* Cancer App */,
-				B2447A7F23A7F2AE004AAD1F /* Cancer AppTests */,
-				B2447A8A23A7F2AE004AAD1F /* Cancer AppUITests */,
+				B2447A6823A7F2AB004AAD1F /* Oncology Helper */,
+				B2447A7F23A7F2AE004AAD1F /* Oncology HelperTests */,
+				B2447A8A23A7F2AE004AAD1F /* Oncology HelperUITests */,
 				B2447A6723A7F2AB004AAD1F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -151,14 +151,14 @@
 		B2447A6723A7F2AB004AAD1F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B2447A6623A7F2AB004AAD1F /* Cancer App.app */,
-				B2447A7C23A7F2AE004AAD1F /* Cancer AppTests.xctest */,
-				B2447A8723A7F2AE004AAD1F /* Cancer AppUITests.xctest */,
+				B2447A6623A7F2AB004AAD1F /* Oncology Helper.app */,
+				B2447A7C23A7F2AE004AAD1F /* Oncology HelperTests.xctest */,
+				B2447A8723A7F2AE004AAD1F /* Oncology HelperUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B2447A6823A7F2AB004AAD1F /* Cancer App */ = {
+		B2447A6823A7F2AB004AAD1F /* Oncology Helper */ = {
 			isa = PBXGroup;
 			children = (
 				B2447A9D23A7F7B6004AAD1F /* UserData.swift */,
@@ -176,7 +176,7 @@
 				B2447AC223A9743D004AAD1F /* Resources */,
 				B2447A7123A7F2AE004AAD1F /* Preview Content */,
 			);
-			path = "Cancer App";
+			path = "Oncology Helper";
 			sourceTree = "<group>";
 		};
 		B2447A7123A7F2AE004AAD1F /* Preview Content */ = {
@@ -187,22 +187,22 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		B2447A7F23A7F2AE004AAD1F /* Cancer AppTests */ = {
+		B2447A7F23A7F2AE004AAD1F /* Oncology HelperTests */ = {
 			isa = PBXGroup;
 			children = (
 				B2447A8023A7F2AE004AAD1F /* Cancer_AppTests.swift */,
 				B2447A8223A7F2AE004AAD1F /* Info.plist */,
 			);
-			path = "Cancer AppTests";
+			path = "Oncology HelperTests";
 			sourceTree = "<group>";
 		};
-		B2447A8A23A7F2AE004AAD1F /* Cancer AppUITests */ = {
+		B2447A8A23A7F2AE004AAD1F /* Oncology HelperUITests */ = {
 			isa = PBXGroup;
 			children = (
 				B2447A8B23A7F2AE004AAD1F /* Cancer_AppUITests.swift */,
 				B2447A8D23A7F2AE004AAD1F /* Info.plist */,
 			);
-			path = "Cancer AppUITests";
+			path = "Oncology HelperUITests";
 			sourceTree = "<group>";
 		};
 		B2447AB923A93D9F004AAD1F /* Appointments */ = {
@@ -232,9 +232,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B2447A6523A7F2AB004AAD1F /* Cancer App */ = {
+		B2447A6523A7F2AB004AAD1F /* Oncology Helper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B2447A9023A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Cancer App" */;
+			buildConfigurationList = B2447A9023A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Oncology Helper" */;
 			buildPhases = (
 				B2447A6223A7F2AB004AAD1F /* Sources */,
 				B2447A6323A7F2AB004AAD1F /* Frameworks */,
@@ -244,14 +244,14 @@
 			);
 			dependencies = (
 			);
-			name = "Cancer App";
+			name = "Oncology Helper";
 			productName = "Cancer App";
-			productReference = B2447A6623A7F2AB004AAD1F /* Cancer App.app */;
+			productReference = B2447A6623A7F2AB004AAD1F /* Oncology Helper.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B2447A7B23A7F2AE004AAD1F /* Cancer AppTests */ = {
+		B2447A7B23A7F2AE004AAD1F /* Oncology HelperTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B2447A9323A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Cancer AppTests" */;
+			buildConfigurationList = B2447A9323A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Oncology HelperTests" */;
 			buildPhases = (
 				B2447A7823A7F2AE004AAD1F /* Sources */,
 				B2447A7923A7F2AE004AAD1F /* Frameworks */,
@@ -262,14 +262,14 @@
 			dependencies = (
 				B2447A7E23A7F2AE004AAD1F /* PBXTargetDependency */,
 			);
-			name = "Cancer AppTests";
+			name = "Oncology HelperTests";
 			productName = "Cancer AppTests";
-			productReference = B2447A7C23A7F2AE004AAD1F /* Cancer AppTests.xctest */;
+			productReference = B2447A7C23A7F2AE004AAD1F /* Oncology HelperTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B2447A8623A7F2AE004AAD1F /* Cancer AppUITests */ = {
+		B2447A8623A7F2AE004AAD1F /* Oncology HelperUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B2447A9623A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Cancer AppUITests" */;
+			buildConfigurationList = B2447A9623A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Oncology HelperUITests" */;
 			buildPhases = (
 				B2447A8323A7F2AE004AAD1F /* Sources */,
 				B2447A8423A7F2AE004AAD1F /* Frameworks */,
@@ -280,9 +280,9 @@
 			dependencies = (
 				B2447A8923A7F2AE004AAD1F /* PBXTargetDependency */,
 			);
-			name = "Cancer AppUITests";
+			name = "Oncology HelperUITests";
 			productName = "Cancer AppUITests";
-			productReference = B2447A8723A7F2AE004AAD1F /* Cancer AppUITests.xctest */;
+			productReference = B2447A8723A7F2AE004AAD1F /* Oncology HelperUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -308,7 +308,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B2447A6123A7F2AB004AAD1F /* Build configuration list for PBXProject "Cancer App" */;
+			buildConfigurationList = B2447A6123A7F2AB004AAD1F /* Build configuration list for PBXProject "Oncology Helper" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -321,9 +321,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B2447A6523A7F2AB004AAD1F /* Cancer App */,
-				B2447A7B23A7F2AE004AAD1F /* Cancer AppTests */,
-				B2447A8623A7F2AE004AAD1F /* Cancer AppUITests */,
+				B2447A6523A7F2AB004AAD1F /* Oncology Helper */,
+				B2447A7B23A7F2AE004AAD1F /* Oncology HelperTests */,
+				B2447A8623A7F2AE004AAD1F /* Oncology HelperUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -434,12 +434,12 @@
 /* Begin PBXTargetDependency section */
 		B2447A7E23A7F2AE004AAD1F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B2447A6523A7F2AB004AAD1F /* Cancer App */;
+			target = B2447A6523A7F2AB004AAD1F /* Oncology Helper */;
 			targetProxy = B2447A7D23A7F2AE004AAD1F /* PBXContainerItemProxy */;
 		};
 		B2447A8923A7F2AE004AAD1F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B2447A6523A7F2AB004AAD1F /* Cancer App */;
+			target = B2447A6523A7F2AB004AAD1F /* Oncology Helper */;
 			targetProxy = B2447A8823A7F2AE004AAD1F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -575,15 +575,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Cancer App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Oncology Helper/Preview Content\"";
 				DEVELOPMENT_TEAM = DA83PZ28FL;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "Cancer App/Info.plist";
+				INFOPLIST_FILE = "Oncology Helper/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Cancer-App";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Oncology-Helper";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -595,15 +595,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Cancer App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Oncology Helper/Preview Content\"";
 				DEVELOPMENT_TEAM = DA83PZ28FL;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "Cancer App/Info.plist";
+				INFOPLIST_FILE = "Oncology Helper/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Cancer-App";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Oncology-Helper";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -628,7 +628,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cancer App.app/Cancer App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Oncology Helper.app/Oncology Helper";
 			};
 			name = Debug;
 		};
@@ -650,7 +650,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cancer App.app/Cancer App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Oncology Helper.app/Oncology Helper";
 			};
 			name = Release;
 		};
@@ -697,7 +697,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B2447A6123A7F2AB004AAD1F /* Build configuration list for PBXProject "Cancer App" */ = {
+		B2447A6123A7F2AB004AAD1F /* Build configuration list for PBXProject "Oncology Helper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2447A8E23A7F2AE004AAD1F /* Debug */,
@@ -706,7 +706,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B2447A9023A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Cancer App" */ = {
+		B2447A9023A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Oncology Helper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2447A9123A7F2AE004AAD1F /* Debug */,
@@ -715,7 +715,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B2447A9323A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Cancer AppTests" */ = {
+		B2447A9323A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Oncology HelperTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2447A9423A7F2AE004AAD1F /* Debug */,
@@ -724,7 +724,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B2447A9623A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Cancer AppUITests" */ = {
+		B2447A9623A7F2AE004AAD1F /* Build configuration list for PBXNativeTarget "Oncology HelperUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B2447A9723A7F2AE004AAD1F /* Debug */,
