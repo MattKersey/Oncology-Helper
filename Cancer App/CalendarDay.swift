@@ -10,6 +10,7 @@ import SwiftUI
 
 struct CalendarDay: View {
     @EnvironmentObject var userData: UserData
+    @Binding var selected: Date?
     
     let currentMonthDays: Int
     let previousMonthDays: Int
@@ -64,28 +65,37 @@ struct CalendarDay: View {
     
     var body: some View {
         let aptDay = isAppointmentDay
+        let date = actualDate
         
-        return ZStack {
-            if (currentCalendar.isDate(actualDate, inSameDayAs: currentDate)) {
-                Image(systemName: "circle.fill")
-                    .imageScale(.medium)
-                    .foregroundColor(aptDay ? .green : .blue)
-                    .opacity(0.5)
-            } else if aptDay {
-                Image(systemName: "circle.fill")
-                    .imageScale(.medium)
-                    .foregroundColor(.yellow)
-                    .opacity(0.5)
+        return Button(action: {self.selected = date}) {
+            ZStack {
+                if (self.selected != nil) && (currentCalendar.isDate(date, inSameDayAs: self.selected!)) {
+                    Image(systemName: "circle.fill")
+                        .imageScale(.medium)
+                        .foregroundColor(.red)
+                        .opacity(0.5)
+                } else if (currentCalendar.isDate(date, inSameDayAs: currentDate)) {
+                    Image(systemName: "circle.fill")
+                        .imageScale(.medium)
+                        .foregroundColor(aptDay ? .green : .blue)
+                        .opacity(0.5)
+                } else if aptDay {
+                    Image(systemName: "circle.fill")
+                        .imageScale(.medium)
+                        .foregroundColor(.yellow)
+                        .opacity(0.5)
+                }
+                Text("\(actualDateInt)")
+                    .font(.footnote)
+                    .foregroundColor(.black)
             }
-            Text("\(actualDateInt)")
-                .font(.footnote)
+            .opacity(inMonth ? 1.0 : 0.5)
         }
-        .opacity(inMonth ? 1.0 : 0.5)
     }
 }
 
 struct CalendarDay_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarDay(currentMonthDays: 31, previousMonthDays: 31, firstDayIndex: 4, index: 0, ordinal: 0, currentDate: Date(), firstDay: Date(), currentCalendar: Calendar.current).environmentObject(UserData())
+        CalendarDay(selected: .constant(Date()), currentMonthDays: 31, previousMonthDays: 31, firstDayIndex: 4, index: 0, ordinal: 0, currentDate: Date(), firstDay: Date(), currentCalendar: Calendar.current).environmentObject(UserData())
     }
 }

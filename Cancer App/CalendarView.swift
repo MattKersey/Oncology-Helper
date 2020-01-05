@@ -10,6 +10,7 @@ import SwiftUI
 
 struct CalendarView: View {
     @EnvironmentObject var userData: UserData
+    @State var selected: Date? = nil
     @State var day: Date
     @State var increment = true
     
@@ -60,7 +61,7 @@ struct CalendarView: View {
                 }
             }
             .padding()
-            CalendarMonth(day: firstDay_C).environmentObject(self.userData)
+            CalendarMonth(selected: self.$selected, day: firstDay_C).environmentObject(self.userData)
         }
     }
 }
