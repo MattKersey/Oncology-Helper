@@ -27,12 +27,13 @@ struct AppointmentDetail: View {
     var body: some View {
         VStack {
             if (appointment != nil) {
-                AppointmentPage(appointment: appointment!)
+                AppointmentPage(id: id).environmentObject(self.userData)
             } else {
                 Text("Appointment unavailable")
             }
             Spacer()
         }
+        .navigationBarTitle(Text(appointment!.doctor))
         .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
         .sheet(isPresented: self.$editMode){
             AppointmentEditor(appointment: self.appointment!).environmentObject(self.userData)

@@ -10,7 +10,17 @@ import SwiftUI
 import AVFoundation
 
 struct AppointmentPage: View {
-    var appointment: Appointment
+    @EnvironmentObject var userData: UserData
+    var id: Int
+    
+    var appointment: Appointment? {
+        if let apt = userData.appointments.first(where: {$0.id == id}) {
+            return apt
+        } else {
+            return nil
+        }
+    }
+    
     var audioSession: AVAudioSession? {
         var session: AVAudioSession? = AVAudioSession.sharedInstance()
         do {
@@ -28,10 +38,11 @@ struct AppointmentPage: View {
     }
     
     var body: some View {
-        List {
-            AppointmentRow(appointment: appointment)
-            if (audioSession != nil) {
-                AppointmentRecording(id: appointment.id).environmentObject(UserData())
+        VStack {
+            List {
+                if (audioSession != nil) {
+                    AppointmentRecording(id: appointment!.id).environmentObject(self.userData)
+                }
             }
         }
     }
@@ -39,6 +50,6 @@ struct AppointmentPage: View {
 
 struct AppointmentPage_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentPage(appointment: UserData().appointments[0])
+        AppointmentPage(id: 1).environmentObject(UserData())
     }
 }

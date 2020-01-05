@@ -31,12 +31,6 @@ struct HomePage: View {
     var body: some View {
         NavigationView {
             List {
-                // Filter options
-                HStack {
-                    // Add date picker here
-                    Spacer()
-                    Button(action: {self.showAll.toggle()}){self.showAll ? Text("Show Upcoming") : Text("Show All")}
-                }
                 // Appointments loop
                 ForEach(self.userData.appointments) { appointment in
                     // Check if the appointment should be shown (it's upcoming or show all)
@@ -50,9 +44,8 @@ struct HomePage: View {
                 .onDelete(perform: self.delete)
             }
             .navigationBarTitle(self.showAll ? Text("All Appointments") : Text("Upcoming"))
-            // Appointment adding functionality
-            .navigationBarItems(trailing: Button(action: {self.addAppointment = true}) {
-                Image(systemName: "plus")
+            .navigationBarItems(leading: Button(action: {self.showAll.toggle()}){self.showAll ? Text("Show Upcoming") : Text("Show All")}, trailing: Button(action: {self.addAppointment = true}) {
+                    Image(systemName: "plus")
             })
             .sheet(isPresented: self.$addAppointment) {
                         AppointmentAdder().environmentObject(self.userData)
