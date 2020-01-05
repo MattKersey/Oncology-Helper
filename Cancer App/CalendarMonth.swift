@@ -49,14 +49,13 @@ struct CalendarMonth: View {
         let previousMonthDays = previousMonthDays_C
         let firstDayIndex = firstDayIndex_C
         let firstDay = firstDay_C
-        let numWeeks = Int(ceil(Double((firstDayIndex + currentMonthDays)) / 7.0))
         
         return HStack(alignment: .top, spacing: 20) {
             ForEach(self.weekDays.indices) { index in
                 VStack {
                     Text(self.weekDays[index])
                         .font(.subheadline)
-                    ForEach(0 ..< numWeeks) { ordinal in
+                    ForEach(0 ..< 6) { ordinal in
                         CalendarDay(currentMonthDays: currentMonthDays, previousMonthDays: previousMonthDays, firstDayIndex: firstDayIndex, index: index, ordinal: ordinal, currentDate: Date(), firstDay: firstDay, currentCalendar: self.currentCalendar).environmentObject(self.userData)
                     }
                 }
