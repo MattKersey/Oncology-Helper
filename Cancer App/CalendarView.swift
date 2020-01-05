@@ -32,40 +32,13 @@ struct CalendarView: View {
     
     var body: some View {
         VStack() {
-            Text("\(ymd)")
             HStack {
                 Text(month)
                 Spacer()
                 Text(year)
             }
             .padding()
-            
-            HStack(spacing: 10) {
-                
-                VStack(spacing: 10) {
-                    Text("S")
-                    ZStack {
-                        Image(systemName: "circle.fill")
-                            .imageScale(.medium)
-                            .foregroundColor(.blue)
-                            .opacity(0.5)
-                        Text("1")
-                            .font(.footnote)
-                    }
-                }
-                Divider()
-                VStack(spacing: 10) {
-                    Text("M")
-                    ZStack {
-                        Image(systemName: "circle.fill")
-                            .imageScale(.medium)
-                            .foregroundColor(.blue)
-                            .opacity(0.5)
-                        Text("2")
-                            .font(.footnote)
-                    }
-                }
-            }
+            CalendarMonth(day: monthYear)
         }
     }
 }
