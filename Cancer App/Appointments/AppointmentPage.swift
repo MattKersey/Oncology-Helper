@@ -14,7 +14,7 @@ struct AppointmentPage: View {
     var audioSession: AVAudioSession? {
         var session: AVAudioSession? = AVAudioSession.sharedInstance()
         do {
-            try session!.setCategory(.playAndRecord)
+            try session!.setCategory(.playAndRecord, mode: .default)
             try session!.setActive(true)
             session!.requestRecordPermission() { allowed in
                 if !allowed {

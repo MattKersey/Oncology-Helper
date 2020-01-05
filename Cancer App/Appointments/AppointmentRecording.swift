@@ -81,6 +81,7 @@ struct AppointmentRecording: View {
      */
     func reRecord() -> Void {
         userData.appointments[aptIndex!].hasRecording = false
+        userData.appointments[aptIndex!].timestamps = []
         self.reRecordPressed = false
         self.record()
     }
@@ -98,6 +99,7 @@ struct AppointmentRecording: View {
      TODO: set up timestamp storage, look into possibly adding NSSpeechRecognizer functionality
      */
     func mark() -> Void {
+        print("\(audioRecorder!.currentTime)")
         userData.appointments[aptIndex!].timestamps.append(audioRecorder!.currentTime)
     }
     
