@@ -25,6 +25,7 @@ struct CalendarDay: View {
     let currentDate: Date                       // The current date (today)
     let firstDay: Date                          // Date of the first day of the selected month
     let currentCalendar: Calendar               // Calendar
+    let highlight: Bool                         // Whether dates get highlighted when selected
     
     var relativeDate_C: Int {                   // The relative date in the month, ie
         1 + index + 7 * ordinal - firstDayIndex     // 31 of previous month is 0, 30 is -1
@@ -90,7 +91,7 @@ struct CalendarDay: View {
         return Button(action: {self.selected = date}) {
             ZStack {
                 // Put a circle in the background to denote important things
-                if (self.selected != nil) && (currentCalendar.isDate(date, inSameDayAs: self.selected!)) {
+                if highlight && (self.selected != nil) && (currentCalendar.isDate(date, inSameDayAs: self.selected!)) {
                     // If the day is selected, the circle is red
                     Image(systemName: "circle.fill")
                         .imageScale(.medium)
@@ -124,6 +125,6 @@ struct CalendarDay: View {
 
 struct CalendarDay_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarDay(selected: .constant(Date()), currentMonthDays: 31, previousMonthDays: 31, firstDayIndex: 4, index: 0, ordinal: 0, currentDate: Date(), firstDay: Date(), currentCalendar: Calendar.current).environmentObject(UserData())
+        CalendarDay(selected: .constant(Date()), currentMonthDays: 31, previousMonthDays: 31, firstDayIndex: 4, index: 0, ordinal: 0, currentDate: Date(), firstDay: Date(), currentCalendar: Calendar.current, highlight: false).environmentObject(UserData())
     }
 }

@@ -19,6 +19,7 @@ struct CalendarView: View {
     @State var day: Date                        // Variable for holding some day in a month
     @State var increment = true                 // State variable used for transitions
                                                     // TODO: Add transitions
+    let highlight: Bool                         // Whether dates get highlighted when selected
     let currentCalendar = Calendar.current      // Variable for holding a calendar
     
     var month: String {                         // String containing the selected month
@@ -87,7 +88,7 @@ struct CalendarView: View {
             }
             .padding()
             // View of days in the selected month
-            CalendarMonth(selected: self.$selected, day: firstDay_C).environmentObject(self.userData)
+            CalendarMonth(selected: self.$selected, day: firstDay_C, highlight: highlight).environmentObject(self.userData)
         }
     }
 }
@@ -96,6 +97,6 @@ struct CalendarView: View {
 
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView(selected: .constant(nil), day: Date()).environmentObject(UserData())
+        CalendarView(selected: .constant(nil), day: Date(), highlight: false).environmentObject(UserData())
     }
 }

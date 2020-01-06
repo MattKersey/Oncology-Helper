@@ -36,7 +36,7 @@ struct HomePage: View {
             // Calendar of appointments
             Text("Appointments")
                 .font(.largeTitle)
-            CalendarView(selected: $selected, day: currentDate)
+            CalendarView(selected: $selected, day: currentDate, highlight: false)
         }
             // Modal view for when a date is selected
         .sheet(isPresented: Binding<Bool>(get: {self.selected != nil}, set: {p in self.selected = p ? Date() : nil})) {

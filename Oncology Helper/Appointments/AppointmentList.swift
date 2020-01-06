@@ -25,6 +25,16 @@ struct AppointmentList: View {
         return formatter
     }
     
+    var appointments: [Appointment] {
+        var appointments: [Appointment] = []
+        for apt in userData.appointments {
+            if currentCalendar.isDate(apt.date, inSameDayAs: date) {
+                appointments.append(apt)
+            }
+        }
+        return appointments
+    }
+    
     func delete(at offsets: IndexSet) {
         userData.appointments.remove(atOffsets: offsets)
     }
@@ -32,15 +42,20 @@ struct AppointmentList: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(self.userData.appointments) { appointment in
-                    if (self.currentCalendar.isDate(appointment.date, inSameDayAs: self.date)) {
-                        NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)
-                        ) {
-                            AppointmentRow(appointment: appointment)
+                if (appointments.isEmpty) {
+                    Text("No appointments")
+                        .foregroundColor(.gray)
+                } else {
+                    ForEach(self.userData.appointments) { appointment in
+                        if (self.currentCalendar.isDate(appointment.date, inSameDayAs: self.date)) {
+                            NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)
+                            ) {
+                                AppointmentRow(appointment: appointment)
+                            }
                         }
                     }
+                    .onDelete(perform: self.delete)
                 }
-                .onDelete(perform: self.delete)
             }
         .navigationBarTitle(Text("\(dateFormatter.string(from: date))"))
             .navigationBarItems(

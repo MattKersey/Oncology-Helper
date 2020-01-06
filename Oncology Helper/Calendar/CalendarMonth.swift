@@ -17,8 +17,9 @@ struct CalendarMonth: View {
     @EnvironmentObject var userData: UserData   // Variable for storing appointments, etc
     @Binding var selected: Date?                // Optional for holding a selected date
     var day: Date                               // Variable for holding some day in a month
+    let highlight: Bool                         // Whether dates get highlighted when selected
     
-    var weekDays: [String] = ["S", "M", "T", "W", "T", "F", "S"]    // Weekday abbreviations
+    let weekDays: [String] = ["S", "M", "T", "W", "T", "F", "S"]    // Weekday abbreviations
     
     let currentCalendar = Calendar.current      // Variable for holding a calendar
     
@@ -76,7 +77,7 @@ struct CalendarMonth: View {
                     // Assume each month is 6 weeks for sake of consistent UI
                     ForEach(0 ..< 6) { ordinal in
                         // View for each day
-                        CalendarDay(selected: self.$selected, currentMonthDays: currentMonthDays, previousMonthDays: previousMonthDays, firstDayIndex: firstDayIndex, index: index, ordinal: ordinal, currentDate: Date(), firstDay: firstDay, currentCalendar: self.currentCalendar).environmentObject(self.userData)
+                        CalendarDay(selected: self.$selected, currentMonthDays: currentMonthDays, previousMonthDays: previousMonthDays, firstDayIndex: firstDayIndex, index: index, ordinal: ordinal, currentDate: Date(), firstDay: firstDay, currentCalendar: self.currentCalendar, highlight: self.highlight).environmentObject(self.userData)
                     }
                 }
                 // We only want dividers in between weekdays, not at the end
@@ -92,6 +93,6 @@ struct CalendarMonth: View {
 
 struct CalendarMonth_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarMonth(selected: .constant(Date()), day: Date()).environmentObject(UserData())
+        CalendarMonth(selected: .constant(Date()), day: Date(), highlight: false).environmentObject(UserData())
     }
 }
