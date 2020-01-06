@@ -13,7 +13,7 @@ struct HomePage: View {
     
     @EnvironmentObject var userData: UserData   // Variable for storing appointments, etc
     @State var showAll = false                  // Whether we should show all apts or upcoming
-    @State var addAppointment = false           // Whether user is adding an appointment
+    @State var selected: Date? = nil
     var currentDate = Date()                    // Current date to determine if upcoming
     
 /**************************************** Functions ********************************************/
@@ -30,27 +30,11 @@ struct HomePage: View {
     
     var body: some View {
         NavigationView {
-            List {
-                // Appointments loop
-                ForEach(self.userData.appointments) { appointment in
-                    // Check if the appointment should be shown (it's upcoming or show all)
-                    if self.showAll || appointment.date > self.currentDate {
-                        NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)
-                        ) {
-                            AppointmentRow(appointment: appointment)
-                        }
-                    }
-                }
-                .onDelete(perform: self.delete)
+            VStack {
+                CalendarView(selected: $selected, day: currentDate)
             }
-            .navigationBarTitle(self.showAll ? Text("All") : Text("Upcoming"))
-            .navigationBarItems(
-                leading: Button(action: {self.showAll.toggle()}){self.showAll ? Text("Show Upcoming") : Text("Show All")},
-                trailing: Button(action: {self.addAppointment = true}) {
-                    Image(systemName: "plus")}
-            )
-            .sheet(isPresented: self.$addAppointment) {
-                        AppointmentAdder().environmentObject(self.userData)
+            .sheet(isPresented: Binding<Bool>(get: {self.selected != nil}, set: {p in self.selected = p ? Date() : nil})) {
+                AppointmentList(date: self.selected!).environmentObject(self.userData)
             }
         }
     }

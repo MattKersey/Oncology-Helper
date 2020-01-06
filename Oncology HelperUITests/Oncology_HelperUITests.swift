@@ -8,7 +8,7 @@
 
 import XCTest
 
-class Cancer_AppUITests: XCTestCase {
+class Oncology_HelperUITests: XCTestCase {
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.

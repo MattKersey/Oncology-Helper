@@ -42,14 +42,6 @@ struct Appointment: Hashable, Codable, Identifiable {
         }
     }
     
-    var readableDate: String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US")
-        formatter.dateFormat = "HH:mm MM/dd/yyyy"
-        
-        return formatter.string(from: date)
-    }
-    
     init(id: Int, doctor: String, location: String, RC3339date: String) {
         self.id = id
         self.doctor = doctor

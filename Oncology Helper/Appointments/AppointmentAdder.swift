@@ -19,18 +19,7 @@ struct AppointmentAdder: View {
     
     @State var doctor = ""                          // Binding for storing doctor's name
     @State var location = ""                        // Binding for storing location
-    @State var date = Date()                        // Binding for storing date, today by default
-    
-    var appointment: Appointment{                   // New appointment object
-        // Find the highest id we have, make one greater than that
-        var id = 1
-        for apt in userData.appointments {
-            id = apt.id > id ? apt.id : id
-        }
-        // Initialize to some values
-        let apt = Appointment(id: id + 1, doctor: "", location: "", RC3339date: "1995-01-01T12:00:00+00:00")
-        return apt
-    }
+    @State var date: Date                     // Binding for storing date, today by default
     
 /**************************************** Functions ********************************************/
     
@@ -46,14 +35,13 @@ struct AppointmentAdder: View {
             }
             index += 1
         }
-        userData.appointments.insert(appointment, at: index)
-        // Update values from the bindings
-        userData.appointments[index].doctor = doctor
-        userData.appointments[index].location = location
+        var id = 1
+        for apt in userData.appointments {
+            id = apt.id > id ? apt.id : id
+        }
+        // Insert new appointment from the bindings
+        userData.appointments.insert(Appointment(id: id + 1, doctor: doctor, location: location, RC3339date: "1995-01-01T12:00:00+00:00"), at: index)
         userData.appointments[index].date = date
-        // Other method for inserting new appointment via appending and sorting
-//        userData.appointments.append(appointment)
-//        userData.appointments.sort(by: {$0.date < $1.date})
         // Close sheet
         self.presentationMode.wrappedValue.dismiss()
     }
@@ -77,7 +65,7 @@ struct AppointmentAdder: View {
                 TextField("Location", text: $location)
             }
             // Date picker for appointment
-            DatePicker(selection: $date, label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
+            DatePicker(selection: $date, displayedComponents: .hourAndMinute, label: { Text("Time") })
             
             // Done button
             Button(action: {self.done()}) {
@@ -95,6 +83,6 @@ struct AppointmentAdder: View {
 
 struct AppointmentAdder_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentAdder().environmentObject(UserData())
+        AppointmentAdder(date: Date()).environmentObject(UserData())
     }
 }

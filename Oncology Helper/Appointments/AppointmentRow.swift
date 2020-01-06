@@ -11,18 +11,25 @@ import SwiftUI
 struct AppointmentRow: View {
     var appointment: Appointment
     
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }
+    
     var body: some View {
         HStack(alignment: .top) {
+            Text(dateFormatter.string(from: appointment.date))
+            .font(.title)
+            Divider()
             VStack(alignment: .leading) {
                 Text(appointment.doctor)
                     .font(.headline)
-                HStack {
-                    Text(appointment.readableDate)
-                    Spacer()
-                    Text(appointment.location)
-                }
-                .font(.caption)
+                Text(appointment.location)
+                    .font(.caption)
             }
+            Spacer()
         }
     }
 }
