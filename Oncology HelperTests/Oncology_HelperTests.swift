@@ -1,6 +1,6 @@
 //
-//  Cancer_AppTests.swift
-//  Cancer AppTests
+//  Oncology_HelperTests.swift
+//  Oncology HelperTests
 //
 //  Created by Matt Kersey on 12/16/19.
 //  Copyright © 2019 Matt Kersey. All rights reserved.

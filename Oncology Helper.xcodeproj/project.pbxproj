@@ -176,9 +176,7 @@
 			children = (
 				B2447A9D23A7F7B6004AAD1F /* UserData.swift */,
 				B2447A9923A7F35D004AAD1F /* HomePage.swift */,
-				B2447AB723A93D92004AAD1F /* CalendarView.swift */,
-				B23FE11123C226360026BE03 /* CalendarMonth.swift */,
-				B23FE11523C26E200026BE03 /* CalendarDay.swift */,
+				B2B132D123C2C93100F4AD9D /* Calendar */,
 				B2447AB923A93D9F004AAD1F /* Appointments */,
 				B2447AA723A80534004AAD1F /* Data.swift */,
 				B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */,
@@ -240,6 +238,16 @@
 				B2447AA323A7F9D6004AAD1F /* appointmentData.json */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		B2B132D123C2C93100F4AD9D /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				B2447AB723A93D92004AAD1F /* CalendarView.swift */,
+				B23FE11123C226360026BE03 /* CalendarMonth.swift */,
+				B23FE11523C26E200026BE03 /* CalendarDay.swift */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -633,14 +641,14 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DA83PZ28FL;
-				INFOPLIST_FILE = "Cancer AppTests/Info.plist";
+				INFOPLIST_FILE = "Oncology HelperTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Cancer-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Oncology-HelperTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -655,14 +663,14 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DA83PZ28FL;
-				INFOPLIST_FILE = "Cancer AppTests/Info.plist";
+				INFOPLIST_FILE = "Oncology HelperTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Cancer-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Oncology-HelperTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -676,17 +684,17 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DA83PZ28FL;
-				INFOPLIST_FILE = "Cancer AppUITests/Info.plist";
+				INFOPLIST_FILE = "Oncology HelperUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Cancer-AppUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Oncology-HelperUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Cancer App";
+				TEST_TARGET_NAME = "Oncology Helper";
 			};
 			name = Debug;
 		};
@@ -696,17 +704,17 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DA83PZ28FL;
-				INFOPLIST_FILE = "Cancer AppUITests/Info.plist";
+				INFOPLIST_FILE = "Oncology HelperUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Cancer-AppUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mkersey95.iOS.Oncology-HelperUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Cancer App";
+				TEST_TARGET_NAME = "Oncology Helper";
 			};
 			name = Release;
 		};
