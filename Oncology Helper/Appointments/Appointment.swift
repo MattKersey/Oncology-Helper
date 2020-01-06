@@ -2,6 +2,8 @@
 //  Appointment.swift
 //  Oncology Helper
 //
+//  Data structure for holding key values related to appointments
+//
 //  Created by Matt Kersey on 12/16/19.
 //  Copyright © 2019 Matt Kersey. All rights reserved.
 //
@@ -21,13 +23,13 @@ struct Appointment: Hashable, Codable, Identifiable {
     
 /************************************ Computed Properties ****************************************/
     
-    static let `default` = UserData().appointments[0]
+    static let `default` = UserData().appointments[0]   // Default appointment for previews
     
-    var recordingURL: URL {
+    var recordingURL: URL {                     // URL for recording files
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("audioRecording\(self.id).m4a")
     }
     
-    var date: Date {
+    var date: Date {                            // Wrapper for the date
         get {
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -41,6 +43,8 @@ struct Appointment: Hashable, Codable, Identifiable {
             RC3339date = formatter.string(from: newDate)
         }
     }
+    
+/**************************************** Initializer ********************************************/
     
     init(id: Int, doctor: String, location: String, RC3339date: String) {
         self.id = id

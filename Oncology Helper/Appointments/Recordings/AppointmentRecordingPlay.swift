@@ -10,7 +10,11 @@
 import SwiftUI
 
 struct AppointmentRecordingPlay: View {
+/**************************************** Variables ********************************************/
+    
     var appointment: Appointment
+    
+/**************************************** Functions ********************************************/
     
     var body: some View {
         List {
@@ -21,6 +25,8 @@ struct AppointmentRecordingPlay: View {
         }
     }
 }
+
+/**************************************** Preview ********************************************/
 
 struct AppointmentRecordingPlay_Previews: PreviewProvider {
     static var previews: some View {

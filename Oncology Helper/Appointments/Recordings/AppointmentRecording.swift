@@ -2,6 +2,8 @@
 //  AppointmentRecording.swift
 //  Oncology Helper
 //
+//  View for controlling audio recording
+//
 //  Code for audio recording adapted from
 //  https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
 //
@@ -207,6 +209,8 @@ struct AppointmentRecording: View {
         }
     }
 }
+
+/**************************************** Preview ********************************************/
 
 struct AppointmentRecording_Previews: PreviewProvider {
     static var previews: some View {

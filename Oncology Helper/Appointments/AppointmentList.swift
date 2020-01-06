@@ -2,6 +2,8 @@
 //  AppointmentList.swift
 //  Oncology Helper
 //
+//  View for listing appointments for a given date.
+//
 //  Created by Matt Kersey on 1/5/20.
 //  Copyright © 2020 Matt Kersey. All rights reserved.
 //
@@ -9,6 +11,8 @@
 import SwiftUI
 
 struct AppointmentList: View {
+
+    
     @EnvironmentObject var userData: UserData
     @State var addAppointment = false
     var date: Date

@@ -1,6 +1,6 @@
 //
 //  CalendarDay.swift
-//  Cancer App
+//  Oncology Helper
 //
 //  View for an individual day on the calendar.
 //  Includes day number and a highlight

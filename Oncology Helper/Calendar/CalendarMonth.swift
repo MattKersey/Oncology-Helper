@@ -1,6 +1,6 @@
 //
 //  CalendarMonth.swift
-//  Cancer App
+//  Oncology Helper
 //
 //  A view that takes in a day in a month and prints that month
 //  in a calendar format.
