@@ -12,75 +12,78 @@
 import SwiftUI
 
 struct CalendarDay: View {
-/**************************************** Variables ********************************************/
+
+    // MARK: - instance properties
     
-    @EnvironmentObject var userData: UserData   // Variable for storing appointments, etc
-    @Binding var selected: Date?                // Optional for holding a selected date
+    @EnvironmentObject var userData: UserData
+    @Binding var selectedDate: Date?
+    let daysCurrentMonthInt: Int
+    let daysPreviousMonthInt: Int
+    let firstDayOfMonthIndex: Int
+    let currentDayIndex: Int
+    let currentWeekOrdinal: Int
+    let todayDate: Date
+    let firstDayOfMonthDate: Date
+    let userCalendar: Calendar
+    let shouldHighlightSelection: Bool
     
-    let currentMonthDays: Int                   // Number of days in the selected month
-    let previousMonthDays: Int                  // Number of days in the previous month
-    let firstDayIndex: Int                      // Index in the week of the first day of the month
-    let index: Int                              // Index of selected day in the week
-    let ordinal: Int                            // Index of selected week in the month
-    let currentDate: Date                       // The current date (today)
-    let firstDay: Date                          // Date of the first day of the selected month
-    let currentCalendar: Calendar               // Calendar
-    let highlight: Bool                         // Whether dates get highlighted when selected
-    
-    var relativeDate_C: Int {                   // The relative date in the month, ie
-        1 + index + 7 * ordinal - firstDayIndex     // 31 of previous month is 0, 30 is -1
+    // The relative date in the month, ie 31 of previous month is 0, 30 is -1
+    var relativeDateInt: Int {
+        1 + currentDayIndex + 7 * currentWeekOrdinal - firstDayOfMonthIndex
     }
     
-    var actualDateInt: Int {                    // Actual date number
+    var actualDateInt: Int {
         // So we don't have to recalculate every time
-        let relativeDate = relativeDate_C
+        let rDInt = relativeDateInt
         // Check if the day is in the previous month
-        if (relativeDate <= 0) {
+        if (rDInt <= 0) {
             // If so, return the date relative to that month
-            return previousMonthDays + relativeDate
+            return daysPreviousMonthInt + rDInt
         // Check if the day is in the next month
-        } else if (relativeDate > currentMonthDays) {
+        } else if (rDInt > daysCurrentMonthInt) {
             // If so, return the date relative to that month
-            return relativeDate - currentMonthDays
+            return rDInt - daysCurrentMonthInt
         }
         // If the date is in the selected month, just give the relative date
-        return relativeDate
+        return rDInt
     }
     
-    var inMonth: Bool {                         // Whether or not the date is in selected month
+    var isCurrentDateInMonth: Bool {
         // So we don't have to recalculate every time
-        let relativeDate = relativeDate_C
+        let rDInt = relativeDateInt
         // Return whether or not the relative date is out of range
-        return !((relativeDate <= 0) || (relativeDate > currentMonthDays))
+        return !((rDInt <= 0) || (rDInt > daysCurrentMonthInt))
     }
     
-    var actualDate: Date {                      // The actual date in date format
+    var actualDate: Date {
         // So we don't have to recalculate every time
-        let relativeDate = relativeDate_C
-        var month = firstDay
+        let relativeDate = relativeDateInt
+        var month = firstDayOfMonthDate
         // Check if the day is in the previous month
         if (relativeDate <= 0) {
             // If so, go to the previous month
             month = month - TimeInterval(86400)
             // Set the month date to the start of the month
-            month = currentCalendar.date(from: currentCalendar.dateComponents([.year, .month], from: month))!
+            month = userCalendar.date(from: userCalendar.dateComponents([.year, .month],
+                                                                        from: month))!
         // Check if the day is in the next month
-        } else if (relativeDate > currentMonthDays) {
+        } else if (relativeDate > daysCurrentMonthInt) {
             // If so, set the month date to the beginning of the next month
-            month = currentCalendar.date(byAdding: DateComponents(calendar: currentCalendar, month: 1), to: month)!
+            month = userCalendar.date(byAdding: DateComponents(calendar: userCalendar, month: 1),
+                                      to: month)!
         }
         // Return the month date with day filled in by the actual date number
-        return currentCalendar.date(bySetting: .day, value: actualDateInt, of: month)!
+        return userCalendar.date(bySetting: .day, value: actualDateInt, of: month)!
     }
     
-    var isAppointmentDay: Bool {                   // Appointment on the selected day?
+    var isAppointmentDay: Bool {
         // So we don't have to recalculate every time
         let date = actualDate
         // Return true if there is an appointment for the selected day in the JSON file
-        return (userData.appointments.first(where: {currentCalendar.isDate($0.date, inSameDayAs: date)}) != nil)
+        return (userData.appointments.first(where: {userCalendar.isDate($0.date, inSameDayAs: date)}) != nil)
     }
 
-/**************************************** Main View ********************************************/
+    // MARK: - body
     
     var body: some View {
         // So we don't have to recalculate every time
@@ -88,16 +91,16 @@ struct CalendarDay: View {
         let date = actualDate
         
         // The entire view is a button
-        return Button(action: {self.selected = date}) {
+        return Button(action: {self.selectedDate = date}) {
             ZStack {
                 // Put a circle in the background to denote important things
-                if highlight && (self.selected != nil) && (currentCalendar.isDate(date, inSameDayAs: self.selected!)) {
+                if shouldHighlightSelection && (self.selectedDate != nil) && userCalendar.isDate(date, inSameDayAs: self.selectedDate!) {
                     // If the day is selected, the circle is red
                     Image(systemName: "circle.fill")
                         .imageScale(.medium)
                         .foregroundColor(.red)
                         .opacity(0.25)
-                } else if (currentCalendar.isDate(date, inSameDayAs: currentDate)) {
+                } else if (userCalendar.isDate(date, inSameDayAs: todayDate)) {
                     // If the day is today, the circle is blue (green if there is an appointment
                     Image(systemName: "circle.fill")
                         .imageScale(.medium)
@@ -116,15 +119,25 @@ struct CalendarDay: View {
                     .foregroundColor(.black)
             }
             // Change the opacity based on whether or not the day is in the selected month
-            .opacity(inMonth ? 1.0 : 0.5)
+            .opacity(isCurrentDateInMonth ? 1.0 : 0.5)
         }
     }
 }
 
-/**************************************** Preview ********************************************/
+// MARK: - previews
 
 struct CalendarDay_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarDay(selected: .constant(Date()), currentMonthDays: 31, previousMonthDays: 31, firstDayIndex: 4, index: 0, ordinal: 0, currentDate: Date(), firstDay: Date(), currentCalendar: Calendar.current, highlight: false).environmentObject(UserData())
+        CalendarDay(selectedDate: .constant(Date()),
+                    daysCurrentMonthInt: 31,
+                    daysPreviousMonthInt: 31,
+                    firstDayOfMonthIndex: 4,
+                    currentDayIndex: 0,
+                    currentWeekOrdinal: 0,
+                    todayDate: Date(),
+                    firstDayOfMonthDate: Date(),
+                    userCalendar: Calendar.current,
+                    shouldHighlightSelection: false)
+            .environmentObject(UserData())
     }
 }

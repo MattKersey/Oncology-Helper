@@ -12,66 +12,63 @@
 import SwiftUI
 
 struct CalendarView: View {
-/**************************************** Variables ********************************************/
 
-    @EnvironmentObject var userData: UserData   // Variable for storing appointments, etc
-    @Binding var selected: Date?                // Optional for holding a selected date
-    @State var day: Date                        // Variable for holding some day in a month
-    @State var increment = true                 // State variable used for transitions
-                                                    // TODO: Add transitions
-    let highlight: Bool                         // Whether dates get highlighted when selected
-    let currentCalendar = Calendar.current      // Variable for holding a calendar
+    // MARK: - instance properties
+
+    @EnvironmentObject var userData: UserData
+    @Binding var selectedDate: Date?                
+    @State var dayInMonthDate: Date
+    let shouldHighlightSelection: Bool
+    let userCalendar = Calendar.current
     
-    var month: String {                         // String containing the selected month
+    var monthString: String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "MMMM"
-        return formatter.string(from: day)
+        return formatter.string(from: dayInMonthDate)
     }
     
-    var year: String {                          // String containing the selected year
+    var yearString: String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy"
-        return formatter.string(from: day)
+        return formatter.string(from: dayInMonthDate)
     }
     
-    var firstDay_C: Date {                      // Date of the first day of the selected month
-        let monthComponents = currentCalendar.dateComponents([.year, .month], from: day)
-        return currentCalendar.date(from: monthComponents)!
+    var firstDayOfMonthDate: Date {
+        let monthComponents = userCalendar.dateComponents([.year, .month],
+                                                          from: dayInMonthDate)
+        return userCalendar.date(from: monthComponents)!
     }
     
-/**************************************** Functions ********************************************/
+    // MARK: - functions
     
-    /*
+    /**
      Function for moving to the next month
     */
     func incrementMonth() -> Void {
-        // Set state for transitions
-        increment = true
         // Add one month to the current day
-        day = currentCalendar.date(byAdding: DateComponents(calendar: currentCalendar, month: 1), to: firstDay_C)!
+        dayInMonthDate = userCalendar.date(byAdding: DateComponents(calendar: userCalendar, month: 1),
+                                           to: firstDayOfMonthDate)!
         // set the day to the first of the month
-        day = firstDay_C
+        dayInMonthDate = firstDayOfMonthDate
     }
     
-    /*
+    /**
      Function for moving to the previous month
     */
     func decrementMonth() -> Void {
-        // Set state for transitions
-        increment = false
-        // Subtract one day from the first day of the month (ie last day of previous month)
-        day = firstDay_C - TimeInterval(86400)
+        // Subtract one day from the first day of the month
+        dayInMonthDate = firstDayOfMonthDate - TimeInterval(86400)
         // Set the day to the first of the month
-        day = firstDay_C
+        dayInMonthDate = firstDayOfMonthDate
     }
     
-/**************************************** Main View ********************************************/
+    // MARK: - body
     
     var body: some View {
         VStack {
-            // Header for the calendar containing buttons for changing month and title
+            // Header for the calendar
             HStack {
                 // Decrement month button
                 Button(action: {self.decrementMonth()}) {
@@ -79,7 +76,7 @@ struct CalendarView: View {
                 }
                 Spacer()
                 // Name of month and year
-                Text("\(month) \(year)")
+                Text("\(monthString) \(yearString)")
                 Spacer()
                 // Increment month button
                 Button(action: {self.incrementMonth()}) {
@@ -88,15 +85,21 @@ struct CalendarView: View {
             }
             .padding()
             // View of days in the selected month
-            CalendarMonth(selected: self.$selected, day: firstDay_C, highlight: highlight).environmentObject(self.userData)
+            CalendarMonth(selectedDate: self.$selectedDate,
+                          dayInMonthDate: firstDayOfMonthDate,
+                          shouldHighlightSelection: shouldHighlightSelection)
+                .environmentObject(self.userData)
         }
     }
 }
 
-/**************************************** Preview ********************************************/
+// MARK: - previews
 
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView(selected: .constant(nil), day: Date(), highlight: false).environmentObject(UserData())
+        CalendarView(selectedDate: .constant(nil),
+                     dayInMonthDate: Date(),
+                     shouldHighlightSelection: false)
+            .environmentObject(UserData())
     }
 }

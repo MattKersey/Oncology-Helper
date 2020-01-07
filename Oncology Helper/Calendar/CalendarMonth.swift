@@ -12,76 +12,87 @@
 import SwiftUI
 
 struct CalendarMonth: View {
-/**************************************** Variables ********************************************/
+
+    // MARK: - instance properties
     
-    @EnvironmentObject var userData: UserData   // Variable for storing appointments, etc
-    @Binding var selected: Date?                // Optional for holding a selected date
-    var day: Date                               // Variable for holding some day in a month
-    let highlight: Bool                         // Whether dates get highlighted when selected
+    @EnvironmentObject var userData: UserData
+    @Binding var selectedDate: Date?
+    let dayInMonthDate: Date
+    let shouldHighlightSelection: Bool
     
-    let weekDays: [String] = ["S", "M", "T", "W", "T", "F", "S"]    // Weekday abbreviations
+    let weekDaysStrings: [String] = ["S", "M", "T", "W", "T", "F", "S"]
     
-    let currentCalendar = Calendar.current      // Variable for holding a calendar
+    let userCalendar = Calendar.current
     
-    var dateFormatter: DateFormatter {          // Formatter for getting the day from a date
+    var dayDateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US")
         formatter.dateFormat = "dd"
         return formatter
     }
     
-    var firstDay_C: Date {                      // Date of the first day of the selected month
-        let monthComponents = currentCalendar.dateComponents([.year, .month], from: day)
-        return currentCalendar.date(from: monthComponents)!
+    var firstDayOfMonthDate: Date {
+        let monthComponents = userCalendar.dateComponents([.year, .month],
+                                                          from: dayInMonthDate)
+        return userCalendar.date(from: monthComponents)!
     }
     
-    var currentMonthDays_C: Int {               // Number of days in the selected month
+    var daysCurrentMonthInt: Int {
         // Get the first day of the next month
-        let firstDayNextMonth = currentCalendar.date(byAdding: DateComponents(calendar: currentCalendar, month: 1), to: firstDay_C)!
+        let components = DateComponents(calendar: userCalendar, month: 1)
+        let firstDayNextMonth = userCalendar.date(byAdding: components,
+                                                  to: firstDayOfMonthDate)!
         // Get the final day of this month
         let finalDay = firstDayNextMonth - TimeInterval(86400)
-        // The number of days in the month should be equal to the number of the final day
-        return Int(dateFormatter.string(from: finalDay))!
+        return Int(dayDateFormatter.string(from: finalDay))!
     }
     
-    var previousMonthDays_C: Int {              // Number of days in the previous month
+    var daysPreviousMonthInt: Int {
         // Find the final day of the previous month
-        let finalDay = firstDay_C - TimeInterval(86400)
-        // The number of days in the month should be equal to the number of the final day
-        return Int(dateFormatter.string(from: finalDay))!
+        let finalDay = firstDayOfMonthDate - TimeInterval(86400)
+        return Int(dayDateFormatter.string(from: finalDay))!
     }
     
-    var firstDayIndex_C: Int {                  // Index in the week of the first day of the month
-        let dayIndex = currentCalendar.component(.weekday, from: firstDay_C)
+    var firstDayOfMonthIndex: Int {
+        let dayIndex = userCalendar.component(.weekday,
+                                              from: firstDayOfMonthDate)
         // .weekday is indexed from 1
         return dayIndex - 1
     }
     
-/**************************************** Main View ********************************************/
+    // MARK: - body
     
     var body: some View {
-        // Get variables for the computed properties so we don't recalculate every time
-        let currentMonthDays = currentMonthDays_C
-        let previousMonthDays = previousMonthDays_C
-        let firstDayIndex = firstDayIndex_C
-        let firstDay = firstDay_C
+        // Get variables for the computed properties so we don't recalculate
+        let currentMonthDays = daysCurrentMonthInt
+        let previousMonthDays = daysPreviousMonthInt
+        let firstDayIndex = firstDayOfMonthIndex
+        let firstDay = firstDayOfMonthDate
         
         return HStack(alignment: .top, spacing: 20) {
             // Loop through every weekday first
-            ForEach(self.weekDays.indices) { index in
+            ForEach(self.weekDaysStrings.indices) { index in
                 VStack {
                     // Title with weekday abbreviation
-                    Text(self.weekDays[index])
+                    Text(self.weekDaysStrings[index])
                         .font(.subheadline)
-                    // Now loop through that weekday in the context of the whole month
                     // Assume each month is 6 weeks for sake of consistent UI
                     ForEach(0 ..< 6) { ordinal in
-                        // View for each day
-                        CalendarDay(selected: self.$selected, currentMonthDays: currentMonthDays, previousMonthDays: previousMonthDays, firstDayIndex: firstDayIndex, index: index, ordinal: ordinal, currentDate: Date(), firstDay: firstDay, currentCalendar: self.currentCalendar, highlight: self.highlight).environmentObject(self.userData)
+                        CalendarDay(selectedDate: self.$selectedDate,
+                                    daysCurrentMonthInt: currentMonthDays,
+                                    daysPreviousMonthInt: previousMonthDays,
+                                    firstDayOfMonthIndex: firstDayIndex,
+                                    currentDayIndex: index,
+                                    currentWeekOrdinal: ordinal,
+                                    todayDate: Date(),
+                                    firstDayOfMonthDate: firstDay,
+                                    userCalendar: self.userCalendar,
+                                    shouldHighlightSelection: self.shouldHighlightSelection)
+                            .environmentObject(self.userData)
                     }
                 }
                 // We only want dividers in between weekdays, not at the end
-                if (index < self.weekDays.count - 1) {
+                if (index < self.weekDaysStrings.count - 1) {
                     Divider()
                 }
             }
@@ -89,10 +100,13 @@ struct CalendarMonth: View {
     }
 }
 
-/**************************************** Preview ********************************************/
+// MARK: - previews
 
 struct CalendarMonth_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarMonth(selected: .constant(Date()), day: Date(), highlight: false).environmentObject(UserData())
+        CalendarMonth(selectedDate: .constant(Date()),
+                      dayInMonthDate: Date(),
+                      shouldHighlightSelection: false)
+            .environmentObject(UserData())
     }
 }

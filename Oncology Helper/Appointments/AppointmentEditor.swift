@@ -82,7 +82,7 @@ struct AppointmentEditor: View {
 
                 // Date picker for appointment
                 // DatePicker(selection: $appointment.date, label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
-                CalendarView(selected: $selectedDate, day: Date(), highlight: true)
+                CalendarView(selectedDate: $selectedDate, dayInMonthDate: Date(), shouldHighlightSelection: true)
                 if (selectedDate != nil) {
                     DatePicker(selection: $selectedTime, displayedComponents: .hourAndMinute, label: {Text("Time")})
                 }
