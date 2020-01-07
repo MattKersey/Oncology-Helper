@@ -41,7 +41,7 @@ struct AppointmentPage: View {
         VStack {
             List {
                 if (audioSession != nil) {
-                    AppointmentRecording(id: appointment!.id).environmentObject(self.userData)
+                    AppointmentRecording(appointmentId: appointment!.id).environmentObject(self.userData)
                 }
             }
         }

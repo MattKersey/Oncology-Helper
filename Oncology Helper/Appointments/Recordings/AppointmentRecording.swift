@@ -15,10 +15,11 @@ import SwiftUI
 import AVFoundation
 
 struct AppointmentRecording: View {
-/**************************************** Variables ********************************************/
+
+    // MARK: - instance properties
     
-    @EnvironmentObject var userData: UserData   // For accessing JSON file
-    var id: Int                                 // For indexing in userData
+    @EnvironmentObject var userData: UserData
+    let appointmentId: Int
     
     @State var testBool = false                 // For texting, equivalent to audioRecorder.isRecording
                                                     // TODO: Replace with audioRecorder.isRecording
@@ -29,7 +30,7 @@ struct AppointmentRecording: View {
     @State var playPressed = false              // If the play button has been pressed
     
     var aptIndex: Int? {                        // Index variable for appointment in the array
-        if let index = userData.appointments.firstIndex(where: {$0.id == id}) {
+        if let index = userData.appointments.firstIndex(where: {$0.id == appointmentId}) {
             return index
         } else {
             print("index is nil")
@@ -37,25 +38,7 @@ struct AppointmentRecording: View {
         }
     }
     
-    var audioRecorder: AVAudioRecorder? {       // Audio recorder object
-        // Settings for the recorder
-        let settings = [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-        ]
-        var recorder: AVAudioRecorder? = nil
-        // Attempt to initialize the recorder
-        do {
-            recorder = try AVAudioRecorder(url: userData.appointments[aptIndex!].recordingURL, settings: settings)
-        } catch {
-            // If there is an error, print message and return nil
-            print("Error initializing recorder")
-            return nil
-        }
-        return recorder
-    }
+    @State var audioRecorder: AVAudioRecorder? = nil    // I doubt that @State is the right wrapper here
     
 /**************************************** Functions ********************************************/
     
@@ -69,6 +52,19 @@ struct AppointmentRecording: View {
         } else {
             // Check to see if we are beginning a new recording
             if (!self.beganRecording) {
+                let settings = [
+                    AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                    AVSampleRateKey: 12000,
+                    AVNumberOfChannelsKey: 1,
+                    AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+                ]
+                do {
+                    audioRecorder = try AVAudioRecorder(url: userData.appointments[aptIndex!].recordingURL, settings: settings)
+                } catch {
+                    // If there is an error, print message and return nil
+                    print("Error initializing recorder")
+                    return
+                }
                 // Initialize audio file
                 audioRecorder!.prepareToRecord()
                 self.beganRecording = true
@@ -114,6 +110,7 @@ struct AppointmentRecording: View {
         self.endPressed = false
         userData.appointments[aptIndex!].hasRecording = true
         audioRecorder!.stop()
+        audioRecorder = nil
     }
     
 /**************************************** Main View ********************************************/
@@ -122,10 +119,7 @@ struct AppointmentRecording: View {
         HStack {
             // Record/Pause button, check first to see if we are in a warning mode
             if (!self.endPressed && !self.reRecordPressed) {
-                // Check to confirm that the recorder is set up
-                if (audioRecorder == nil) {
-                    Text("Recorder Error")
-                } else if (!self.testBool) {
+                if (!self.testBool) {
                     // If not currently recording, display a record button
                     Button(action: {self.record()}) {
                         ZStack {
@@ -214,6 +208,6 @@ struct AppointmentRecording: View {
 
 struct AppointmentRecording_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecording(id: 0).environmentObject(UserData())
+        AppointmentRecording(appointmentId: 0).environmentObject(UserData())
     }
 }
