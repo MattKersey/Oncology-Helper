@@ -12,20 +12,18 @@
 import SwiftUI
 
 struct AppointmentAdder: View {
-/**************************************** Variables ********************************************/
+
+    // MARK: - instance properties
     
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State var doctor = ""                          // Binding for storing doctor's name
-    @State var location = ""                        // Binding for storing location
+    @State var doctorString = ""                          // Binding for storing doctor's name
+    @State var locationString = ""                        // Binding for storing location
     @State var date: Date                     // Binding for storing date, today by default
     
-/**************************************** Functions ********************************************/
+    // MARK: - functions
     
-    /*
-     Function for finishing up and storing the new appointment in the JSON file
-     */
     func done() -> Void {
         // Find the proper index for the new appointment s.t. the array is sorted by date
         var index = 0
@@ -40,13 +38,17 @@ struct AppointmentAdder: View {
             id = apt.id > id ? apt.id : id
         }
         // Insert new appointment from the bindings
-        userData.appointments.insert(Appointment(id: id + 1, doctor: doctor, location: location, RC3339date: "1995-01-01T12:00:00+00:00"), at: index)
+        userData.appointments.insert(Appointment(id: id + 1,
+                                                 doctor: doctorString,
+                                                 location: locationString,
+                                                 RC3339date: "1995-01-01T12:00:00+00:00"),
+                                     at: index)
         userData.appointments[index].date = date
         // Close sheet
         self.presentationMode.wrappedValue.dismiss()
     }
     
-/**************************************** Main View ********************************************/
+    // MARK: - body
     
     var body: some View {
         List {
@@ -55,14 +57,14 @@ struct AppointmentAdder: View {
                 Text("Doctor")
                     .font(.headline)
                 Divider()
-                TextField("Doctor", text: $doctor)
+                TextField("Doctor", text: $doctorString)
             }
             // Location name field
             HStack {
                 Text("Location")
                     .font(.headline)
                 Divider()
-                TextField("Location", text: $location)
+                TextField("Location", text: $locationString)
             }
             // Date picker for appointment
             DatePicker(selection: $date, displayedComponents: .hourAndMinute, label: { Text("Time") })
@@ -80,6 +82,8 @@ struct AppointmentAdder: View {
         }
     }
 }
+
+// MARK: - previews
 
 struct AppointmentAdder_Previews: PreviewProvider {
     static var previews: some View {

@@ -11,7 +11,8 @@
 import SwiftUI
 
 struct AppointmentEditor: View {
-/**************************************** Variables ********************************************/
+    
+    // MARK: - instance properties
     
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -19,21 +20,18 @@ struct AppointmentEditor: View {
     @State var selectedDate: Date? = nil
     @State var selectedTime: Date
     
-    var aptIndex: Int? {                        // Index of the appointment in the array
-        // Check to see if something went wrong, if so dismiss this view
+    var aptIndex: Int? {
         if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
             return index
         } else {
+            print("index of appointment is nil")
             self.presentationMode.wrappedValue.dismiss()
             return nil
         }
     }
     
-/**************************************** Functions ********************************************/
+    // MARK: - functions
     
-    /*
-     Function for cancelling an edit and returning to initial values
-     */
     func cancel() -> Void {
         appointment.doctor = userData.appointments[aptIndex!].doctor
         appointment.location = userData.appointments[aptIndex!].location
@@ -42,9 +40,6 @@ struct AppointmentEditor: View {
         self.presentationMode.wrappedValue.dismiss()
     }
     
-    /*
-     Function for saving changes, automatically called when the view disappears
-     */
     func save() -> Void {
         userData.appointments[aptIndex!].doctor = appointment.doctor
         userData.appointments[aptIndex!].location = appointment.location
@@ -59,7 +54,7 @@ struct AppointmentEditor: View {
         }
     }
     
-/**************************************** Main View ********************************************/
+    // MARK: - body
     
     var body: some View {
         return VStack {
@@ -81,7 +76,6 @@ struct AppointmentEditor: View {
                 }
 
                 // Date picker for appointment
-                // DatePicker(selection: $appointment.date, label: { /*@START_MENU_TOKEN@*/Text("Date")/*@END_MENU_TOKEN@*/ })
                 CalendarView(selectedDate: $selectedDate, dayInMonthDate: Date(), shouldHighlightSelection: true)
                 if (selectedDate != nil) {
                     DatePicker(selection: $selectedTime, displayedComponents: .hourAndMinute, label: {Text("Time")})
@@ -117,6 +111,8 @@ struct AppointmentEditor: View {
             .onDisappear(perform: {self.save(); self.userData.appointments.sort(by: {$0.date < $1.date})})
     }
 }
+
+// MARK: - previews
 
 struct AppointmentEditor_Previews: PreviewProvider {
     static var previews: some View {

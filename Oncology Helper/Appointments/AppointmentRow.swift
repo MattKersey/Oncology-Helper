@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct AppointmentRow: View {
+    
+    // MARK: - instance properties
+    
     var appointment: Appointment
     
     var dateFormatter: DateFormatter {
@@ -17,6 +20,8 @@ struct AppointmentRow: View {
         formatter.dateFormat = "HH:mm"
         return formatter
     }
+    
+    // MARK: - body
     
     var body: some View {
         HStack(alignment: .top) {
@@ -33,6 +38,8 @@ struct AppointmentRow: View {
         }
     }
 }
+
+// MARK: - previews
 
 struct AppointmentRow_Previews: PreviewProvider {
 

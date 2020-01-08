@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct AppointmentDetail: View {
+    
+    // MARK: - instance properties
+    
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.editMode) var mode
@@ -23,6 +26,8 @@ struct AppointmentDetail: View {
             return nil
         }
     }
+    
+    // MARK: - body
     
     var body: some View {
         VStack {
@@ -40,6 +45,8 @@ struct AppointmentDetail: View {
         }
     }
 }
+
+// MARK: - previews
 
 struct AppointmentDetail_Previews: PreviewProvider {
     static var previews: some View {

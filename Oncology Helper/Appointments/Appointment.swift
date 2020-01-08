@@ -12,24 +12,25 @@ import SwiftUI
 import CoreLocation
 
 struct Appointment: Hashable, Codable, Identifiable {
-/*********************************** Variables from JSON File ***************************************/
+
+    // MARK: - properties from JSON file
     
-    var id: Int                                 // The appointment's id
-    var doctor: String                          // Doctor's name
-    var location: String                        // Name of hospital or practice
-    fileprivate var RC3339date: String          // Date in yyyy-MM-dd'T'HH:mm:ssZZZZZ format
-    var hasRecording: Bool                      // Is there a recording of the appointment?
-    var timestamps: [TimeInterval]              // List of timestamps in recording
+    var id: Int
+    var doctor: String
+    var location: String
+    fileprivate var RC3339date: String
+    var hasRecording: Bool
+    var timestamps: [TimeInterval]
     
-/************************************ Computed Properties ****************************************/
+    // MARK: - computed properties
     
-    static let `default` = UserData().appointments[0]   // Default appointment for previews
+    static let `default` = UserData().appointments[0]
     
-    var recordingURL: URL {                     // URL for recording files
+    var recordingURL: URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("audioRecording\(self.id).m4a")
     }
     
-    var date: Date {                            // Wrapper for the date
+    var date: Date {
         get {
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -44,7 +45,7 @@ struct Appointment: Hashable, Codable, Identifiable {
         }
     }
     
-/**************************************** Initializer ********************************************/
+    // MARK: - initializer
     
     init(id: Int, doctor: String, location: String, RC3339date: String) {
         self.id = id

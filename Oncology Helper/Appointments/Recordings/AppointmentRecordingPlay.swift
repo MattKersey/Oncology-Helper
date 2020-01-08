@@ -11,13 +11,29 @@ import SwiftUI
 import AVFoundation
 
 struct AppointmentRecordingPlay: View {
-/**************************************** Variables ********************************************/
     
-    var appointment: Appointment
+    // MARK: - instance properties
     
+    @EnvironmentObject var userData: UserData
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    let appointmentId: Int
     @State var audioPlayer: AVAudioPlayer? = nil
     
-/**************************************** Functions ********************************************/
+    var aptIndex: Int? {
+        if let index = userData.appointments.firstIndex(where: {$0.id == appointmentId}) {
+            return index
+        } else {
+            print("index of appointment is nil")
+            self.presentationMode.wrappedValue.dismiss()
+            return nil
+        }
+    }
+    
+    var appointment: Appointment {
+        userData.appointments[aptIndex!]
+    }
+    
+    // MARK: - functions
     
     func play() -> Void {
         if (audioPlayer == nil) {
@@ -45,27 +61,59 @@ struct AppointmentRecordingPlay: View {
         audioPlayer!.currentTime = timestamp
     }
     
+    func mark() -> Void {
+        var index = 0
+        for timestamp in appointment.timestamps {
+            if timestamp > audioPlayer!.currentTime {
+                break
+            }
+            index += 1
+        }
+        userData.appointments[aptIndex!].timestamps.insert(audioPlayer!.currentTime, at: index)
+    }
+    
+    func delete(at offsets: IndexSet) {
+        userData.appointments[aptIndex!].timestamps.remove(atOffsets: offsets)
+    }
+    
+    // MARK: - body
+    
     var body: some View {
-        List {
+        let apt = appointment
+        return List {
             HStack {
                 Button(action: {self.play()}) {
                     Image(systemName: "play.circle.fill")
+                        .foregroundColor(.red)
                 }
-//                Slider(value: audioPlayer!.currentTime, in: 0.0...audioPlayer!.duration, step: 0.01)
+                .scaleEffect(2.0)
+                Spacer()
+                if (audioPlayer != nil) {
+                    // Slider(value: audioPlayer!.currentTime, in: 0.0...audioPlayer!.duration, step: 0.01)
+                }
+                Spacer()
+                Button(action: {self.mark()}) {
+                    Image(systemName: "flag.circle.fill")
+                        .foregroundColor(.red)
+                }
+                .scaleEffect(2.0)
             }
-            ForEach(appointment.timestamps, id: \.self) { timestamp in
+            .buttonStyle(BorderlessButtonStyle())
+            ForEach(apt.timestamps, id: \.self) { timestamp in
                 Button(action: {self.setTime(timestamp)}) {
                     Text("\(timestamp)")
                 }
             }
+            .onDelete(perform: self.delete)
         }
     }
 }
 
-/**************************************** Preview ********************************************/
+// MARK: - previews
 
 struct AppointmentRecordingPlay_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecordingPlay(appointment: UserData().appointments[0])
+        AppointmentRecordingPlay(appointmentId: 0)
+            .environmentObject(UserData())
     }
 }

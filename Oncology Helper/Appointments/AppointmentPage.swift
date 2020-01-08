@@ -10,6 +10,9 @@ import SwiftUI
 import AVFoundation
 
 struct AppointmentPage: View {
+    
+    // MARK: - instance properties
+    
     @EnvironmentObject var userData: UserData
     var id: Int
     
@@ -37,6 +40,8 @@ struct AppointmentPage: View {
         return session
     }
     
+    // MARK: - body
+    
     var body: some View {
         VStack {
             List {
@@ -47,6 +52,8 @@ struct AppointmentPage: View {
         }
     }
 }
+
+// MARK: - previews
 
 struct AppointmentPage_Previews: PreviewProvider {
     static var previews: some View {

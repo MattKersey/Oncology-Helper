@@ -21,9 +21,8 @@ struct HomePage: View {
     
     // MARK: - functions
     
-    /*
-     TODO: Add functionality for deleting associated audio files, memos
-     */
+
+    // TODO: - Add functionality for deleting associated audio files, memos
     func delete(at offsets: IndexSet) {
         userData.appointments.remove(atOffsets: offsets)
     }
