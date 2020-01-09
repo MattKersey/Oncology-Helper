@@ -40,22 +40,18 @@ struct AppointmentRecordingPlay: View {
     }
     
     func mark() -> Void {
-        if let aptIndex = appointmentIndex {
-            var index = 0
-            for timestamp in appointment.timestamps {
-                if timestamp > audioPlayer!.currentTime {
-                    break
-                }
-                index += 1
+        var index = 0
+        for timestamp in userData.appointments[appointmentIndex!].timestamps {
+            if timestamp > audioPlayer!.currentTime {
+                break
             }
-            userData.appointments[aptIndex].timestamps.insert(audioPlayer!.currentTime, at: index)
+            index += 1
         }
+        userData.appointments[appointmentIndex!].timestamps.insert(audioPlayer!.currentTime, at: index)
     }
     
     func delete(at offsets: IndexSet) {
-        if let aptIndex = appointmentIndex {
-            userData.appointments[aptIndex].timestamps.remove(atOffsets: offsets)
-        }
+        userData.appointments[appointmentIndex!].timestamps.remove(atOffsets: offsets)
     }
     
     // MARK: - init
