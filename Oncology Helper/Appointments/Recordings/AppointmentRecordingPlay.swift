@@ -17,7 +17,7 @@ struct AppointmentRecordingPlay: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let appointment: Appointment
-    @State var audioPlayer: AVPlayer
+    let audioPlayer: AVPlayer
     @State var currentTime: TimeInterval
     let duration: TimeInterval
     
@@ -60,10 +60,10 @@ struct AppointmentRecordingPlay: View {
     
     init(appointment: Appointment) {
         self.appointment = appointment
-        _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
+        audioPlayer = AVPlayer(url: appointment.recordingURL)
         _currentTime = State(initialValue: 0.0)
-        duration = CMTimeGetSeconds(_audioPlayer.wrappedValue.currentItem!.duration)
-        _audioPlayer.wrappedValue.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: nil) { [self] time in
+        duration = CMTimeGetSeconds(audioPlayer.currentItem!.duration)
+        audioPlayer.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: nil) { [self] time in
             self.currentTime = CMTimeGetSeconds(time)
         }
     }
@@ -105,6 +105,8 @@ struct AppointmentRecordingPlay: View {
         }
     }
 }
+
+// MARK: - UIKit
 
 // MARK: - previews
 
