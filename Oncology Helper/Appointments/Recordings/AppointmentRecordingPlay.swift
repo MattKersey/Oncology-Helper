@@ -17,7 +17,9 @@ struct AppointmentRecordingPlay: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let appointment: Appointment
-    @State var audioPlayer: AVAudioPlayer?
+    @State var audioPlayer: AVPlayer
+    @State var currentTime: TimeInterval
+    let duration: TimeInterval
     
     var appointmentIndex: Int? {
         if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
@@ -32,22 +34,22 @@ struct AppointmentRecordingPlay: View {
     // MARK: - functions
     
     func play() -> Void {
-        audioPlayer!.play()
+        audioPlayer.play()
     }
     
     func setTime(_ timestamp: TimeInterval) {
-        audioPlayer!.currentTime = timestamp
+        audioPlayer.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
     }
     
-    func mark() -> Void {
+    func mark(_ timestamp: TimeInterval) -> Void {
         var index = 0
-        for timestamp in userData.appointments[appointmentIndex!].timestamps {
-            if timestamp > audioPlayer!.currentTime {
+        for storedTimestamp in userData.appointments[appointmentIndex!].timestamps {
+            if storedTimestamp > timestamp {
                 break
             }
             index += 1
         }
-        userData.appointments[appointmentIndex!].timestamps.insert(audioPlayer!.currentTime, at: index)
+        userData.appointments[appointmentIndex!].timestamps.insert(timestamp, at: index)
     }
     
     func delete(at offsets: IndexSet) {
@@ -58,29 +60,19 @@ struct AppointmentRecordingPlay: View {
     
     init(appointment: Appointment) {
         self.appointment = appointment
-        do {
-            try _audioPlayer = State(initialValue: AVAudioPlayer(contentsOf: appointment.recordingURL))
-        } catch {
-            print("audioPlayer was not initialized")
+        _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
+        _currentTime = State(initialValue: 0.0)
+        duration = CMTimeGetSeconds(_audioPlayer.wrappedValue.currentItem!.duration)
+        _audioPlayer.wrappedValue.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: nil) { [self] time in
+            self.currentTime = CMTimeGetSeconds(time)
         }
     }
     
     // MARK: - body
     
     var body: some View {
-        let currentTime = Binding<TimeInterval>(get: {
-            if self.audioPlayer != nil {
-                return self.audioPlayer!.currentTime
-            }
-            return -1.0
-        }, set: { p in
-            if (self.audioPlayer != nil) {
-                self.audioPlayer!.currentTime = p
-            }
-        })
-        
         return List {
-            if audioPlayer != nil && appointmentIndex != nil  {
+            if duration > 0.0 && appointmentIndex != nil  {
                 HStack {
                     Button(action: {self.play()}) {
                         Image(systemName: "play.circle.fill")
@@ -89,10 +81,10 @@ struct AppointmentRecordingPlay: View {
                     .scaleEffect(2.0)
                     Spacer()
                     Text("0")
-                    Slider(value: currentTime, in: 0.0...audioPlayer!.duration, step: 0.01)
-                    Text(verbatim: String(format: "%.1f", audioPlayer!.duration))
+                    Slider(value: $currentTime, in: 0.0...duration, step: 0.01)
+                    Text(verbatim: String(format: "%.1f", duration))
                     Spacer()
-                    Button(action: {self.mark()}) {
+                    Button(action: {self.mark(CMTimeGetSeconds(self.audioPlayer.currentTime()))}) {
                         Image(systemName: "flag.circle.fill")
                             .foregroundColor(.red)
                     }
@@ -105,10 +97,10 @@ struct AppointmentRecordingPlay: View {
                     }
                 }
                 .onDelete(perform: self.delete)
-            } else if audioPlayer == nil {
-                Text("Failed to initialize audio player")
-            } else {
+            } else if appointmentIndex == nil {
                 Text("Could not find appointment")
+            } else {
+                Text("Failed to initialize audio player")
             }
         }
     }
