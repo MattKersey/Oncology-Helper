@@ -88,7 +88,9 @@ struct AppointmentRecordingPlay: View {
                     }
                     .scaleEffect(2.0)
                     Spacer()
+                    Text("0")
                     Slider(value: currentTime, in: 0.0...audioPlayer!.duration, step: 0.01)
+                    Text(verbatim: String(format: "%.1f", audioPlayer!.duration))
                     Spacer()
                     Button(action: {self.mark()}) {
                         Image(systemName: "flag.circle.fill")
@@ -99,7 +101,7 @@ struct AppointmentRecordingPlay: View {
                 .buttonStyle(BorderlessButtonStyle())
                 ForEach(appointment.timestamps, id: \.self) { timestamp in
                     Button(action: {self.setTime(timestamp)}) {
-                        Text("\(timestamp)")
+                        Text(verbatim: String(format: "%.1f", timestamp))
                     }
                 }
                 .onDelete(perform: self.delete)
