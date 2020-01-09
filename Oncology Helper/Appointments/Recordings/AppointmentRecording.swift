@@ -185,7 +185,7 @@ struct AppointmentRecording: View {
         .padding()
         .buttonStyle(BorderlessButtonStyle())
         .sheet(isPresented: self.$playPressed){
-            AppointmentRecordingPlay(appointmentId: self.appointmentId)
+            AppointmentRecordingPlay(appointment: self.appointment)
                 .environmentObject(self.userData)
         }
     }

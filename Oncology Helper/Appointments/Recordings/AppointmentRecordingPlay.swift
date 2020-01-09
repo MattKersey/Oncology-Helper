@@ -16,11 +16,11 @@ struct AppointmentRecordingPlay: View {
     
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    let appointmentId: Int
-    @State var audioPlayer: AVAudioPlayer? = nil
+    let appointment: Appointment
+    @State var audioPlayer: AVAudioPlayer?
     
-    var aptIndex: Int? {
-        if let index = userData.appointments.firstIndex(where: {$0.id == appointmentId}) {
+    var appointmentIndex: Int? {
+        if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
             return index
         } else {
             print("index of appointment is nil")
@@ -29,51 +29,44 @@ struct AppointmentRecordingPlay: View {
         }
     }
     
-    var appointment: Appointment {
-        userData.appointments[aptIndex!]
-    }
-    
     // MARK: - functions
     
     func play() -> Void {
-        if (audioPlayer == nil) {
-            do {
-                try audioPlayer = AVAudioPlayer(contentsOf: appointment.recordingURL)
-                audioPlayer?.prepareToPlay()
-            } catch {
-                print("audioPlayer was not initialized")
-                return
-            }
-        }
         audioPlayer!.play()
     }
     
     func setTime(_ timestamp: TimeInterval) {
-        if (audioPlayer == nil) {
-            do {
-                try audioPlayer = AVAudioPlayer(contentsOf: appointment.recordingURL)
-                audioPlayer?.prepareToPlay()
-            } catch {
-                print("audioPlayer was not initialized")
-                return
-            }
-        }
         audioPlayer!.currentTime = timestamp
     }
     
     func mark() -> Void {
-        var index = 0
-        for timestamp in appointment.timestamps {
-            if timestamp > audioPlayer!.currentTime {
-                break
+        if let aptIndex = appointmentIndex {
+            var index = 0
+            for timestamp in appointment.timestamps {
+                if timestamp > audioPlayer!.currentTime {
+                    break
+                }
+                index += 1
             }
-            index += 1
+            userData.appointments[aptIndex].timestamps.insert(audioPlayer!.currentTime, at: index)
         }
-        userData.appointments[aptIndex!].timestamps.insert(audioPlayer!.currentTime, at: index)
     }
     
     func delete(at offsets: IndexSet) {
-        userData.appointments[aptIndex!].timestamps.remove(atOffsets: offsets)
+        if let aptIndex = appointmentIndex {
+            userData.appointments[aptIndex].timestamps.remove(atOffsets: offsets)
+        }
+    }
+    
+    // MARK: - init
+    
+    init(appointment: Appointment) {
+        self.appointment = appointment
+        do {
+            try _audioPlayer = State(initialValue: AVAudioPlayer(contentsOf: appointment.recordingURL))
+        } catch {
+            print("audioPlayer was not initialized")
+        }
     }
     
     // MARK: - body
@@ -81,30 +74,34 @@ struct AppointmentRecordingPlay: View {
     var body: some View {
         let apt = appointment
         return List {
-            HStack {
-                Button(action: {self.play()}) {
-                    Image(systemName: "play.circle.fill")
-                        .foregroundColor(.red)
+            if audioPlayer != nil && appointmentIndex != nil  {
+                HStack {
+                    Button(action: {self.play()}) {
+                        Image(systemName: "play.circle.fill")
+                            .foregroundColor(.red)
+                    }
+                    .scaleEffect(2.0)
+                    Spacer()
+                        // Slider(value: audioPlayer!.currentTime, in: 0.0...audioPlayer!.duration, step: 0.01)
+                    Spacer()
+                    Button(action: {self.mark()}) {
+                        Image(systemName: "flag.circle.fill")
+                            .foregroundColor(.red)
+                    }
+                    .scaleEffect(2.0)
                 }
-                .scaleEffect(2.0)
-                Spacer()
-                if (audioPlayer != nil) {
-                    // Slider(value: audioPlayer!.currentTime, in: 0.0...audioPlayer!.duration, step: 0.01)
+                .buttonStyle(BorderlessButtonStyle())
+                ForEach(apt.timestamps, id: \.self) { timestamp in
+                    Button(action: {self.setTime(timestamp)}) {
+                        Text("\(timestamp)")
+                    }
                 }
-                Spacer()
-                Button(action: {self.mark()}) {
-                    Image(systemName: "flag.circle.fill")
-                        .foregroundColor(.red)
-                }
-                .scaleEffect(2.0)
+                .onDelete(perform: self.delete)
+            } else if audioPlayer == nil {
+                Text("Failed to initialize audio player")
+            } else {
+                Text("Could not find appointment")
             }
-            .buttonStyle(BorderlessButtonStyle())
-            ForEach(apt.timestamps, id: \.self) { timestamp in
-                Button(action: {self.setTime(timestamp)}) {
-                    Text("\(timestamp)")
-                }
-            }
-            .onDelete(perform: self.delete)
         }
     }
 }
@@ -113,7 +110,7 @@ struct AppointmentRecordingPlay: View {
 
 struct AppointmentRecordingPlay_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecordingPlay(appointmentId: 0)
+        AppointmentRecordingPlay(appointment: appointmentData[0])
             .environmentObject(UserData())
     }
 }
