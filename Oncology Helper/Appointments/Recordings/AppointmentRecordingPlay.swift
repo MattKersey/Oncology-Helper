@@ -3,6 +3,9 @@
 //  AppointmentRecordingPlay.swift
 //  Oncology Helper
 //
+//  Audio player adapted from:
+//  https://medium.com/@chris.mash/avplayer-swiftui-b87af6d0553
+//
 //  Created by Matt Kersey on 12/18/19.
 //  Copyright © 2019 Matt Kersey. All rights reserved.
 //
@@ -16,9 +19,11 @@ struct AppointmentRecordingPlay: View {
     
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    let appointment: Appointment
     @State var audioPlayer: AVPlayer
-    @State private(set) var currentTime: TimeInterval = 0.0
+    @State var currentTime: TimeInterval = 0.0
+    @State var isEditing = false
+    @State var isPlaying = false
+    let appointment: Appointment
     let duration: TimeInterval
     
     var appointmentIndex: Int? {
@@ -35,6 +40,12 @@ struct AppointmentRecordingPlay: View {
     
     func play() -> Void {
         audioPlayer.play()
+        isPlaying = true
+    }
+    
+    func pause() -> Void {
+        audioPlayer.pause()
+        isPlaying = false
     }
     
     func setTime(_ timestamp: TimeInterval) {
@@ -58,7 +69,15 @@ struct AppointmentRecordingPlay: View {
     }
     
     func sliderEditingChanged(editingStarted: Bool) {
-        audioPlayer.seek(to: CMTime(seconds: self.currentTime, preferredTimescale: 600))
+        if editingStarted {
+            isEditing = true
+            pause()
+        } else {
+            audioPlayer.seek(to: CMTime(seconds: self.currentTime, preferredTimescale: 600)) { _ in
+                self.isEditing = false
+                self.play()
+            }
+        }
     }
     
     // MARK: - init
@@ -74,13 +93,14 @@ struct AppointmentRecordingPlay: View {
     var body: some View {
         return List {
             if duration > 0.0 && appointmentIndex != nil  {
-                AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime)
+                AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing)
                 HStack {
-                    Button(action: {self.play()}) {
-                        Image(systemName: "play.circle.fill")
+                    Button(action: {self.isPlaying ? self.pause() : self.play()}) {
+                        Image(systemName: self.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                             .foregroundColor(.red)
                     }
                     .scaleEffect(2.0)
+                    .padding()
                     Spacer()
                     Text("0")
                     Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
@@ -91,6 +111,7 @@ struct AppointmentRecordingPlay: View {
                             .foregroundColor(.red)
                     }
                     .scaleEffect(2.0)
+                    .padding()
                 }
                 .buttonStyle(BorderlessButtonStyle())
                 Button(action: {print(self.currentTime)}) {
@@ -108,6 +129,7 @@ struct AppointmentRecordingPlay: View {
                 Text("Failed to initialize audio player")
             }
         }
+        .onDisappear(perform: pause)
     }
 }
 
@@ -116,36 +138,54 @@ struct AppointmentRecordingPlay: View {
 class AudioPlayerUIView: UIView {
     private let audioPlayer: Binding<AVPlayer>
     private let currentTime: Binding<TimeInterval>
-    private var timeObservation: Any?
+    private let isEditing: Binding<Bool>
+    private var timeObserverToken: Any?
     
-    init(audioPlayer: Binding<AVPlayer>, currentTime: Binding<TimeInterval>) {
+    init(audioPlayer: Binding<AVPlayer>, currentTime: Binding<TimeInterval>, isEditing: Binding<Bool>) {
         self.audioPlayer = audioPlayer
         self.currentTime = currentTime
+        self.isEditing = isEditing
         super.init(frame: .null)
         
         let interval = CMTime(seconds: 0.1, preferredTimescale: 600)
-        timeObservation = audioPlayer.wrappedValue.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
+        timeObserverToken = audioPlayer.wrappedValue.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
             guard let self = self else {return}
- 
-            self.currentTime.wrappedValue = time.seconds
+            if !self.isEditing.wrappedValue {
+                self.currentTime.wrappedValue = time.seconds
+            }
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func removePeriodicTimeObserver() {
+        if (timeObserverToken != nil) {
+            audioPlayer.wrappedValue.removeTimeObserver(timeObserverToken!)
+            timeObserverToken = nil
+        }
+    }
 }
 
 struct AudioPlayerView: UIViewRepresentable {
     @Binding var audioPlayer: AVPlayer
-    @Binding private(set) var currentTime: TimeInterval
+    @Binding var currentTime: TimeInterval
+    @Binding var isEditing: Bool
     
     func makeUIView(context: UIViewRepresentableContext<AudioPlayerView>) -> UIView {
-        let uiView = AudioPlayerUIView(audioPlayer: $audioPlayer, currentTime: $currentTime)
+        let uiView = AudioPlayerUIView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing)
         return uiView
     }
     
     func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<AudioPlayerView>) {
+    }
+    
+    static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
+        guard let audioPlayerUIView = uiView as? AudioPlayerUIView else {
+            return
+        }
+        audioPlayerUIView.removePeriodicTimeObserver()
     }
 }
 
