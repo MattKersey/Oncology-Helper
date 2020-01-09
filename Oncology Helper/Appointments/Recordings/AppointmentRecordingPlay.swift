@@ -18,7 +18,7 @@ struct AppointmentRecordingPlay: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let appointment: Appointment
     let audioPlayer: AVPlayer
-    @State var currentTime: TimeInterval
+    @State var currentTime: TimeInterval = 0.0
     let duration: TimeInterval
     
     var appointmentIndex: Int? {
@@ -39,6 +39,7 @@ struct AppointmentRecordingPlay: View {
     
     func setTime(_ timestamp: TimeInterval) {
         audioPlayer.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
+        audioPlayer.play()
     }
     
     func mark(_ timestamp: TimeInterval) -> Void {
@@ -61,11 +62,7 @@ struct AppointmentRecordingPlay: View {
     init(appointment: Appointment) {
         self.appointment = appointment
         audioPlayer = AVPlayer(url: appointment.recordingURL)
-        _currentTime = State(initialValue: 0.0)
-        duration = CMTimeGetSeconds(audioPlayer.currentItem!.duration)
-        audioPlayer.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: nil) { [self] time in
-            self.currentTime = CMTimeGetSeconds(time)
-        }
+        duration = CMTimeGetSeconds(audioPlayer.currentItem!.asset.duration)
     }
     
     // MARK: - body
@@ -73,6 +70,7 @@ struct AppointmentRecordingPlay: View {
     var body: some View {
         return List {
             if duration > 0.0 && appointmentIndex != nil  {
+                AudioPlayerView(audioPlayer: audioPlayer, currentTime: $currentTime)
                 HStack {
                     Button(action: {self.play()}) {
                         Image(systemName: "play.circle.fill")
@@ -107,6 +105,42 @@ struct AppointmentRecordingPlay: View {
 }
 
 // MARK: - UIKit
+
+class AudioPlayerUIView: UIView {
+    private let audioPlayer: AVPlayer
+    private let currentTime: Binding<TimeInterval>
+    
+    init(audioPlayer: AVPlayer, currentTime: Binding<TimeInterval>) {
+        self.audioPlayer = audioPlayer
+        self.currentTime = currentTime
+        super.init(frame: .null)
+        
+        let interval = CMTime(seconds: 0.1, preferredTimescale: 600)
+        
+        audioPlayer.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
+            guard let self = self else {return}
+            
+            self.currentTime.wrappedValue = CMTimeGetSeconds(time)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+struct AudioPlayerView: UIViewRepresentable {
+    let audioPlayer: AVPlayer
+    @Binding var currentTime: TimeInterval
+    
+    func makeUIView(context: UIViewRepresentableContext<AudioPlayerView>) -> UIView {
+        let uiView = AudioPlayerUIView(audioPlayer: audioPlayer, currentTime: $currentTime)
+        return uiView
+    }
+    
+    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<AudioPlayerView>) {
+    }
+}
 
 // MARK: - previews
 
