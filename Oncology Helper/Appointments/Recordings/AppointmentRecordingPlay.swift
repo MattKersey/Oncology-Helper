@@ -72,7 +72,17 @@ struct AppointmentRecordingPlay: View {
     // MARK: - body
     
     var body: some View {
-        let apt = appointment
+        let currentTime = Binding<TimeInterval>(get: {
+            if self.audioPlayer != nil {
+                return self.audioPlayer!.currentTime
+            }
+            return -1.0
+        }, set: { p in
+            if (self.audioPlayer != nil) {
+                self.audioPlayer!.currentTime = p
+            }
+        })
+        
         return List {
             if audioPlayer != nil && appointmentIndex != nil  {
                 HStack {
@@ -82,7 +92,7 @@ struct AppointmentRecordingPlay: View {
                     }
                     .scaleEffect(2.0)
                     Spacer()
-                        // Slider(value: audioPlayer!.currentTime, in: 0.0...audioPlayer!.duration, step: 0.01)
+                    Slider(value: currentTime, in: 0.0...audioPlayer!.duration, step: 0.01)
                     Spacer()
                     Button(action: {self.mark()}) {
                         Image(systemName: "flag.circle.fill")
@@ -91,7 +101,7 @@ struct AppointmentRecordingPlay: View {
                     .scaleEffect(2.0)
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                ForEach(apt.timestamps, id: \.self) { timestamp in
+                ForEach(appointment.timestamps, id: \.self) { timestamp in
                     Button(action: {self.setTime(timestamp)}) {
                         Text("\(timestamp)")
                     }
