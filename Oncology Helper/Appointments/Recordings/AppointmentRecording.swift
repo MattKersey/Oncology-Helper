@@ -56,6 +56,19 @@ struct AppointmentRecording: View {
     }
     
     func reRecord() -> Void {
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 12000,
+            AVNumberOfChannelsKey: 1,
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+        ]
+        do {
+            audioRecorder = try AVAudioRecorder(url: appointment.recordingURL, settings: settings)
+        } catch {
+            print("audioRecorder was not initialized")
+            self.reRecordPressed = false
+            return
+        }
         userData.appointments[appointmentIndex!].hasRecording = false
         userData.appointments[appointmentIndex!].timestamps = []
         self.reRecordPressed = false
@@ -101,7 +114,7 @@ struct AppointmentRecording: View {
     
     var body: some View {
         HStack {
-            if audioRecorder != nil && appointmentIndex != nil {
+            if appointmentIndex != nil && (audioRecorder != nil || userData.appointments[appointmentIndex!].hasRecording) {
                 // Record/Pause button, check first to see if we are in a warning mode
                 if !self.endPressed && !self.reRecordPressed {
                     if !self.isRecording {
@@ -180,10 +193,10 @@ struct AppointmentRecording: View {
                             .foregroundColor(.red)
                     }
                 }
-            } else if audioRecorder == nil {
-                Text("Failed to initialize audio recorder")
-            } else {
+            } else if appointmentIndex == nil {
                 Text("Could not find appointment")
+            } else {
+                Text("Failed to initialize audio recorder")
             }
         }
         .padding()
