@@ -17,8 +17,8 @@ struct AppointmentRecordingPlay: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let appointment: Appointment
-    let audioPlayer: AVPlayer
-    @State var currentTime: TimeInterval = 0.0
+    @State var audioPlayer: AVPlayer
+    @State private(set) var currentTime: TimeInterval = 0.0
     let duration: TimeInterval
     
     var appointmentIndex: Int? {
@@ -57,12 +57,16 @@ struct AppointmentRecordingPlay: View {
         userData.appointments[appointmentIndex!].timestamps.remove(atOffsets: offsets)
     }
     
+    func sliderEditingChanged(editingStarted: Bool) {
+        audioPlayer.seek(to: CMTime(seconds: self.currentTime, preferredTimescale: 600))
+    }
+    
     // MARK: - init
     
     init(appointment: Appointment) {
         self.appointment = appointment
-        audioPlayer = AVPlayer(url: appointment.recordingURL)
-        duration = CMTimeGetSeconds(audioPlayer.currentItem!.asset.duration)
+        _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
+        duration = CMTimeGetSeconds(_audioPlayer.wrappedValue.currentItem!.asset.duration)
     }
     
     // MARK: - body
@@ -70,7 +74,7 @@ struct AppointmentRecordingPlay: View {
     var body: some View {
         return List {
             if duration > 0.0 && appointmentIndex != nil  {
-                AudioPlayerView(audioPlayer: audioPlayer, currentTime: $currentTime)
+                AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime)
                 HStack {
                     Button(action: {self.play()}) {
                         Image(systemName: "play.circle.fill")
@@ -79,7 +83,7 @@ struct AppointmentRecordingPlay: View {
                     .scaleEffect(2.0)
                     Spacer()
                     Text("0")
-                    Slider(value: $currentTime, in: 0.0...duration, step: 0.01)
+                    Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
                     Text(verbatim: String(format: "%.1f", duration))
                     Spacer()
                     Button(action: {self.mark(CMTimeGetSeconds(self.audioPlayer.currentTime()))}) {
@@ -89,6 +93,9 @@ struct AppointmentRecordingPlay: View {
                     .scaleEffect(2.0)
                 }
                 .buttonStyle(BorderlessButtonStyle())
+                Button(action: {print(self.currentTime)}) {
+                    Text("print cur time")
+                }
                 ForEach(appointment.timestamps, id: \.self) { timestamp in
                     Button(action: {self.setTime(timestamp)}) {
                         Text(verbatim: String(format: "%.1f", timestamp))
@@ -107,20 +114,20 @@ struct AppointmentRecordingPlay: View {
 // MARK: - UIKit
 
 class AudioPlayerUIView: UIView {
-    private let audioPlayer: AVPlayer
+    private let audioPlayer: Binding<AVPlayer>
     private let currentTime: Binding<TimeInterval>
+    private var timeObservation: Any?
     
-    init(audioPlayer: AVPlayer, currentTime: Binding<TimeInterval>) {
+    init(audioPlayer: Binding<AVPlayer>, currentTime: Binding<TimeInterval>) {
         self.audioPlayer = audioPlayer
         self.currentTime = currentTime
         super.init(frame: .null)
         
         let interval = CMTime(seconds: 0.1, preferredTimescale: 600)
-        
-        audioPlayer.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
+        timeObservation = audioPlayer.wrappedValue.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
             guard let self = self else {return}
-            
-            self.currentTime.wrappedValue = CMTimeGetSeconds(time)
+ 
+            self.currentTime.wrappedValue = time.seconds
         }
     }
     
@@ -130,11 +137,11 @@ class AudioPlayerUIView: UIView {
 }
 
 struct AudioPlayerView: UIViewRepresentable {
-    let audioPlayer: AVPlayer
-    @Binding var currentTime: TimeInterval
+    @Binding var audioPlayer: AVPlayer
+    @Binding private(set) var currentTime: TimeInterval
     
     func makeUIView(context: UIViewRepresentableContext<AudioPlayerView>) -> UIView {
-        let uiView = AudioPlayerUIView(audioPlayer: audioPlayer, currentTime: $currentTime)
+        let uiView = AudioPlayerUIView(audioPlayer: $audioPlayer, currentTime: $currentTime)
         return uiView
     }
     
