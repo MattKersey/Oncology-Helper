@@ -24,17 +24,13 @@ struct HomePage: View {
     // MARK: - body
     
     var body: some View {
-        // Binding for when a date is selected
-        let hasSelectedDate = Binding<Bool>(get: {
-                self.selectedDate != nil
-            }, set: { p in
-                self.selectedDate = p ? Date() : nil
-            })
-        let hasSelectedQuestion = Binding<Bool>(get: {
-                self.selectedQuestion != nil
-            }, set: { _ in
-                self.selectedQuestion = nil
-            })
+        let showModal = Binding<Bool>(get: {
+            return self.selectedDate != nil || self.selectedQuestion != nil || self.seeAllQuestions
+        }, set: { p in
+            self.selectedQuestion = nil
+            self.selectedDate = nil
+            self.seeAllQuestions = p
+        })
         
         return VStack {
             // Calendar of appointments
@@ -55,16 +51,16 @@ struct HomePage: View {
                 .environmentObject(userData)
             Spacer()
         }
-        .sheet(isPresented: hasSelectedDate) {
+        .sheet(isPresented: showModal) {
             // Modal for when a date is selected
-            AppointmentList(selectedDate: self.selectedDate!)
-                .environmentObject(self.userData)
-        }
-        .sheet(isPresented: hasSelectedQuestion) {
-            Text("Hello World")
-        }
-        .sheet(isPresented: $seeAllQuestions) {
-            Text("Hello World")
+            if self.selectedDate != nil {
+                AppointmentList(selectedDate: self.selectedDate!)
+                    .environmentObject(self.userData)
+            } else if self.selectedQuestion != nil {
+                Text("Hello World")
+            } else {
+                Text("Hello World")
+            }
         }
     }
 }
