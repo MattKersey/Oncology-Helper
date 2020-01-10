@@ -11,4 +11,5 @@ import Combine
 
 final class UserData: ObservableObject {
     @Published var appointments = appointmentData
+    @Published var questions = questionData
 }

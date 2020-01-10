@@ -65,6 +65,15 @@
 		B2EB449B23A99DCE0096DA95 /* RecordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = B2EB449A23A99DCE0096DA95 /* RecordButton.png */; };
 		B2EB449C23A99DCE0096DA95 /* RecordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = B2EB449A23A99DCE0096DA95 /* RecordButton.png */; };
 		B2EB449D23A99DCE0096DA95 /* RecordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = B2EB449A23A99DCE0096DA95 /* RecordButton.png */; };
+		B2FD547523C80DA0004B2DB1 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD547423C80DA0004B2DB1 /* Question.swift */; };
+		B2FD547D23C81563004B2DB1 /* questionData.json in Resources */ = {isa = PBXBuildFile; fileRef = B2FD547C23C81563004B2DB1 /* questionData.json */; };
+		B2FD547E23C81A79004B2DB1 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD547423C80DA0004B2DB1 /* Question.swift */; };
+		B2FD547F23C81A7A004B2DB1 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD547423C80DA0004B2DB1 /* Question.swift */; };
+		B2FD548223C81A80004B2DB1 /* questionData.json in Resources */ = {isa = PBXBuildFile; fileRef = B2FD547C23C81563004B2DB1 /* questionData.json */; };
+		B2FD548323C81A81004B2DB1 /* questionData.json in Resources */ = {isa = PBXBuildFile; fileRef = B2FD547C23C81563004B2DB1 /* questionData.json */; };
+		B2FD548423C8B1BF004B2DB1 /* QuestionPreviewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD547823C814D9004B2DB1 /* QuestionPreviewList.swift */; };
+		B2FD548523C8B1C0004B2DB1 /* QuestionPreviewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD547823C814D9004B2DB1 /* QuestionPreviewList.swift */; };
+		B2FD548623C8B1C1004B2DB1 /* QuestionPreviewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD547823C814D9004B2DB1 /* QuestionPreviewList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +124,9 @@
 		B26AB12023A8799C00359769 /* AppointmentEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentEditor.swift; sourceTree = "<group>"; };
 		B2D4055223AC5A1200605D6D /* AppointmentAdder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentAdder.swift; sourceTree = "<group>"; };
 		B2EB449A23A99DCE0096DA95 /* RecordButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordButton.png; sourceTree = "<group>"; };
+		B2FD547423C80DA0004B2DB1 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		B2FD547823C814D9004B2DB1 /* QuestionPreviewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionPreviewList.swift; sourceTree = "<group>"; };
+		B2FD547C23C81563004B2DB1 /* questionData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questionData.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,8 +190,9 @@
 				B2447A9923A7F35D004AAD1F /* HomePage.swift */,
 				B2B132D123C2C93100F4AD9D /* Calendar */,
 				B2447AB923A93D9F004AAD1F /* Appointments */,
-				B2447AA723A80534004AAD1F /* Data.swift */,
+				B2FD547323C80D7A004B2DB1 /* Questions */,
 				B2447A6923A7F2AB004AAD1F /* AppDelegate.swift */,
+				B2447AA723A80534004AAD1F /* Data.swift */,
 				B2447A6B23A7F2AB004AAD1F /* SceneDelegate.swift */,
 				B2447A6F23A7F2AE004AAD1F /* Assets.xcassets */,
 				B2447A7423A7F2AE004AAD1F /* LaunchScreen.storyboard */,
@@ -236,6 +249,7 @@
 			children = (
 				B2EB449A23A99DCE0096DA95 /* RecordButton.png */,
 				B2447AA323A7F9D6004AAD1F /* appointmentData.json */,
+				B2FD547C23C81563004B2DB1 /* questionData.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -248,6 +262,15 @@
 				B23FE11523C26E200026BE03 /* CalendarDay.swift */,
 			);
 			path = Calendar;
+			sourceTree = "<group>";
+		};
+		B2FD547323C80D7A004B2DB1 /* Questions */ = {
+			isa = PBXGroup;
+			children = (
+				B2FD547423C80DA0004B2DB1 /* Question.swift */,
+				B2FD547823C814D9004B2DB1 /* QuestionPreviewList.swift */,
+			);
+			path = Questions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -357,6 +380,7 @@
 				B2447A7623A7F2AE004AAD1F /* LaunchScreen.storyboard in Resources */,
 				B2447AA423A7F9D6004AAD1F /* appointmentData.json in Resources */,
 				B2EB449B23A99DCE0096DA95 /* RecordButton.png in Resources */,
+				B2FD547D23C81563004B2DB1 /* questionData.json in Resources */,
 				B2447A7323A7F2AE004AAD1F /* Preview Assets.xcassets in Resources */,
 				B2447A7023A7F2AE004AAD1F /* Assets.xcassets in Resources */,
 			);
@@ -366,6 +390,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2FD548223C81A80004B2DB1 /* questionData.json in Resources */,
 				B2EB449C23A99DCE0096DA95 /* RecordButton.png in Resources */,
 				B2447AA523A7FA4E004AAD1F /* appointmentData.json in Resources */,
 			);
@@ -375,6 +400,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2FD548323C81A81004B2DB1 /* questionData.json in Resources */,
 				B2EB449D23A99DCE0096DA95 /* RecordButton.png in Resources */,
 				B2447AA623A7FA50004AAD1F /* appointmentData.json in Resources */,
 			);
@@ -390,6 +416,7 @@
 				B22F973923AAA7C60023BBC6 /* AppointmentPage.swift in Sources */,
 				B2447AB823A93D92004AAD1F /* CalendarView.swift in Sources */,
 				B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */,
+				B2FD547523C80DA0004B2DB1 /* Question.swift in Sources */,
 				B2447AA823A80534004AAD1F /* Data.swift in Sources */,
 				B23FE11623C26E200026BE03 /* CalendarDay.swift in Sources */,
 				B2D4055323AC5A1200605D6D /* AppointmentAdder.swift in Sources */,
@@ -403,6 +430,7 @@
 				B2447AB023A81654004AAD1F /* AppointmentRow.swift in Sources */,
 				B2447ABF23A96602004AAD1F /* AppointmentRecording.swift in Sources */,
 				B2447A9E23A7F7B6004AAD1F /* UserData.swift in Sources */,
+				B2FD548423C8B1BF004B2DB1 /* QuestionPreviewList.swift in Sources */,
 				B22F973D23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -414,6 +442,8 @@
 				B22F973A23AAA7C90023BBC6 /* AppointmentPage.swift in Sources */,
 				B26AB12223A8799C00359769 /* AppointmentEditor.swift in Sources */,
 				B2D4055023AC3D9300605D6D /* CalendarView.swift in Sources */,
+				B2FD547E23C81A79004B2DB1 /* Question.swift in Sources */,
+				B2FD548523C8B1C0004B2DB1 /* QuestionPreviewList.swift in Sources */,
 				B2447A8123A7F2AE004AAD1F /* Oncology_HelperTests.swift in Sources */,
 				B23FE11323C226360026BE03 /* CalendarMonth.swift in Sources */,
 				B2447AC023A96602004AAD1F /* AppointmentRecording.swift in Sources */,
@@ -437,6 +467,8 @@
 				B22F973B23AAA7C90023BBC6 /* AppointmentPage.swift in Sources */,
 				B26AB12323A8799C00359769 /* AppointmentEditor.swift in Sources */,
 				B2D4055123AC3D9400605D6D /* CalendarView.swift in Sources */,
+				B2FD547F23C81A7A004B2DB1 /* Question.swift in Sources */,
+				B2FD548623C8B1C1004B2DB1 /* QuestionPreviewList.swift in Sources */,
 				B2447A8C23A7F2AE004AAD1F /* Oncology_HelperUITests.swift in Sources */,
 				B23FE11423C226360026BE03 /* CalendarMonth.swift in Sources */,
 				B2447AC123A96602004AAD1F /* AppointmentRecording.swift in Sources */,

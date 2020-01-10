@@ -1,0 +1,15 @@
+[
+    {
+        "id": 1,
+        "question": "What is the best treatment for this?",
+        "doctor": null,
+        "pin": true,
+        "appointmentTimestamps":[
+            {
+                "id": 1,
+                "timestamps":[
+                ]
+            }
+        ]
+    }
+]

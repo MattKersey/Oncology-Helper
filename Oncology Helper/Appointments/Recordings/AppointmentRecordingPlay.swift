@@ -30,7 +30,6 @@ struct AppointmentRecordingPlay: View {
         if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
             return index
         } else {
-            print("index of appointment is nil")
             self.presentationMode.wrappedValue.dismiss()
             return nil
         }
@@ -91,7 +90,7 @@ struct AppointmentRecordingPlay: View {
     // MARK: - body
     
     var body: some View {
-        return List {
+        List {
             if duration > 0.0 && appointmentIndex != nil  {
                 AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing)
                 HStack {

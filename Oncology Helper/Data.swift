@@ -10,6 +10,7 @@ import SwiftUI
 import CoreLocation
 
 let appointmentData: [Appointment] = load("appointmentData.json")
+let questionData: [Question] = load("questionData.json")
 
 func load<T: Decodable>(_ filename: String) -> T {
     let data: Data
