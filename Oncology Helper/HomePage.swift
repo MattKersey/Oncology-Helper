@@ -21,6 +21,8 @@ struct HomePage: View {
     @State var seeAllQuestions: Bool = false
     var todayDate = Date()
     
+    let backgroundColor = Color(red: 63.0 / 255, green: 87.0 / 255, blue: 97.0 / 255)
+    
     // MARK: - body
     
     var body: some View {
@@ -32,34 +34,49 @@ struct HomePage: View {
             self.seeAllQuestions = p
         })
         
-        return VStack {
-            // Calendar of appointments
-            Text("Appointments")
-                .font(.largeTitle)
-                .padding(.bottom, -10)
-            CalendarView(selectedDate: $selectedDate,
-                         dayInMonthDate: todayDate,
-                         shouldHighlightSelection: false)
-                .environmentObject(userData)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 400, height: 250)
-                .padding(.bottom, -10)
-            Text("Questions")
-                .font(.largeTitle)
-                .padding(.bottom, -10)
-            QuestionPreviewList(selectedQuestion: $selectedQuestion, seeAllQuestions: $seeAllQuestions)
-                .environmentObject(userData)
-            Spacer()
-        }
-        .sheet(isPresented: showModal) {
-            // Modal for when a date is selected
-            if self.selectedDate != nil {
-                AppointmentList(selectedDate: self.selectedDate!)
+        return GeometryReader { geo in
+            VStack {
+                // Calendar of appointments
+                Text("Appointments")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+                    .offset(y: 30.0)
+                    .frame(width: geo.size.width, height: 120)
+                    .background(self.backgroundColor)
+                    .offset(y: -80.0)
+                    .padding(.bottom, -80.0)
+                CalendarView(selectedDate: self.$selectedDate,
+                             dayInMonthDate: self.todayDate,
+                             shouldHighlightSelection: false)
                     .environmentObject(self.userData)
-            } else if self.selectedQuestion != nil {
-                Text("Hello World")
-            } else {
-                Text("Hello World")
+                    .offset(y: -25)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: geo.size.width, height: 250)
+                    .padding(.bottom, -45)
+                HStack {
+                    Spacer()
+                    Text("Questions")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .frame(width: geo.size.width, height: 60)
+                .background(self.backgroundColor)
+                .padding(.bottom, -25)
+                QuestionPreviewList(selectedQuestion: self.$selectedQuestion, seeAllQuestions: self.$seeAllQuestions)
+                    .environmentObject(self.userData)
+                Spacer()
+            }
+            .sheet(isPresented: showModal) {
+                // Modal for when a date is selected
+                if self.selectedDate != nil {
+                    AppointmentList(selectedDate: self.selectedDate!)
+                        .environmentObject(self.userData)
+                } else if self.selectedQuestion != nil {
+                    Text("Hello World")
+                } else {
+                    Text("Hello World")
+                }
             }
         }
     }
