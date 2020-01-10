@@ -19,6 +19,7 @@ struct AppointmentList: View {
     let selectedDate: Date
     let userCalendar = Calendar.current
     let fileManager = FileManager()
+    let backgroundColor = UIColor(red: 63.0 / 255, green: 87.0 / 255, blue: 97.0 / 255, alpha: 1.0)
     
     var selectedDateAppointments: [Appointment] {
         var appointments: [Appointment] = []
@@ -50,6 +51,11 @@ struct AppointmentList: View {
         userData.appointments.remove(atOffsets: offsets)
     }
     
+    init(selectedDate: Date) {
+        self.selectedDate = selectedDate
+        UINavigationBar.appearance().backgroundColor = backgroundColor
+    }
+    
     // MARK: - body
     
     var body: some View {
@@ -71,7 +77,7 @@ struct AppointmentList: View {
                     .onDelete(perform: self.delete)
                 }
             }
-            .navigationBarTitle(Text("\(AppointmentList.readableDateFormatter.string(from: selectedDate))"))
+            .navigationBarTitle(Text("\(AppointmentList.readableDateFormatter.string(from: selectedDate))"), displayMode: .inline)
             .navigationBarItems(trailing: Button(action: {self.isAddingAppointment = true}) {
                 Image(systemName: "plus")
             })

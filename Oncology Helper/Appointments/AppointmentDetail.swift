@@ -27,13 +27,21 @@ struct AppointmentDetail: View {
         }
     }
     
+    var dateString: String? {
+        guard appointment != nil else {return nil}
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "MM/dd/yy"
+        return formatter.string(from: appointment!.date)
+    }
+    
     // MARK: - body
     
     var body: some View {
         VStack {
             if (appointment != nil) {
                 AppointmentPage(id: id).environmentObject(self.userData)
-                .navigationBarTitle(Text(appointment!.doctor))
+                .navigationBarTitle(Text("\(appointment!.doctor) | \(dateString!)"))
                 .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
                 .sheet(isPresented: self.$editMode){
                     AppointmentEditor(appointment: self.appointment!, selectedTime:  self.appointment!.date).environmentObject(self.userData)
