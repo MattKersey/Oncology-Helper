@@ -18,6 +18,7 @@ struct AppointmentList: View {
     @State private var isAddingAppointment = false
     let selectedDate: Date
     let userCalendar = Calendar.current
+    let fileManager = FileManager()
     
     var selectedDateAppointments: [Appointment] {
         var appointments: [Appointment] = []
@@ -39,6 +40,13 @@ struct AppointmentList: View {
     // MARK: - functions
     
     func delete(at offsets: IndexSet) {
+        for index in offsets {
+            do {
+                try fileManager.removeItem(at: userData.appointments[index].recordingURL)
+            } catch {
+                print("Issue deleting recording file")
+            }
+        }
         userData.appointments.remove(atOffsets: offsets)
     }
     

@@ -20,11 +20,10 @@ struct AppointmentEditor: View {
     @State var selectedDate: Date? = nil
     @State var selectedTime: Date
     
-    var aptIndex: Int? {
+    var appointmentIndex: Int? {
         if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
             return index
         } else {
-            print("index of appointment is nil")
             self.presentationMode.wrappedValue.dismiss()
             return nil
         }
@@ -33,24 +32,30 @@ struct AppointmentEditor: View {
     // MARK: - functions
     
     func cancel() -> Void {
-        appointment.doctor = userData.appointments[aptIndex!].doctor
-        appointment.location = userData.appointments[aptIndex!].location
+        guard let aptIndex = appointmentIndex else {
+            return
+        }
+        appointment.doctor = userData.appointments[aptIndex].doctor
+        appointment.location = userData.appointments[aptIndex].location
         selectedDate = nil
-        selectedTime = userData.appointments[aptIndex!].date
+        selectedTime = userData.appointments[aptIndex].date
         self.presentationMode.wrappedValue.dismiss()
     }
     
     func save() -> Void {
-        userData.appointments[aptIndex!].doctor = appointment.doctor
-        userData.appointments[aptIndex!].location = appointment.location
+        guard let aptIndex = appointmentIndex else {
+            return
+        }
+        userData.appointments[aptIndex].doctor = appointment.doctor
+        userData.appointments[aptIndex].location = appointment.location
         if (selectedDate != nil) {
             let calendar = Calendar.current
             var components = calendar.dateComponents([.year, .month, .day], from: selectedDate!)
             components.hour = calendar.component(.hour, from: selectedTime)
             components.minute = calendar.component(.minute, from: selectedTime)
-            userData.appointments[aptIndex!].date = calendar.date(from: components)!
+            userData.appointments[aptIndex].date = calendar.date(from: components)!
         } else {
-            userData.appointments[aptIndex!].date = appointment.date
+            userData.appointments[aptIndex].date = appointment.date
         }
     }
     

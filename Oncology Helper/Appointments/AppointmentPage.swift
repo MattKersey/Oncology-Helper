@@ -45,7 +45,7 @@ struct AppointmentPage: View {
     var body: some View {
         VStack {
             List {
-                if (audioSession != nil) {
+                if audioSession != nil && appointment != nil {
                     AppointmentRecording(appointment: appointment!).environmentObject(self.userData)
                 }
             }

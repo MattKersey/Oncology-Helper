@@ -112,6 +112,10 @@ struct CalendarDay: View {
                         .imageScale(.medium)
                         .foregroundColor(.yellow)
                         .opacity(0.5)
+                } else {
+                    Image(systemName: "circle.fill")
+                    .imageScale(.medium)
+                    .opacity(0.0)
                 }
                 // The date number
                 Text("\(actualDateInt)")

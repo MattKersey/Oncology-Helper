@@ -33,15 +33,15 @@ struct AppointmentDetail: View {
         VStack {
             if (appointment != nil) {
                 AppointmentPage(id: id).environmentObject(self.userData)
+                .navigationBarTitle(Text(appointment!.doctor))
+                .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
+                .sheet(isPresented: self.$editMode){
+                    AppointmentEditor(appointment: self.appointment!, selectedTime:  self.appointment!.date).environmentObject(self.userData)
+                }
             } else {
                 Text("Appointment unavailable")
             }
             Spacer()
-        }
-        .navigationBarTitle(Text(appointment!.doctor))
-        .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
-        .sheet(isPresented: self.$editMode){
-            AppointmentEditor(appointment: self.appointment!, selectedTime:  self.appointment!.date).environmentObject(self.userData)
         }
     }
 }

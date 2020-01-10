@@ -19,14 +19,6 @@ struct HomePage: View {
     @State var selectedDate: Date? = nil
     var todayDate = Date()
     
-    // MARK: - functions
-    
-
-    // TODO: - Add functionality for deleting associated audio files, memos
-    func delete(at offsets: IndexSet) {
-        userData.appointments.remove(atOffsets: offsets)
-    }
-    
     // MARK: - body
     
     var body: some View {
@@ -44,6 +36,12 @@ struct HomePage: View {
             CalendarView(selectedDate: $selectedDate,
                          dayInMonthDate: todayDate,
                          shouldHighlightSelection: false)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 400, height: 250)
+            Divider()
+            Text("Questions")
+                .font(.largeTitle)
+            Spacer()
         }
         .sheet(isPresented: hasSelectedDate) {
             // Modal for when a date is selected

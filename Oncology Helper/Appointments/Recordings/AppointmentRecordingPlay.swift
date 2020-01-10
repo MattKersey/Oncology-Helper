@@ -147,7 +147,7 @@ class AudioPlayerUIView: UIView {
         self.isEditing = isEditing
         super.init(frame: .null)
         
-        let interval = CMTime(seconds: 0.1, preferredTimescale: 600)
+        let interval = CMTime(seconds: 0.02, preferredTimescale: 600)
         timeObserverToken = audioPlayer.wrappedValue.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
             guard let self = self else {return}
             if !self.isEditing.wrappedValue {

@@ -69,7 +69,7 @@ struct CalendarMonth: View {
         let firstDayIndex = firstDayOfMonthIndex
         let firstDay = firstDayOfMonthDate
         
-        return HStack(alignment: .top, spacing: 20) {
+        return HStack(alignment: .top, spacing: 18) {
             // Loop through every weekday first
             ForEach(self.weekDaysStrings.indices) { index in
                 VStack {
