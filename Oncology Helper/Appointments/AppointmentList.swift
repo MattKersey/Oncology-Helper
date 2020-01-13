@@ -66,14 +66,14 @@ struct AppointmentList: View {
     var body: some View {
         NavigationView {
             List {
-                if (selectedDateAppointments.isEmpty) {
+                if selectedDateAppointments.isEmpty {
                     // If there are no appointments on the selected date, display appropriate message
                     Text("No appointments")
                         .foregroundColor(.gray)
                 } else {
                     // Otherwise, show appointments
                     ForEach(self.userData.appointments) { appointment in
-                        if (self.userCalendar.isDate(appointment.date, inSameDayAs: self.selectedDate)) {
+                        if self.userCalendar.isDate(appointment.date, inSameDayAs: self.selectedDate) {
                             NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)) {
                                 AppointmentRow(appointment: appointment)
                             }

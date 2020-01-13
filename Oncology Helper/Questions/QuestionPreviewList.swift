@@ -15,6 +15,7 @@ struct QuestionPreviewList: View {
     @EnvironmentObject var userData: UserData
     @Binding var selectedQuestion: Question?
     @Binding var seeAllQuestions: Bool
+    @State var newQuestion = ""
     
     var pinned: [Question] {
         var pinnedList: [Question] = []
@@ -26,15 +27,43 @@ struct QuestionPreviewList: View {
         return pinnedList
     }
     
+    // MARK: - functions
+    
+    func submitNewQuestion() -> Void {
+        guard newQuestion != "" else {
+            return
+        }
+        var id: Int = 1
+        for question in userData.questions {
+            id = question.id > id ? question.id : id
+        }
+        userData.questions.append(Question(id: id + 1,
+                                           questionString: newQuestion,
+                                           description: nil,
+                                           pin: true,
+                                           appointmentTimestamps: []))
+        newQuestion = ""
+    }
+    
     // MARK: - body
     
     var body: some View {
         let pinnedList = pinned
         
         return List {
-            if userData.questions.isEmpty {
-                Text("No Questions")
+            HStack {
+                TextField("Add a question", text: $newQuestion)
+                    .foregroundColor(Constants.titleColor)
+                Spacer()
+                Divider()
+                
+                Button(action: self.submitNewQuestion) {
+                    Text("Submit")
+                        .foregroundColor(Constants.subtitleColor)
+                        .font(.body)
+                }
             }
+            .buttonStyle(BorderlessButtonStyle())
             if !pinnedList.isEmpty {
                 ForEach(pinnedList) { question in
                     Button(action: {self.selectedQuestion = question}) {

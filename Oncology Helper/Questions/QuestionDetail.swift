@@ -16,6 +16,7 @@ struct QuestionDetail: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.editMode) var mode
     @State private var editMode = false
+    @State var addAppointments = false
     let id: Int
     
     var question: Question? {
@@ -40,25 +41,63 @@ struct QuestionDetail: View {
         guard let question = self.question else {
             return AnyView(Text("Question unavailable").foregroundColor(Constants.subtitleColor))
         }
+        let showModal = Binding<Bool>(get: {
+            return self.editMode || self.addAppointments
+        }, set: { p in
+            self.editMode = p
+            self.addAppointments = p
+        })
 
-        return AnyView(NavigationView {
-            List {
-                if (question.description != nil) {
-                    HStack {
-                        Text(question.description!)
-                            .font(.subheadline)
-                            .foregroundColor(Constants.subtitleColor)
-                            .multilineTextAlignment(.leading)
-                        Spacer()
+        return AnyView(GeometryReader { geo in
+            NavigationView {
+                VStack(alignment: .leading, spacing: 0) {
+                    Group {
+                        HStack {
+                            Text(question.questionString)
+                                .font(.headline)
+                                .foregroundColor(Constants.titleColor)
+                                .multilineTextAlignment(.leading)
+                                .padding([.top, .leading, .trailing])
+                            Spacer()
+                        }
+                        if (question.description != nil) {
+                            HStack {
+                                Text(question.description!)
+                                    .font(.subheadline)
+                                    .foregroundColor(Constants.bodyColor)
+                                    .multilineTextAlignment(.leading)
+                                    .padding([.leading, .trailing])
+                                    .padding(.top, 5.0)
+                                    .padding(.bottom, 10.0)
+                                Spacer()
+                            }
+                        }
+                    }
+                    .frame(width: geo.size.width)
+                    .background(Constants.backgroundColor)
+                    List {
+                        ForEach(question.appointmentTimestamps, id: \.self) { appointmentTimestamps in
+                            QuestionAppointmentView(appointmentTimestamps: appointmentTimestamps)
+                                .environmentObject(self.userData)
+                        }
+                        Button(action: {self.addAppointments = true}) {
+                            Text("Add more appointments")
+                                .foregroundColor(.blue)
+                                .font(.callout)
+                        }
+                    }
+                    .navigationBarTitle(Text(""), displayMode: .inline)
+                    .navigationBarItems(trailing: Button(action: {self.editMode = true}) {Image(systemName: "square.and.pencil")})
+                    .sheet(isPresented: showModal) {
+                        if self.editMode {
+                            Text("Hello World")
+                        } else {
+                            QuestionAppointmentAdder(question: question)
+                                .environmentObject(self.userData)
+                        }
                     }
                 }
-                ForEach(question.appointmentTimestamps, id: \.self) { appointmentTimestamps in
-                    QuestionAppointmentView(appointmentTimestamps: appointmentTimestamps)
-                        .environmentObject(self.userData)
-                }
             }
-            .navigationBarTitle(Text(question.questionString), displayMode: .inline)
-            .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
         })
     }
 }

@@ -2,7 +2,7 @@
     {
         "id": 1,
         "questionString": "What is the best treatment for this?",
-        "description": null,
+        "description": "Where can I find more information?",
         "pin": true,
         "appointmentTimestamps":[
             {

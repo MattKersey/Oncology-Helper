@@ -47,10 +47,12 @@ struct QuestionAppointmentView: View {
                     .rotationEffect(Angle(degrees: showTimes ? 90.0 : 0.0))
                     .padding(.trailing)
                 } else {
-                    Image(systemName: "chevron.right.circle")
-                        .scaleEffect(1.5)
-                        .foregroundColor(Constants.subtitleColor)
-                        .padding(.trailing)
+                    Button(action: {}) {
+                        Image(systemName: "chevron.right.circle")
+                            .scaleEffect(1.5)
+                            .foregroundColor(Constants.subtitleColor)
+                            .padding(.trailing)
+                    }
                 }
                 NavigationLink(destination: AppointmentDetail(id: appointment.id)
                     .environmentObject(self.userData)) {
@@ -60,6 +62,7 @@ struct QuestionAppointmentView: View {
                             Text(dateString)
                                 .font(.caption)
                         }
+                        .foregroundColor(Constants.titleColor)
                         Spacer()
                 }
             }
@@ -74,7 +77,7 @@ struct QuestionAppointmentView: View {
                         Divider()
                         Image(systemName: "play.fill")
                     }
-                    .opacity(0.65)
+                    .foregroundColor(Constants.bodyColor)
                 }
             }
         })
