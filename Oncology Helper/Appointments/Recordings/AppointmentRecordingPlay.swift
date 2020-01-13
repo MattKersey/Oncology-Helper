@@ -123,9 +123,6 @@ struct AppointmentRecordingPlay: View {
                 }
                 .buttonStyle(BorderlessButtonStyle())
             }
-            Button(action: {print(self.currentTime)}) {
-                Text("print cur time")
-            }
             ForEach(appointment.timestamps, id: \.self) { timestamp in
                 Button(action: {self.setTime(timestamp)}) {
                     Text(verbatim: String(format: "%.1f", timestamp))
@@ -145,6 +142,7 @@ class AudioPlayerUIView: UIView {
     private let isEditing: Binding<Bool>
     private let isPlaying: Binding<Bool>
     private var timeObserverToken: Any?
+    private var endObserverToken: Any?
     
     init(audioPlayer: Binding<AVPlayer>, currentTime: Binding<TimeInterval>, isEditing: Binding<Bool>, isPlaying: Binding<Bool>) {
         self.audioPlayer = audioPlayer
@@ -160,8 +158,8 @@ class AudioPlayerUIView: UIView {
                 self.currentTime.wrappedValue = time.seconds
             }
             
-            NotificationCenter.default.addObserver(self, selector: #selector(self.didFinishPlaying(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         }
+        endObserverToken = NotificationCenter.default.addObserver(self, selector: #selector(self.didFinishPlaying(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -174,10 +172,14 @@ class AudioPlayerUIView: UIView {
         self.isPlaying.wrappedValue = false
     }
     
-    func removePeriodicTimeObserver() {
+    func removeObservers() {
         if (timeObserverToken != nil) {
             audioPlayer.wrappedValue.removeTimeObserver(timeObserverToken!)
             timeObserverToken = nil
+        }
+        if (endObserverToken != nil) {
+            NotificationCenter.default.removeObserver(endObserverToken!)
+            endObserverToken = nil
         }
     }
 }
@@ -200,7 +202,7 @@ struct AudioPlayerView: UIViewRepresentable {
         guard let audioPlayerUIView = uiView as? AudioPlayerUIView else {
             return
         }
-        audioPlayerUIView.removePeriodicTimeObserver()
+        audioPlayerUIView.removeObservers()
     }
 }
 

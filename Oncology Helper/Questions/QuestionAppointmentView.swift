@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct QuestionAppointmentView: View {
     
@@ -15,6 +16,8 @@ struct QuestionAppointmentView: View {
     @EnvironmentObject var userData: UserData
     @State var showTimes = false
     let appointmentTimestamps: AppointmentTimestamps
+    @Binding var audioPlayer: AVPlayer?
+    @Binding var playing: appointmentTimestampSingle?
     
     var appointment: Appointment? {
         if let apt = userData.appointments.first(where: {$0.id == appointmentTimestamps.id}) {
@@ -29,6 +32,27 @@ struct QuestionAppointmentView: View {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "MMMM dd, yyyy"
         return formatter.string(from: appointment!.date)
+    }
+    
+    // MARK: - functions
+    
+    func play(appointment: Appointment, timestamp: TimeInterval) -> Void {
+        if audioPlayer != nil {
+            audioPlayer!.pause()
+        }
+        audioPlayer = AVPlayer(url: appointment.recordingURL)
+        audioPlayer!.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
+        audioPlayer!.play()
+        playing = appointmentTimestampSingle(appointmentId: appointment.id, timestamp: timestamp)
+    }
+    
+    func stop(appointment: Appointment, timestamp: TimeInterval) -> Void {
+        guard audioPlayer != nil else {
+            return
+        }
+        audioPlayer!.pause()
+        audioPlayer = nil
+        playing = nil
     }
     
     // MARK: - body
@@ -75,7 +99,17 @@ struct QuestionAppointmentView: View {
                         Spacer()
                         Image(systemName: "doc.text")
                         Divider()
-                        Image(systemName: "play.fill")
+                        if self.playing != nil &&
+                            self.playing!.appointmentId == appointment.id &&
+                            self.playing!.timestamp == timestamp {
+                            Button(action: {self.stop(appointment: appointment, timestamp: timestamp)}) {
+                                Image(systemName: "stop.fill")
+                            }
+                        } else {
+                            Button(action: {self.play(appointment: appointment, timestamp: timestamp)}) {
+                                Image(systemName: "play.fill")
+                            }
+                        }
                     }
                     .foregroundColor(Constants.bodyColor)
                 }
@@ -88,7 +122,9 @@ struct QuestionAppointmentView: View {
 
 struct QuestionAppointmentView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionAppointmentView(appointmentTimestamps: AppointmentTimestamps(id: 1, timestamps: []))
+        QuestionAppointmentView(appointmentTimestamps: AppointmentTimestamps(id: 1, timestamps: []),
+                                audioPlayer: .constant(nil),
+                                playing: .constant(nil))
             .environmentObject(UserData())
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct QuestionDetail: View {
     
@@ -15,6 +16,8 @@ struct QuestionDetail: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.editMode) var mode
+    @State var audioPlayer: AVPlayer?
+    @State var playing: appointmentTimestampSingle?
     @State private var editMode = false
     @State var addAppointments = false
     let id: Int
@@ -77,7 +80,9 @@ struct QuestionDetail: View {
                     .background(Constants.backgroundColor)
                     List {
                         ForEach(question.appointmentTimestamps, id: \.self) { appointmentTimestamps in
-                            QuestionAppointmentView(appointmentTimestamps: appointmentTimestamps)
+                            QuestionAppointmentView(appointmentTimestamps: appointmentTimestamps,
+                                                    audioPlayer: self.$audioPlayer,
+                                                    playing: self.$playing)
                                 .environmentObject(self.userData)
                         }
                         Button(action: {self.addAppointments = true}) {
@@ -100,6 +105,11 @@ struct QuestionDetail: View {
             }
         })
     }
+}
+
+struct appointmentTimestampSingle: Hashable, Codable {
+    var appointmentId: Int
+    var timestamp: TimeInterval
 }
 
 // MARK: - previews
