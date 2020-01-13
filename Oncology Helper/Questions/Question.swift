@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct Question: Hashable, Codable, Identifiable {
+    
+    // MARK: - properties from JSON file
+    
     var id: Int
     var questionString: String
     var description: String?

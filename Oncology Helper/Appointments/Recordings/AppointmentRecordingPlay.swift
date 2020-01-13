@@ -79,7 +79,7 @@ struct AppointmentRecordingPlay: View {
         }
     }
     
-    // MARK: - init
+    // MARK: - initializer
     
     init(appointment: Appointment) {
         self.appointment = appointment

@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct QuestionAppointmentView: View {
+    
+    // MARK: - instance properties
+    
     @EnvironmentObject var userData: UserData
     @State var showTimes = false
     let appointmentTimestamps: AppointmentTimestamps
@@ -28,36 +31,58 @@ struct QuestionAppointmentView: View {
         return formatter.string(from: appointment!.date)
     }
     
+    // MARK: - body
+    
     var body: some View {
         guard let appointment = self.appointment else {
             return AnyView(Text(""))
         }
         return AnyView(Group {
             HStack {
-                VStack(alignment: .leading) {
-                    Text(appointment.doctor)
-                        .font(.headline)
-                    Text(dateString)
-                        .font(.caption)
-                }
-                Spacer()
-                Image(systemName: "chevron.right.circle")
+                if !appointmentTimestamps.timestamps.isEmpty {
+                    Button(action: {self.showTimes.toggle()}) {
+                        Image(systemName: "chevron.right.circle")
+                    }
                     .scaleEffect(1.5)
-            }
-            ForEach(appointmentTimestamps.timestamps, id: \.self) { timestamp in
-                HStack {
-                    Text(verbatim: String(format: "%.1f", timestamp))
-                        .padding(.leading)
-                    Spacer()
-                    Image(systemName: "doc.text")
-                    Divider()
-                    Image(systemName: "play.fill")
+                    .foregroundColor(.black)
+                    .rotationEffect(Angle(degrees: showTimes ? 90.0 : 0.0))
+                    .padding(.trailing)
+                } else {
+                    Image(systemName: "chevron.right.circle")
+                        .scaleEffect(1.5)
+                        .foregroundColor(.gray)
+                        .padding(.trailing)
                 }
-                .opacity(0.65)
+                NavigationLink(destination: AppointmentDetail(id: appointment.id)
+                    .environmentObject(self.userData)) {
+                        VStack(alignment: .leading) {
+                            Text(appointment.doctor)
+                                .font(.headline)
+                            Text(dateString)
+                                .font(.caption)
+                        }
+                        Spacer()
+                }
+            }
+            .buttonStyle(BorderlessButtonStyle())
+            if showTimes {
+                ForEach(appointmentTimestamps.timestamps, id: \.self) { timestamp in
+                    HStack {
+                        Text(verbatim: String(format: "%.1f", timestamp))
+                            .padding(.leading)
+                        Spacer()
+                        Image(systemName: "doc.text")
+                        Divider()
+                        Image(systemName: "play.fill")
+                    }
+                    .opacity(0.65)
+                }
             }
         })
     }
 }
+
+// MARK: - previews
 
 struct QuestionAppointmentView_Previews: PreviewProvider {
     static var previews: some View {

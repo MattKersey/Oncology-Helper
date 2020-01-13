@@ -21,8 +21,6 @@ struct HomePage: View {
     @State var seeAllQuestions: Bool = false
     var todayDate = Date()
     
-    let backgroundColor = Color(red: 63.0 / 255, green: 87.0 / 255, blue: 97.0 / 255)
-    
     // MARK: - body
     
     var body: some View {
@@ -42,7 +40,7 @@ struct HomePage: View {
                     .foregroundColor(.white)
                     .offset(y: 30.0)
                     .frame(width: geo.size.width, height: 120)
-                    .background(self.backgroundColor)
+                    .background(Constants.backgroundColor)
                     .offset(y: -80.0)
                     .padding(.bottom, -80.0)
                 CalendarView(selectedDate: self.$selectedDate,
@@ -61,7 +59,7 @@ struct HomePage: View {
                     Spacer()
                 }
                 .frame(width: geo.size.width, height: 60)
-                .background(self.backgroundColor)
+                .background(Constants.backgroundColor)
                 .padding(.bottom, -25)
                 QuestionPreviewList(selectedQuestion: self.$selectedQuestion, seeAllQuestions: self.$seeAllQuestions)
                     .environmentObject(self.userData)

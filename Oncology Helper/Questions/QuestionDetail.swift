@@ -9,13 +9,14 @@
 import SwiftUI
 
 struct QuestionDetail: View {
+    
+    // MARK: - instance properties
+    
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.editMode) var mode
     @State private var editMode = false
     let id: Int
-    
-    let backgroundColor = UIColor(red: 63.0 / 255, green: 87.0 / 255, blue: 97.0 / 255, alpha: 1.0)
     
     var question: Question? {
         if let question = userData.questions.first(where: {$0.id == id}) {
@@ -26,10 +27,14 @@ struct QuestionDetail: View {
         }
     }
     
+    // MARK: - initializer
+    
     init(id: Int) {
         self.id = id
-        UINavigationBar.appearance().backgroundColor = backgroundColor
+        UINavigationBar.appearance().backgroundColor = Constants.backgroundUIColor
     }
+    
+    // MARK: - body
     
     var body: some View {
         guard let question = self.question else {
@@ -56,6 +61,8 @@ struct QuestionDetail: View {
         })
     }
 }
+
+// MARK: - previews
 
 struct QuestionDetail_Previews: PreviewProvider {
     static var previews: some View {

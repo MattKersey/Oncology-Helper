@@ -19,7 +19,6 @@ struct AppointmentList: View {
     let selectedDate: Date
     let userCalendar = Calendar.current
     let fileManager = FileManager()
-    let backgroundColor = UIColor(red: 63.0 / 255, green: 87.0 / 255, blue: 97.0 / 255, alpha: 1.0)
     
     var selectedDateAppointments: [Appointment] {
         var appointments: [Appointment] = []
@@ -55,9 +54,11 @@ struct AppointmentList: View {
         userData.appointments.remove(atOffsets: offsets)
     }
     
+    // MARK: - initializer
+    
     init(selectedDate: Date) {
         self.selectedDate = selectedDate
-        UINavigationBar.appearance().backgroundColor = backgroundColor
+        UINavigationBar.appearance().backgroundColor = Constants.backgroundUIColor
     }
     
     // MARK: - body
