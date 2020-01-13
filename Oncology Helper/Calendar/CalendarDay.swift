@@ -120,7 +120,7 @@ struct CalendarDay: View {
                 // The date number
                 Text("\(actualDateInt)")
                     .font(.footnote)
-                    .foregroundColor(.black)
+                    .foregroundColor(Constants.titleColor)
             }
             // Change the opacity based on whether or not the day is in the selected month
             .opacity(isCurrentDateInMonth ? 1.0 : 0.5)

@@ -33,34 +33,31 @@ struct HomePage: View {
         })
         
         return GeometryReader { geo in
-            VStack {
+            VStack(spacing: 0) {
                 // Calendar of appointments
                 Text("Appointments")
                     .font(.largeTitle)
-                    .foregroundColor(.white)
+                    .foregroundColor(Constants.titleColor)
                     .offset(y: 30.0)
                     .frame(width: geo.size.width, height: 120)
                     .background(Constants.backgroundColor)
-                    .offset(y: -80.0)
-                    .padding(.bottom, -80.0)
+                    .offset(y: -75.0)
+                    .padding(.bottom, -75.0)
                 CalendarView(selectedDate: self.$selectedDate,
                              dayInMonthDate: self.todayDate,
                              shouldHighlightSelection: false)
                     .environmentObject(self.userData)
-                    .offset(y: -25)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: geo.size.width, height: 250)
-                    .padding(.bottom, -45)
+                    .frame(width: geo.size.width)
+                    .padding(.bottom)
                 HStack {
                     Spacer()
                     Text("Questions")
                         .font(.largeTitle)
-                        .foregroundColor(.white)
+                        .foregroundColor(Constants.titleColor)
                     Spacer()
                 }
                 .frame(width: geo.size.width, height: 60)
                 .background(Constants.backgroundColor)
-                .padding(.bottom, -25)
                 QuestionPreviewList(selectedQuestion: self.$selectedQuestion, seeAllQuestions: self.$seeAllQuestions)
                     .environmentObject(self.userData)
                 Spacer()

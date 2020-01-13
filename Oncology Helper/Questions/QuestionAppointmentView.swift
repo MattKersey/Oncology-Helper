@@ -44,13 +44,12 @@ struct QuestionAppointmentView: View {
                         Image(systemName: "chevron.right.circle")
                     }
                     .scaleEffect(1.5)
-                    .foregroundColor(.black)
                     .rotationEffect(Angle(degrees: showTimes ? 90.0 : 0.0))
                     .padding(.trailing)
                 } else {
                     Image(systemName: "chevron.right.circle")
                         .scaleEffect(1.5)
-                        .foregroundColor(.gray)
+                        .foregroundColor(Constants.subtitleColor)
                         .padding(.trailing)
                 }
                 NavigationLink(destination: AppointmentDetail(id: appointment.id)

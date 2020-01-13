@@ -77,6 +77,8 @@ struct CalendarView: View {
                 Spacer()
                 // Name of month and year
                 Text("\(monthString) \(yearString)")
+                .font(.headline)
+                .foregroundColor(Constants.titleColor)
                 Spacer()
                 // Increment month button
                 Button(action: {self.incrementMonth()}) {
@@ -89,6 +91,7 @@ struct CalendarView: View {
                           dayInMonthDate: firstDayOfMonthDate,
                           shouldHighlightSelection: shouldHighlightSelection)
                 .environmentObject(self.userData)
+                .frame(height: 170)
         }
     }
 }

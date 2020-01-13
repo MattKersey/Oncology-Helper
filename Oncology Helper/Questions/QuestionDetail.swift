@@ -38,7 +38,7 @@ struct QuestionDetail: View {
     
     var body: some View {
         guard let question = self.question else {
-            return AnyView(Text("Question unavailable"))
+            return AnyView(Text("Question unavailable").foregroundColor(Constants.subtitleColor))
         }
 
         return AnyView(NavigationView {
@@ -47,6 +47,7 @@ struct QuestionDetail: View {
                     HStack {
                         Text(question.description!)
                             .font(.subheadline)
+                            .foregroundColor(Constants.subtitleColor)
                             .multilineTextAlignment(.leading)
                         Spacer()
                     }

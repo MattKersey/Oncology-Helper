@@ -39,13 +39,15 @@ struct QuestionPreviewList: View {
                 ForEach(pinnedList) { question in
                     Button(action: {self.selectedQuestion = question}) {
                         Text("\(question.questionString)")
-                            .font(.callout)
+                            .font(.body)
+                            .foregroundColor(Constants.titleColor)
                     }
                 }
             } else {
                 ForEach(0..<(userData.questions.count > 5 ? 5 : userData.questions.count)) { index in
                     Text("\(self.userData.questions[index].questionString)")
-                        .font(.callout)
+                        .font(.body)
+                        .foregroundColor(Constants.titleColor)
                 }
             }
             HStack {

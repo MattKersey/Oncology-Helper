@@ -74,7 +74,9 @@ struct AppointmentRecordingPlay: View {
         } else {
             audioPlayer.seek(to: CMTime(seconds: self.currentTime, preferredTimescale: 600)) { _ in
                 self.isEditing = false
-                self.play()
+                if self.isPlaying {
+                    self.play()
+                }
             }
         }
     }
@@ -96,28 +98,31 @@ struct AppointmentRecordingPlay: View {
         guard duration > 0.0 else {
             return AnyView(Text("Failed to initialize audio player"))
         }
+        
         return AnyView(List {
-            AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing)
-            HStack {
-                Button(action: {self.isPlaying ? self.pause() : self.play()}) {
-                    Image(systemName: self.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                        .foregroundColor(.red)
+            ZStack {
+                AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing, isPlaying: $isPlaying)
+                HStack {
+                    Button(action: {self.isPlaying ? self.pause() : self.play()}) {
+                        Image(systemName: self.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .foregroundColor(.red)
+                    }
+                    .scaleEffect(2.0)
+                    .padding()
+                    Spacer()
+                    Text("0")
+                    Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
+                    Text(verbatim: String(format: "%.1f", duration))
+                    Spacer()
+                    Button(action: {self.mark(CMTimeGetSeconds(self.audioPlayer.currentTime()))}) {
+                        Image(systemName: "flag.circle.fill")
+                            .foregroundColor(.red)
+                    }
+                    .scaleEffect(2.0)
+                    .padding()
                 }
-                .scaleEffect(2.0)
-                .padding()
-                Spacer()
-                Text("0")
-                Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
-                Text(verbatim: String(format: "%.1f", duration))
-                Spacer()
-                Button(action: {self.mark(CMTimeGetSeconds(self.audioPlayer.currentTime()))}) {
-                    Image(systemName: "flag.circle.fill")
-                        .foregroundColor(.red)
-                }
-                .scaleEffect(2.0)
-                .padding()
+                .buttonStyle(BorderlessButtonStyle())
             }
-            .buttonStyle(BorderlessButtonStyle())
             Button(action: {print(self.currentTime)}) {
                 Text("print cur time")
             }
@@ -138,13 +143,15 @@ class AudioPlayerUIView: UIView {
     private let audioPlayer: Binding<AVPlayer>
     private let currentTime: Binding<TimeInterval>
     private let isEditing: Binding<Bool>
+    private let isPlaying: Binding<Bool>
     private var timeObserverToken: Any?
     
-    init(audioPlayer: Binding<AVPlayer>, currentTime: Binding<TimeInterval>, isEditing: Binding<Bool>) {
+    init(audioPlayer: Binding<AVPlayer>, currentTime: Binding<TimeInterval>, isEditing: Binding<Bool>, isPlaying: Binding<Bool>) {
         self.audioPlayer = audioPlayer
         self.currentTime = currentTime
         self.isEditing = isEditing
-        super.init(frame: .null)
+        self.isPlaying = isPlaying
+        super.init(frame: .zero)
         
         let interval = CMTime(seconds: 0.02, preferredTimescale: 600)
         timeObserverToken = audioPlayer.wrappedValue.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
@@ -152,11 +159,19 @@ class AudioPlayerUIView: UIView {
             if !self.isEditing.wrappedValue {
                 self.currentTime.wrappedValue = time.seconds
             }
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(self.didFinishPlaying(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func didFinishPlaying(note: NSNotification) {
+        self.audioPlayer.wrappedValue.pause()
+        self.audioPlayer.wrappedValue.seek(to: CMTime(seconds: 0.0, preferredTimescale: 600))
+        self.isPlaying.wrappedValue = false
     }
     
     func removePeriodicTimeObserver() {
@@ -171,9 +186,10 @@ struct AudioPlayerView: UIViewRepresentable {
     @Binding var audioPlayer: AVPlayer
     @Binding var currentTime: TimeInterval
     @Binding var isEditing: Bool
+    @Binding var isPlaying: Bool
     
     func makeUIView(context: UIViewRepresentableContext<AudioPlayerView>) -> UIView {
-        let uiView = AudioPlayerUIView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing)
+        let uiView = AudioPlayerUIView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing, isPlaying: $isPlaying)
         return uiView
     }
     

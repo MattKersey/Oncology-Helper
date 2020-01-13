@@ -69,33 +69,37 @@ struct CalendarMonth: View {
         let firstDayIndex = firstDayOfMonthIndex
         let firstDay = firstDayOfMonthDate
         
-        return HStack(alignment: .top, spacing: 18) {
-            // Loop through every weekday first
-            ForEach(self.weekDaysStrings.indices) { index in
-                VStack {
-                    // Title with weekday abbreviation
-                    Text(self.weekDaysStrings[index])
-                        .font(.subheadline)
-                    // Assume each month is 6 weeks for sake of consistent UI
-                    ForEach(0 ..< 6) { ordinal in
-                        CalendarDay(selectedDate: self.$selectedDate,
-                                    daysCurrentMonthInt: currentMonthDays,
-                                    daysPreviousMonthInt: previousMonthDays,
-                                    firstDayOfMonthIndex: firstDayIndex,
-                                    currentDayIndex: index,
-                                    currentWeekOrdinal: ordinal,
-                                    todayDate: Date(),
-                                    firstDayOfMonthDate: firstDay,
-                                    userCalendar: self.userCalendar,
-                                    shouldHighlightSelection: self.shouldHighlightSelection)
-                            .environmentObject(self.userData)
+        return GeometryReader { geo in
+            HStack(alignment: .top, spacing: geo.size.width / 20.0) {
+                // Loop through every weekday first
+                ForEach(self.weekDaysStrings.indices) { index in
+                    VStack {
+                        // Title with weekday abbreviation
+                        Text(self.weekDaysStrings[index])
+                            .font(.subheadline)
+                            .foregroundColor(Constants.subtitleColor)
+                        // Assume each month is 6 weeks for sake of consistent UI
+                        ForEach(0 ..< 6) { ordinal in
+                            CalendarDay(selectedDate: self.$selectedDate,
+                                        daysCurrentMonthInt: currentMonthDays,
+                                        daysPreviousMonthInt: previousMonthDays,
+                                        firstDayOfMonthIndex: firstDayIndex,
+                                        currentDayIndex: index,
+                                        currentWeekOrdinal: ordinal,
+                                        todayDate: Date(),
+                                        firstDayOfMonthDate: firstDay,
+                                        userCalendar: self.userCalendar,
+                                        shouldHighlightSelection: self.shouldHighlightSelection)
+                                .environmentObject(self.userData)
+                        }
+                    }
+                    // We only want dividers in between weekdays, not at the end
+                    if (index < self.weekDaysStrings.count - 1) {
+                        Divider()
                     }
                 }
-                // We only want dividers in between weekdays, not at the end
-                if (index < self.weekDaysStrings.count - 1) {
-                    Divider()
-                }
             }
+            .frame(width: geo.size.width, height: 170)
         }
     }
 }
