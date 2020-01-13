@@ -73,7 +73,8 @@ struct HomePage: View {
                     AppointmentList(selectedDate: self.selectedDate!)
                         .environmentObject(self.userData)
                 } else if self.selectedQuestion != nil {
-                    Text("Hello World")
+                    QuestionDetail(id: self.selectedQuestion!.id)
+                        .environmentObject(self.userData)
                 } else {
                     Text("Hello World")
                 }

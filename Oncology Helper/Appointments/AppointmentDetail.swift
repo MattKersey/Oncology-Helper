@@ -38,19 +38,20 @@ struct AppointmentDetail: View {
     // MARK: - body
     
     var body: some View {
-        VStack {
-            if (appointment != nil) {
-                AppointmentPage(id: id).environmentObject(self.userData)
-                .navigationBarTitle(Text("\(appointment!.doctor) | \(dateString!)"))
-                .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
-                .sheet(isPresented: self.$editMode){
-                    AppointmentEditor(appointment: self.appointment!, selectedTime:  self.appointment!.date).environmentObject(self.userData)
-                }
-            } else {
-                Text("Appointment unavailable")
+        guard let appointment = self.appointment else {
+                return AnyView(Text("Appointment unavailable"))
+        }
+        return AnyView(VStack {
+            List {
+                AppointmentRecording(appointment: appointment).environmentObject(self.userData)
+            }
+            .navigationBarTitle(Text("\(appointment.doctor) | \(dateString!)"))
+            .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
+            .sheet(isPresented: self.$editMode){
+                AppointmentEditor(appointment: appointment, selectedTime:  appointment.date).environmentObject(self.userData)
             }
             Spacer()
-        }
+        })
     }
 }
 

@@ -10,8 +10,8 @@ import SwiftUI
 
 struct Question: Hashable, Codable, Identifiable {
     var id: Int
-    var question: String
-    var doctor: String?
+    var questionString: String
+    var description: String?
     var pin: Bool
     var appointmentTimestamps: [AppointmentTimestamps]
 }

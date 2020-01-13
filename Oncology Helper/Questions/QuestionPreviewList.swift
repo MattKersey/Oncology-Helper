@@ -38,13 +38,13 @@ struct QuestionPreviewList: View {
             if !pinnedList.isEmpty {
                 ForEach(pinnedList) { question in
                     Button(action: {self.selectedQuestion = question}) {
-                        Text("\(question.question)")
+                        Text("\(question.questionString)")
                             .font(.callout)
                     }
                 }
             } else {
                 ForEach(0..<(userData.questions.count > 5 ? 5 : userData.questions.count)) { index in
-                    Text("\(self.userData.questions[index].question)")
+                    Text("\(self.userData.questions[index].questionString)")
                         .font(.callout)
                 }
             }

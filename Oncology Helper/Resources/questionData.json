@@ -1,12 +1,19 @@
 [
     {
         "id": 1,
-        "question": "What is the best treatment for this?",
-        "doctor": null,
+        "questionString": "What is the best treatment for this?",
+        "description": null,
         "pin": true,
         "appointmentTimestamps":[
             {
                 "id": 1,
+                "timestamps":[
+                    3.41,
+                    6.78
+                ]
+            },
+            {
+                "id": 2,
                 "timestamps":[
                 ]
             }

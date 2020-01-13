@@ -42,10 +42,14 @@ struct AppointmentList: View {
     
     func delete(at offsets: IndexSet) {
         for index in offsets {
+            let id = userData.appointments[index].id
             do {
                 try fileManager.removeItem(at: userData.appointments[index].recordingURL)
             } catch {
                 print("Issue deleting recording file")
+            }
+            for index in userData.questions.indices {
+                userData.questions[index].appointmentTimestamps.removeAll(where: {$0.id == id})
             }
         }
         userData.appointments.remove(atOffsets: offsets)

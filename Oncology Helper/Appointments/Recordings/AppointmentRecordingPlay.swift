@@ -90,45 +90,45 @@ struct AppointmentRecordingPlay: View {
     // MARK: - body
     
     var body: some View {
-        List {
-            if duration > 0.0 && appointmentIndex != nil  {
-                AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing)
-                HStack {
-                    Button(action: {self.isPlaying ? self.pause() : self.play()}) {
-                        Image(systemName: self.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .foregroundColor(.red)
-                    }
-                    .scaleEffect(2.0)
-                    .padding()
-                    Spacer()
-                    Text("0")
-                    Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
-                    Text(verbatim: String(format: "%.1f", duration))
-                    Spacer()
-                    Button(action: {self.mark(CMTimeGetSeconds(self.audioPlayer.currentTime()))}) {
-                        Image(systemName: "flag.circle.fill")
-                            .foregroundColor(.red)
-                    }
-                    .scaleEffect(2.0)
-                    .padding()
-                }
-                .buttonStyle(BorderlessButtonStyle())
-                Button(action: {print(self.currentTime)}) {
-                    Text("print cur time")
-                }
-                ForEach(appointment.timestamps, id: \.self) { timestamp in
-                    Button(action: {self.setTime(timestamp)}) {
-                        Text(verbatim: String(format: "%.1f", timestamp))
-                    }
-                }
-                .onDelete(perform: self.delete)
-            } else if appointmentIndex == nil {
-                Text("Could not find appointment")
-            } else {
-                Text("Failed to initialize audio player")
-            }
+        guard appointmentIndex != nil else {
+            return AnyView(Text("Appointment unavailable"))
         }
-        .onDisappear(perform: pause)
+        guard duration > 0.0 else {
+            return AnyView(Text("Failed to initialize audio player"))
+        }
+        return AnyView(List {
+            AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing)
+            HStack {
+                Button(action: {self.isPlaying ? self.pause() : self.play()}) {
+                    Image(systemName: self.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        .foregroundColor(.red)
+                }
+                .scaleEffect(2.0)
+                .padding()
+                Spacer()
+                Text("0")
+                Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
+                Text(verbatim: String(format: "%.1f", duration))
+                Spacer()
+                Button(action: {self.mark(CMTimeGetSeconds(self.audioPlayer.currentTime()))}) {
+                    Image(systemName: "flag.circle.fill")
+                        .foregroundColor(.red)
+                }
+                .scaleEffect(2.0)
+                .padding()
+            }
+            .buttonStyle(BorderlessButtonStyle())
+            Button(action: {print(self.currentTime)}) {
+                Text("print cur time")
+            }
+            ForEach(appointment.timestamps, id: \.self) { timestamp in
+                Button(action: {self.setTime(timestamp)}) {
+                    Text(verbatim: String(format: "%.1f", timestamp))
+                }
+            }
+            .onDelete(perform: self.delete)
+        }
+        .onDisappear(perform: pause))
     }
 }
 

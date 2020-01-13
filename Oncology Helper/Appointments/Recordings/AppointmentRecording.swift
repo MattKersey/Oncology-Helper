@@ -113,90 +113,93 @@ struct AppointmentRecording: View {
     // MARK: - body
     
     var body: some View {
-        HStack {
-            if appointmentIndex != nil && (audioRecorder != nil || userData.appointments[appointmentIndex!].hasRecording) {
-                // Record/Pause button, check first to see if we are in a warning mode
-                if !self.endPressed && !self.reRecordPressed {
-                    if !self.isRecording {
-                        // If not currently recording, display a record button
-                        Button(action: {self.record()}) {
-                            ZStack {
-                                Image(systemName: "circle.fill")
-                                    .foregroundColor(.gray)
-
-                                Image(systemName: "circle.fill")
-                                    .foregroundColor(.red)
-                                    .scaleEffect(0.35)
-                            }
-                        }
-                        .scaleEffect(2.0)
-                    } else {
-                        // If currently recording, display a pause button
-                        Button(action: {self.pause()}) {
-                            Image(systemName: "pause.circle.fill")
-                                .foregroundColor(.red)
-                        }
-                        .scaleEffect(2.0)
-                        // And a marker button (for marking the time for later)
-                        Button(action: {self.mark()}) {
-                            Image(systemName: "flag.circle.fill")
-                                .foregroundColor(.red)
-                        }
-                        .scaleEffect(2.0)
-                        .padding(.leading)
-                    }
-                    Spacer()
-                    // If we have a recording, display the play button
-                    if appointment.hasRecording {
-                        Button(action: {self.playPressed.toggle()}) {
-                            Image(systemName: "play.circle.fill")
+        guard userData.audioSession != nil else {
+            return AnyView(Text("Permission to record denied"))
+        }
+        guard let appointmentIndex = self.appointmentIndex else {
+            return AnyView(Text("Could not find appointment"))
+        }
+        guard audioRecorder != nil || userData.appointments[appointmentIndex].hasRecording else {
+            return AnyView(Text("Failed to initialize audio recorder"))
+        }
+        return AnyView(HStack {
+            // Record/Pause button, check first to see if we are in a warning mode
+            if !self.endPressed && !self.reRecordPressed {
+                if !self.isRecording {
+                    // If not currently recording, display a record button
+                    Button(action: {self.record()}) {
+                        ZStack {
+                            Image(systemName: "circle.fill")
                                 .foregroundColor(.gray)
+
+                            Image(systemName: "circle.fill")
+                                .foregroundColor(.red)
+                                .scaleEffect(0.35)
                         }
-                        .scaleEffect(2.0)
-                    } else if self.beganRecording {
-                        // If we have started recording, regardless of if we pause, display a stop button
-                        Button(action: {self.endPressed.toggle()}) {
-                            Image(systemName: "stop.circle.fill")
-                                // Make it red if we are currently recording, gray if not
-                                .foregroundColor(self.isRecording ? .red : .gray)
-                        }
-                        .scaleEffect(2.0)
                     }
-                } else if self.endPressed {
-                    // Warning section for if a user presses stop
-                    Text("Are you sure you want to end recording?")
-                        .foregroundColor(.red)
-                    Spacer()
-                    Button(action: {self.endPressed.toggle()}) {
-                        Text("No")
-                            .foregroundColor(.blue)
-                            .font(.headline)
-                    }
-                    Divider()
-                    Button(action: {self.end()}) {
-                        Text("Yes")
-                            .foregroundColor(.red)
-                    }
+                    .scaleEffect(2.0)
                 } else {
-                    // Warning section for if a user presses record on an appointment that alreay has a recording
-                    Text("Are you sure you want to rerecord? This will delete the previous recording.")
-                        .foregroundColor(.red)
-                    Spacer()
-                    Button(action: {self.reRecordPressed.toggle()}) {
-                        Text("No")
-                            .foregroundColor(.blue)
-                            .font(.headline)
-                    }
-                    Divider()
-                    Button(action: {self.reRecord()}) {
-                        Text("Yes")
+                    // If currently recording, display a pause button
+                    Button(action: {self.pause()}) {
+                        Image(systemName: "pause.circle.fill")
                             .foregroundColor(.red)
                     }
+                    .scaleEffect(2.0)
+                    // And a marker button (for marking the time for later)
+                    Button(action: {self.mark()}) {
+                        Image(systemName: "flag.circle.fill")
+                            .foregroundColor(.red)
+                    }
+                    .scaleEffect(2.0)
+                    .padding(.leading)
                 }
-            } else if appointmentIndex == nil {
-                Text("Could not find appointment")
+                Spacer()
+                // If we have a recording, display the play button
+                if appointment.hasRecording {
+                    Button(action: {self.playPressed.toggle()}) {
+                        Image(systemName: "play.circle.fill")
+                            .foregroundColor(.gray)
+                    }
+                    .scaleEffect(2.0)
+                } else if self.beganRecording {
+                    // If we have started recording, regardless of if we pause, display a stop button
+                    Button(action: {self.endPressed.toggle()}) {
+                        Image(systemName: "stop.circle.fill")
+                            // Make it red if we are currently recording, gray if not
+                            .foregroundColor(self.isRecording ? .red : .gray)
+                    }
+                    .scaleEffect(2.0)
+                }
+            } else if self.endPressed {
+                // Warning section for if a user presses stop
+                Text("Are you sure you want to end recording?")
+                    .foregroundColor(.red)
+                Spacer()
+                Button(action: {self.endPressed.toggle()}) {
+                    Text("No")
+                        .foregroundColor(.blue)
+                        .font(.headline)
+                }
+                Divider()
+                Button(action: {self.end()}) {
+                    Text("Yes")
+                        .foregroundColor(.red)
+                }
             } else {
-                Text("Failed to initialize audio recorder")
+                // Warning section for if a user presses record on an appointment that alreay has a recording
+                Text("Are you sure you want to rerecord? This will delete the previous recording.")
+                    .foregroundColor(.red)
+                Spacer()
+                Button(action: {self.reRecordPressed.toggle()}) {
+                    Text("No")
+                        .foregroundColor(.blue)
+                        .font(.headline)
+                }
+                Divider()
+                Button(action: {self.reRecord()}) {
+                    Text("Yes")
+                        .foregroundColor(.red)
+                }
             }
         }
         .padding()
@@ -204,7 +207,7 @@ struct AppointmentRecording: View {
         .sheet(isPresented: self.$playPressed){
             AppointmentRecordingPlay(appointment: self.appointment)
                 .environmentObject(self.userData)
-        }
+        })
     }
 }
 
