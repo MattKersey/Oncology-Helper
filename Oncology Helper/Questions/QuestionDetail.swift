@@ -60,7 +60,7 @@ struct QuestionDetail: View {
                                 .font(.headline)
                                 .foregroundColor(Constants.titleColor)
                                 .multilineTextAlignment(.leading)
-                                .padding([.top, .leading, .trailing])
+                                .padding()
                             Spacer()
                         }
                         if (question.description != nil) {
@@ -70,7 +70,7 @@ struct QuestionDetail: View {
                                     .foregroundColor(Constants.bodyColor)
                                     .multilineTextAlignment(.leading)
                                     .padding([.leading, .trailing])
-                                    .padding(.top, 5.0)
+                                    .padding(.top, -10)
                                     .padding(.bottom, 10.0)
                                 Spacer()
                             }

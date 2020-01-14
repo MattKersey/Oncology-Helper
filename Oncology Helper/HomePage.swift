@@ -71,7 +71,8 @@ struct HomePage: View {
                     QuestionDetail(id: self.selectedQuestion!.id)
                         .environmentObject(self.userData)
                 } else {
-                    Text("Hello World")
+                    QuestionList()
+                        .environmentObject(self.userData)
                 }
             }
         }

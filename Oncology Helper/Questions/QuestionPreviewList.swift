@@ -50,43 +50,52 @@ struct QuestionPreviewList: View {
     var body: some View {
         let pinnedList = pinned
         
-        return List {
+        return VStack(spacing: 0) {
             HStack {
                 TextField("Add a question", text: $newQuestion)
                     .foregroundColor(Constants.titleColor)
+                    .padding()
                 Spacer()
-                Divider()
                 
                 Button(action: self.submitNewQuestion) {
                     Text("Submit")
-                        .foregroundColor(Constants.subtitleColor)
-                        .font(.body)
+                        .foregroundColor(.white)
+                        .font(.headline)
                 }
+                .padding()
+                .frame(height: 50)
+                .background(Constants.itemColor)
             }
+            .frame(height: 50)
             .buttonStyle(BorderlessButtonStyle())
-            if !pinnedList.isEmpty {
-                ForEach(pinnedList) { question in
-                    Button(action: {self.selectedQuestion = question}) {
-                        Text("\(question.questionString)")
-                            .font(.body)
-                            .foregroundColor(Constants.titleColor)
+            Divider()
+            List {
+                if !pinnedList.isEmpty {
+                    ForEach(pinnedList) { question in
+                        Button(action: {self.selectedQuestion = question}) {
+                            Text("\(question.questionString)")
+                                .font(.body)
+                                .foregroundColor(Constants.titleColor)
+                        }
+                    }
+                } else {
+                    ForEach(0..<(userData.questions.count > 5 ? 5 : userData.questions.count)) { index in
+                        Button(action: {self.selectedQuestion = self.userData.questions[index]}) {
+                            Text("\(self.userData.questions[index].questionString)")
+                                .font(.body)
+                                .foregroundColor(Constants.titleColor)
+                        }
                     }
                 }
-            } else {
-                ForEach(0..<(userData.questions.count > 5 ? 5 : userData.questions.count)) { index in
-                    Text("\(self.userData.questions[index].questionString)")
-                        .font(.body)
-                        .foregroundColor(Constants.titleColor)
+                HStack {
+                    Spacer()
+                    Button(action: {self.seeAllQuestions = true}) {
+                        Text("See All")
+                            .foregroundColor(.blue)
+                            .font(.callout)
+                    }
+                    Spacer()
                 }
-            }
-            HStack {
-                Spacer()
-                Button(action: {self.seeAllQuestions = true}) {
-                    Text("See All")
-                        .foregroundColor(.blue)
-                        .font(.callout)
-                }
-                Spacer()
             }
         }
     }
