@@ -68,8 +68,10 @@ struct HomePage: View {
                     AppointmentList(selectedDate: self.selectedDate!)
                         .environmentObject(self.userData)
                 } else if self.selectedQuestion != nil {
-                    QuestionDetail(id: self.selectedQuestion!.id)
-                        .environmentObject(self.userData)
+                    NavigationView {
+                        QuestionDetail(id: self.selectedQuestion!.id)
+                            .environmentObject(self.userData)
+                    }
                 } else {
                     QuestionList()
                         .environmentObject(self.userData)

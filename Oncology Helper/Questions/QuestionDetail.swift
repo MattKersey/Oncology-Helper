@@ -52,55 +52,53 @@ struct QuestionDetail: View {
         })
 
         return AnyView(GeometryReader { geo in
-            NavigationView {
-                VStack(alignment: .leading, spacing: 0) {
-                    Group {
+            VStack(alignment: .leading, spacing: 0) {
+                Group {
+                    HStack {
+                        Text(question.questionString)
+                            .font(.headline)
+                            .foregroundColor(Constants.titleColor)
+                            .multilineTextAlignment(.leading)
+                            .padding()
+                        Spacer()
+                    }
+                    if (question.description != nil) {
                         HStack {
-                            Text(question.questionString)
-                                .font(.headline)
-                                .foregroundColor(Constants.titleColor)
+                            Text(question.description!)
+                                .font(.subheadline)
+                                .foregroundColor(Constants.bodyColor)
                                 .multilineTextAlignment(.leading)
-                                .padding()
+                                .padding([.leading, .trailing])
+                                .padding(.top, -10)
+                                .padding(.bottom, 10.0)
                             Spacer()
                         }
-                        if (question.description != nil) {
-                            HStack {
-                                Text(question.description!)
-                                    .font(.subheadline)
-                                    .foregroundColor(Constants.bodyColor)
-                                    .multilineTextAlignment(.leading)
-                                    .padding([.leading, .trailing])
-                                    .padding(.top, -10)
-                                    .padding(.bottom, 10.0)
-                                Spacer()
-                            }
-                        }
                     }
-                    .frame(width: geo.size.width)
-                    .background(Constants.backgroundColor)
-                    List {
-                        ForEach(question.appointmentIDs, id: \.self) { id in
-                            QuestionAppointmentView(appointmentID: id,
-                                                    questionID: self.id,
-                                                    audioPlayer: self.$audioPlayer,
-                                                    playing: self.$playing)
-                                .environmentObject(self.userData)
-                        }
-                        Button(action: {self.addAppointments = true}) {
-                            Text("Add more appointments")
-                                .foregroundColor(.blue)
-                                .font(.callout)
-                        }
+                }
+                .frame(width: geo.size.width)
+                .background(Constants.backgroundColor)
+                List {
+                    ForEach(question.appointmentIDs, id: \.self) { id in
+                        QuestionAppointmentView(appointmentID: id,
+                                                questionID: self.id,
+                                                audioPlayer: self.$audioPlayer,
+                                                playing: self.$playing)
+                            .environmentObject(self.userData)
                     }
-                    .navigationBarTitle(Text(""), displayMode: .inline)
-                    .navigationBarItems(trailing: Button(action: {self.editMode = true}) {Image(systemName: "square.and.pencil")})
-                    .sheet(isPresented: showModal) {
-                        if self.editMode {
-                            Text("Hello World")
-                        } else {
-                            QuestionAppointmentAdder(question: question)
-                                .environmentObject(self.userData)
-                        }
+                    Button(action: {self.addAppointments = true}) {
+                        Text("Add more appointments")
+                            .foregroundColor(.blue)
+                            .font(.callout)
+                    }
+                }
+                .navigationBarTitle(Text(""), displayMode: .inline)
+                .navigationBarItems(trailing: Button(action: {self.editMode = true}) {Image(systemName: "square.and.pencil")})
+                .sheet(isPresented: showModal) {
+                    if self.editMode {
+                        Text("Hello World")
+                    } else {
+                        QuestionAppointmentAdder(question: question)
+                            .environmentObject(self.userData)
                     }
                 }
             }
