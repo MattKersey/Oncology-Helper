@@ -30,7 +30,11 @@ struct QuestionAppointmentAdder: View {
             return
         }
         while !newAppointmentIds.isEmpty {
-            userData.questions[index].appointmentTimestamps.append(AppointmentTimestamps(id: newAppointmentIds.removeFirst(), timestamps: []))
+            let newAppointmentID = newAppointmentIds.removeFirst()
+            if let aptIndex = userData.appointments.firstIndex(where: {$0.id == newAppointmentID}) {
+                userData.questions[index].appointmentTimestamps.append(AppointmentTimestamps(id: newAppointmentID, timestamps: []))
+                userData.appointments[aptIndex].questionIDs.append(question.id)
+            }
         }
     }
     

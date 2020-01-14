@@ -21,10 +21,9 @@ struct AppointmentRecording: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let appointment: Appointment
-    @State var audioRecorder: AVAudioRecorder?
+    @Binding var audioRecorder: AVAudioRecorder?
     
     @State var isRecording = false
-    @State var beganRecording = false
     @State var endPressed = false
     @State var reRecordPressed = false
     @Binding var playPressed: Bool
@@ -47,8 +46,19 @@ struct AppointmentRecording: View {
             self.reRecordPressed = true
         } else {
             // Check to see if we are beginning a new recording
-            if (!self.beganRecording) {
-                self.beganRecording = true
+            if (audioRecorder == nil) {
+                let settings = [
+                    AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                    AVSampleRateKey: 12000,
+                    AVNumberOfChannelsKey: 1,
+                    AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+                ]
+                do {
+                    audioRecorder = try AVAudioRecorder(url: appointment.recordingURL, settings: settings)
+                } catch {
+                    print("audioRecorder was not initialized")
+                    return
+                }
             }
             self.isRecording = true
             audioRecorder!.record()
@@ -56,24 +66,13 @@ struct AppointmentRecording: View {
     }
     
     func reRecord() -> Void {
-        let settings = [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-        ]
-        do {
-            audioRecorder = try AVAudioRecorder(url: appointment.recordingURL, settings: settings)
-        } catch {
-            print("audioRecorder was not initialized")
-            self.reRecordPressed = false
-            return
-        }
         userData.appointments[appointmentIndex!].hasRecording = false
         userData.appointments[appointmentIndex!].describedTimestamps = []
         for id in userData.appointments[appointmentIndex!].questionIDs {
-            if let index = userData.questions.firstIndex(where: {$0.id == id}) {
-                userData.questions[index].appointmentTimestamps.removeAll(where: {$0.id == appointment.id})
+            if let qIndex = userData.questions.firstIndex(where: {$0.id == id}) {
+                if let aptIndex = userData.questions[qIndex].appointmentTimestamps.firstIndex(where: {$0.id == appointment.id}) {
+                    userData.questions[qIndex].appointmentTimestamps[aptIndex].timestamps.removeAll()
+                }
             }
         }
         self.reRecordPressed = false
@@ -91,7 +90,6 @@ struct AppointmentRecording: View {
     
     func end() -> Void {
         self.isRecording = false
-        self.beganRecording = false
         self.endPressed = false
         userData.appointments[appointmentIndex!].hasRecording = true
         audioRecorder!.stop()
@@ -100,20 +98,10 @@ struct AppointmentRecording: View {
     
     // MARK: - initializer
     
-    init(appointment: Appointment, playPressed: Binding<Bool>) {
+    init(appointment: Appointment, audioRecorder: Binding<AVAudioRecorder?>, playPressed: Binding<Bool>) {
         self.appointment = appointment
+        _audioRecorder = audioRecorder
         _playPressed = playPressed
-        let settings = [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-        ]
-        do {
-            _audioRecorder = try State(initialValue: AVAudioRecorder(url: appointment.recordingURL, settings: settings))
-        } catch {
-            print("audioRecorder was not initialized")
-        }
     }
     
     // MARK: - body
@@ -122,62 +110,11 @@ struct AppointmentRecording: View {
         guard userData.audioSession != nil else {
             return AnyView(Text("Permission to record denied"))
         }
-        guard let appointmentIndex = self.appointmentIndex else {
+        guard self.appointmentIndex != nil else {
             return AnyView(Text("Could not find appointment"))
         }
-        guard audioRecorder != nil || userData.appointments[appointmentIndex].hasRecording else {
-            return AnyView(Text("Failed to initialize audio recorder"))
-        }
-        return AnyView(HStack {
-            // Record/Pause button, check first to see if we are in a warning mode
-            if !self.endPressed && !self.reRecordPressed {
-                if !self.isRecording {
-                    // If not currently recording, display a record button
-                    Button(action: {self.record()}) {
-                        ZStack {
-                            Image(systemName: "circle.fill")
-                                .foregroundColor(Constants.subtitleColor)
-
-                            Image(systemName: "circle.fill")
-                                .foregroundColor(.red)
-                                .scaleEffect(0.35)
-                        }
-                    }
-                    .scaleEffect(2.0)
-                } else {
-                    // If currently recording, display a pause button
-                    Button(action: {self.pause()}) {
-                        Image(systemName: "pause.fill")
-                            .foregroundColor(Constants.itemColor)
-                    }
-                    .scaleEffect(1.5)
-                    // And a marker button (for marking the time for later)
-                    Button(action: {self.mark()}) {
-                        Image(systemName: "bookmark.fill")
-                            .foregroundColor(Constants.itemColor)
-                    }
-                    .scaleEffect(1.25)
-                    .padding(.leading)
-                }
-                Spacer()
-                // If we have a recording, display the play button
-                if appointment.hasRecording {
-                    Button(action: {self.playPressed.toggle()}) {
-                        Image(systemName: "play.fill")
-                            .foregroundColor(Constants.itemColor)
-                    }
-                    .scaleEffect(1.5)
-                } else if self.beganRecording {
-                    // If we have started recording, regardless of if we pause, display a stop button
-                    Button(action: {self.endPressed.toggle()}) {
-                        Image(systemName: "stop.fill")
-                            // Make it red if we are currently recording, gray if not
-                            .foregroundColor(Constants.itemColor)
-                    }
-                    .scaleEffect(1.5)
-                }
-            } else if self.endPressed {
-                // Warning section for if a user presses stop
+        guard !self.endPressed else {
+            return AnyView(HStack {
                 Text("End recording?")
                     .foregroundColor(.red)
                 Spacer()
@@ -191,8 +128,10 @@ struct AppointmentRecording: View {
                     Text("Yes")
                         .foregroundColor(.red)
                 }
-            } else {
-                // Warning section for if a user presses record on an appointment that alreay has a recording
+            })
+        }
+        guard !self.reRecordPressed else {
+            return AnyView(HStack {
                 Text("Delete previous recording.")
                     .foregroundColor(.red)
                 Spacer()
@@ -206,6 +145,53 @@ struct AppointmentRecording: View {
                     Text("Yes")
                         .foregroundColor(.red)
                 }
+            })
+        }
+        return AnyView(HStack {
+            if !self.isRecording {
+                // If not currently recording, display a record button
+                Button(action: {self.record()}) {
+                    ZStack {
+                        Image(systemName: "circle.fill")
+                            .foregroundColor(Constants.subtitleColor)
+
+                        Image(systemName: "circle.fill")
+                            .foregroundColor(.red)
+                            .scaleEffect(0.35)
+                    }
+                }
+                .scaleEffect(2.0)
+            } else {
+                // If currently recording, display a pause button
+                Button(action: {self.pause()}) {
+                    Image(systemName: "pause.fill")
+                        .foregroundColor(Constants.itemColor)
+                }
+                .scaleEffect(1.5)
+                // And a marker button (for marking the time for later)
+                Button(action: {self.mark()}) {
+                    Image(systemName: "bookmark.fill")
+                        .foregroundColor(Constants.itemColor)
+                }
+                .scaleEffect(1.25)
+                .padding(.leading)
+            }
+            Spacer()
+            // If we have a recording, display the play button
+            if appointment.hasRecording {
+                Button(action: {self.playPressed.toggle()}) {
+                    Image(systemName: "play.fill")
+                        .foregroundColor(Constants.itemColor)
+                }
+                .scaleEffect(1.5)
+            } else if audioRecorder != nil {
+                // If we have started recording, regardless of if we pause, display a stop button
+                Button(action: {self.endPressed.toggle()}) {
+                    Image(systemName: "stop.fill")
+                        // Make it red if we are currently recording, gray if not
+                        .foregroundColor(Constants.itemColor)
+                }
+                .scaleEffect(1.5)
             }
         }
         .padding()
@@ -217,6 +203,8 @@ struct AppointmentRecording: View {
 
 struct AppointmentRecording_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecording(appointment: UserData().appointments[0], playPressed: .constant(false)).environmentObject(UserData())
+        AppointmentRecording(appointment: UserData().appointments[0],
+                             audioRecorder: .constant(nil),
+                             playPressed: .constant(false)).environmentObject(UserData())
     }
 }

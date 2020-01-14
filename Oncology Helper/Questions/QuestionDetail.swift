@@ -80,7 +80,8 @@ struct QuestionDetail: View {
                     .background(Constants.backgroundColor)
                     List {
                         ForEach(question.appointmentTimestamps, id: \.self) { appointmentTimestamps in
-                            QuestionAppointmentView(appointmentTimestamps: appointmentTimestamps,
+                            QuestionAppointmentView(appointmentID: appointmentTimestamps.id,
+                                                    questionID: self.id,
                                                     audioPlayer: self.$audioPlayer,
                                                     playing: self.$playing)
                                 .environmentObject(self.userData)

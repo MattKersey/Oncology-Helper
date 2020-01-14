@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct AppointmentDetail: View {
     
@@ -17,6 +18,7 @@ struct AppointmentDetail: View {
     @Environment(\.editMode) var mode
     @State private var editMode = false
     @State var playPressed = false
+    @State var audioRecorder: AVAudioRecorder?
     var id: Int
     
     var appointment: Appointment? {
@@ -50,14 +52,17 @@ struct AppointmentDetail: View {
         })
         return AnyView(GeometryReader { geo in
             VStack(spacing: 0) {
-                AppointmentRecording(appointment: appointment, playPressed: self.$playPressed).environmentObject(self.userData)
+                AppointmentRecording(appointment: appointment,
+                                     audioRecorder: self.$audioRecorder,
+                                     playPressed: self.$playPressed)
+                    .environmentObject(self.userData)
                     .padding()
                     .frame(width: geo.size.width, height: 60.0)
                 Spacer()
                 List {
                     ForEach(appointment.questionIDs, id: \.self) { id in
                         HStack {
-                            QuestionMarker()
+                            QuestionMarker(questionID: id, appointmentID: self.id, audioRecorder: self.$audioRecorder)
                                 .environmentObject(self.userData)
                         }
                     }

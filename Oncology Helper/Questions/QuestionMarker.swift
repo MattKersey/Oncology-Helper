@@ -7,21 +7,44 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct QuestionMarker: View {
     
     @EnvironmentObject var userData: UserData
-//    let questionID: Int
-//    let appointmentID: Int
+    let questionID: Int
+    let appointmentID: Int
+    @Binding var audioRecorder: AVAudioRecorder?
+    
+    var question: Question? {
+        return userData.questions.first(where: {$0.id == questionID})
+    }
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        guard let question = self.question else {
+            return AnyView(Text(""))
+        }
+        return AnyView(HStack {
+            Text(question.questionString)
+            Spacer()
+            if (audioRecorder != nil) {
+                Button(action: {self.userData.addTimestamp(appointmentID: self.appointmentID,
+                                                           questionID: self.questionID,
+                                                           timestamp: self.audioRecorder!.currentTime)}) {
+                    Image(systemName: "bookmark.fill")
+                        .foregroundColor(Constants.itemColor)
+                }
+                .scaleEffect(1.25)
+            }
+        }
+        .buttonStyle(BorderlessButtonStyle())
+        )
     }
 }
 
 struct QuestionMarker_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionMarker()
+        QuestionMarker(questionID: 1, appointmentID: 1, audioRecorder: .constant(nil))
             .environmentObject(UserData())
     }
 }

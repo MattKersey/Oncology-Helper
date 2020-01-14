@@ -15,16 +15,31 @@ struct QuestionAppointmentView: View {
     
     @EnvironmentObject var userData: UserData
     @State var showTimes = false
-    let appointmentTimestamps: AppointmentTimestamps
+    let appointmentID: Int
+    let questionID: Int
     @Binding var audioPlayer: AVPlayer?
     @Binding var playing: IDTimestampSingle?
     
+    lazy var questionIndex: Int? = {
+        if let index = userData.questions.firstIndex(where: {$0.id == questionID}) {
+            return index
+        }
+        return nil
+    }()
+    
     var appointment: Appointment? {
-        if let apt = userData.appointments.first(where: {$0.id == appointmentTimestamps.id}) {
+        if let apt = userData.appointments.first(where: {$0.id == appointmentID}) {
             return apt
-        } else {
+        }
+        return nil
+    }
+    
+    var appointmentTimestamps: AppointmentTimestamps? {
+        var mutableSelf = self
+        guard let qIndex = mutableSelf.questionIndex else {
             return nil
         }
+        return userData.questions[qIndex].appointmentTimestamps.first(where: {$0.id == appointmentID})
     }
     
     var dateString: String {
@@ -55,15 +70,27 @@ struct QuestionAppointmentView: View {
         playing = nil
     }
     
+    func delete(at offsets: IndexSet) {
+        for index in offsets {
+            print("\(appointment!.id): \(appointmentTimestamps!.timestamps[index])")
+            userData.deleteTimestamp(appointmentID: appointment!.id,
+                                     timestamp: appointmentTimestamps!.timestamps[index])
+        }
+    }
+    
     // MARK: - body
     
     var body: some View {
+        var mutableSelf = self
         guard let appointment = self.appointment else {
+            return AnyView(Text(""))
+        }
+        guard mutableSelf.questionIndex != nil else {
             return AnyView(Text(""))
         }
         return AnyView(Group {
             HStack {
-                if !appointmentTimestamps.timestamps.isEmpty {
+                if !appointmentTimestamps!.timestamps.isEmpty {
                     Button(action: {self.showTimes.toggle()}) {
                         Image(systemName: "chevron.right.circle")
                     }
@@ -92,7 +119,7 @@ struct QuestionAppointmentView: View {
             }
             .buttonStyle(BorderlessButtonStyle())
             if showTimes {
-                ForEach(appointmentTimestamps.timestamps, id: \.self) { timestamp in
+                ForEach(appointmentTimestamps!.timestamps, id: \.self) { timestamp in
                     HStack {
                         Text(verbatim: String(format: "%.1f", timestamp))
                             .padding(.leading)
@@ -113,6 +140,7 @@ struct QuestionAppointmentView: View {
                     }
                     .foregroundColor(Constants.bodyColor)
                 }
+                .onDelete(perform: self.delete)
             }
         })
     }
@@ -122,7 +150,8 @@ struct QuestionAppointmentView: View {
 
 struct QuestionAppointmentView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionAppointmentView(appointmentTimestamps: AppointmentTimestamps(id: 1, timestamps: []),
+        QuestionAppointmentView(appointmentID: 1,
+                                questionID: 1,
                                 audioPlayer: .constant(nil),
                                 playing: .constant(nil))
             .environmentObject(UserData())
