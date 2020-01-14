@@ -55,6 +55,9 @@
 		B271CC4323CCE7B500706E7F /* QuestionAppointmentAdder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271CC4223CCE7B500706E7F /* QuestionAppointmentAdder.swift */; };
 		B271CC4423CCE7B500706E7F /* QuestionAppointmentAdder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271CC4223CCE7B500706E7F /* QuestionAppointmentAdder.swift */; };
 		B271CC4523CCE7B500706E7F /* QuestionAppointmentAdder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271CC4223CCE7B500706E7F /* QuestionAppointmentAdder.swift */; };
+		B271CC4723CD438000706E7F /* QuestionMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271CC4623CD438000706E7F /* QuestionMarker.swift */; };
+		B271CC4823CD438000706E7F /* QuestionMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271CC4623CD438000706E7F /* QuestionMarker.swift */; };
+		B271CC4923CD438000706E7F /* QuestionMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271CC4623CD438000706E7F /* QuestionMarker.swift */; };
 		B278C37423AAF8BD00F82DD8 /* AppointmentRecordingPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973C23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift */; };
 		B278C37523AAF8BF00F82DD8 /* AppointmentRecordingPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22F973C23AABAFF0023BBC6 /* AppointmentRecordingPlay.swift */; };
 		B2D4055023AC3D9300605D6D /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2447AB723A93D92004AAD1F /* CalendarView.swift */; };
@@ -131,6 +134,7 @@
 		B2447ABE23A96602004AAD1F /* AppointmentRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRecording.swift; sourceTree = "<group>"; };
 		B26AB12023A8799C00359769 /* AppointmentEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentEditor.swift; sourceTree = "<group>"; };
 		B271CC4223CCE7B500706E7F /* QuestionAppointmentAdder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionAppointmentAdder.swift; sourceTree = "<group>"; };
+		B271CC4623CD438000706E7F /* QuestionMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionMarker.swift; sourceTree = "<group>"; };
 		B2D4055223AC5A1200605D6D /* AppointmentAdder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentAdder.swift; sourceTree = "<group>"; };
 		B2E8ABD423CBF8070068D618 /* QuestionAppointmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionAppointmentView.swift; sourceTree = "<group>"; };
 		B2E8ABD823CCB0E30068D618 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -282,6 +286,7 @@
 				B2FD547423C80DA0004B2DB1 /* Question.swift */,
 				B2FD547823C814D9004B2DB1 /* QuestionPreviewList.swift */,
 				B2FD548923C92B99004B2DB1 /* QuestionDetail.swift */,
+				B271CC4623CD438000706E7F /* QuestionMarker.swift */,
 				B2E8ABD423CBF8070068D618 /* QuestionAppointmentView.swift */,
 				B271CC4223CCE7B500706E7F /* QuestionAppointmentAdder.swift */,
 			);
@@ -441,6 +446,7 @@
 				B2447AB423A8243D004AAD1F /* AppointmentDetail.swift in Sources */,
 				B26AB12123A8799C00359769 /* AppointmentEditor.swift in Sources */,
 				B2E8ABD923CCB0E40068D618 /* Constants.swift in Sources */,
+				B271CC4723CD438000706E7F /* QuestionMarker.swift in Sources */,
 				B239986D23C2B30100B912FF /* AppointmentList.swift in Sources */,
 				B2447A9A23A7F35D004AAD1F /* HomePage.swift in Sources */,
 				B2447AAA23A805A7004AAD1F /* Appointment.swift in Sources */,
@@ -460,6 +466,7 @@
 				B26AB12223A8799C00359769 /* AppointmentEditor.swift in Sources */,
 				B2D4055023AC3D9300605D6D /* CalendarView.swift in Sources */,
 				B2FD547E23C81A79004B2DB1 /* Question.swift in Sources */,
+				B271CC4823CD438000706E7F /* QuestionMarker.swift in Sources */,
 				B2FD548523C8B1C0004B2DB1 /* QuestionPreviewList.swift in Sources */,
 				B271CC4423CCE7B500706E7F /* QuestionAppointmentAdder.swift in Sources */,
 				B2447A8123A7F2AE004AAD1F /* Oncology_HelperTests.swift in Sources */,
@@ -488,6 +495,7 @@
 				B26AB12323A8799C00359769 /* AppointmentEditor.swift in Sources */,
 				B2D4055123AC3D9400605D6D /* CalendarView.swift in Sources */,
 				B2FD547F23C81A7A004B2DB1 /* Question.swift in Sources */,
+				B271CC4923CD438000706E7F /* QuestionMarker.swift in Sources */,
 				B2FD548623C8B1C1004B2DB1 /* QuestionPreviewList.swift in Sources */,
 				B271CC4523CCE7B500706E7F /* QuestionAppointmentAdder.swift in Sources */,
 				B2447A8C23A7F2AE004AAD1F /* Oncology_HelperUITests.swift in Sources */,

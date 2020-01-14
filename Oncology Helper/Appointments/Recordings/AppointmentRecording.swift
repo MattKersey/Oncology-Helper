@@ -27,7 +27,7 @@ struct AppointmentRecording: View {
     @State var beganRecording = false
     @State var endPressed = false
     @State var reRecordPressed = false
-    @State var playPressed = false
+    @Binding var playPressed: Bool
     
     var appointmentIndex: Int? {
         if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
@@ -70,7 +70,12 @@ struct AppointmentRecording: View {
             return
         }
         userData.appointments[appointmentIndex!].hasRecording = false
-        userData.appointments[appointmentIndex!].timestamps = []
+        userData.appointments[appointmentIndex!].describedTimestamps = []
+        for id in userData.appointments[appointmentIndex!].questionIDs {
+            if let index = userData.questions.firstIndex(where: {$0.id == id}) {
+                userData.questions[index].appointmentTimestamps.removeAll(where: {$0.id == appointment.id})
+            }
+        }
         self.reRecordPressed = false
         self.record()
     }
@@ -81,7 +86,7 @@ struct AppointmentRecording: View {
     }
     
     func mark() -> Void {
-        userData.appointments[appointmentIndex!].timestamps.append(audioRecorder!.currentTime)
+        userData.appointments[appointmentIndex!].describedTimestamps.append(DescribedTimestamp(timestamp: audioRecorder!.currentTime))
     }
     
     func end() -> Void {
@@ -95,8 +100,9 @@ struct AppointmentRecording: View {
     
     // MARK: - initializer
     
-    init(appointment: Appointment) {
+    init(appointment: Appointment, playPressed: Binding<Bool>) {
         self.appointment = appointment
+        _playPressed = playPressed
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
@@ -130,7 +136,7 @@ struct AppointmentRecording: View {
                     Button(action: {self.record()}) {
                         ZStack {
                             Image(systemName: "circle.fill")
-                                .foregroundColor(.gray)
+                                .foregroundColor(Constants.subtitleColor)
 
                             Image(systemName: "circle.fill")
                                 .foregroundColor(.red)
@@ -141,38 +147,38 @@ struct AppointmentRecording: View {
                 } else {
                     // If currently recording, display a pause button
                     Button(action: {self.pause()}) {
-                        Image(systemName: "pause.circle.fill")
-                            .foregroundColor(.red)
+                        Image(systemName: "pause.fill")
+                            .foregroundColor(Constants.itemColor)
                     }
-                    .scaleEffect(2.0)
+                    .scaleEffect(1.5)
                     // And a marker button (for marking the time for later)
                     Button(action: {self.mark()}) {
-                        Image(systemName: "flag.circle.fill")
-                            .foregroundColor(.red)
+                        Image(systemName: "bookmark.fill")
+                            .foregroundColor(Constants.itemColor)
                     }
-                    .scaleEffect(2.0)
+                    .scaleEffect(1.25)
                     .padding(.leading)
                 }
                 Spacer()
                 // If we have a recording, display the play button
                 if appointment.hasRecording {
                     Button(action: {self.playPressed.toggle()}) {
-                        Image(systemName: "play.circle.fill")
-                            .foregroundColor(.gray)
+                        Image(systemName: "play.fill")
+                            .foregroundColor(Constants.itemColor)
                     }
-                    .scaleEffect(2.0)
+                    .scaleEffect(1.5)
                 } else if self.beganRecording {
                     // If we have started recording, regardless of if we pause, display a stop button
                     Button(action: {self.endPressed.toggle()}) {
-                        Image(systemName: "stop.circle.fill")
+                        Image(systemName: "stop.fill")
                             // Make it red if we are currently recording, gray if not
-                            .foregroundColor(self.isRecording ? .red : .gray)
+                            .foregroundColor(Constants.itemColor)
                     }
-                    .scaleEffect(2.0)
+                    .scaleEffect(1.5)
                 }
             } else if self.endPressed {
                 // Warning section for if a user presses stop
-                Text("Are you sure you want to end recording?")
+                Text("End recording?")
                     .foregroundColor(.red)
                 Spacer()
                 Button(action: {self.endPressed.toggle()}) {
@@ -187,7 +193,7 @@ struct AppointmentRecording: View {
                 }
             } else {
                 // Warning section for if a user presses record on an appointment that alreay has a recording
-                Text("Are you sure you want to rerecord? This will delete the previous recording.")
+                Text("Delete previous recording.")
                     .foregroundColor(.red)
                 Spacer()
                 Button(action: {self.reRecordPressed.toggle()}) {
@@ -203,11 +209,7 @@ struct AppointmentRecording: View {
             }
         }
         .padding()
-        .buttonStyle(BorderlessButtonStyle())
-        .sheet(isPresented: self.$playPressed){
-            AppointmentRecordingPlay(appointment: self.appointment)
-                .environmentObject(self.userData)
-        })
+        .buttonStyle(BorderlessButtonStyle()))
     }
 }
 
@@ -215,6 +217,6 @@ struct AppointmentRecording: View {
 
 struct AppointmentRecording_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecording(appointment: UserData().appointments[0]).environmentObject(UserData())
+        AppointmentRecording(appointment: UserData().appointments[0], playPressed: .constant(false)).environmentObject(UserData())
     }
 }

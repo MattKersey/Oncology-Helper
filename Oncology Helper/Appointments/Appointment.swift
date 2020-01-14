@@ -19,7 +19,8 @@ struct Appointment: Hashable, Codable, Identifiable {
     var location: String
     fileprivate var RC3339date: String
     var hasRecording: Bool
-    var timestamps: [TimeInterval]
+    var describedTimestamps: [DescribedTimestamp]
+    var questionIDs: [Int]
     
     // MARK: - computed properties
     
@@ -52,6 +53,13 @@ struct Appointment: Hashable, Codable, Identifiable {
         self.location = location
         self.RC3339date = RC3339date
         self.hasRecording = false
-        self.timestamps = []
+        self.describedTimestamps = []
+        self.questionIDs = []
     }
+}
+
+struct DescribedTimestamp: Hashable, Codable {
+    var id: Int?
+    var description: String?
+    var timestamp: TimeInterval
 }

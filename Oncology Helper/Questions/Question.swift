@@ -23,3 +23,8 @@ struct AppointmentTimestamps: Hashable, Codable, Identifiable {
     var id: Int
     var timestamps: [TimeInterval]
 }
+
+struct IDTimestampSingle: Hashable, Codable {
+    var id: Int
+    var timestamp: TimeInterval
+}

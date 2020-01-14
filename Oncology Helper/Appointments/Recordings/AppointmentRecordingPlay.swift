@@ -50,21 +50,31 @@ struct AppointmentRecordingPlay: View {
     func setTime(_ timestamp: TimeInterval) {
         audioPlayer.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
         audioPlayer.play()
+        isPlaying = true
     }
     
     func mark(_ timestamp: TimeInterval) -> Void {
         var index = 0
-        for storedTimestamp in userData.appointments[appointmentIndex!].timestamps {
-            if storedTimestamp > timestamp {
+        for describedTimestamp in userData.appointments[appointmentIndex!].describedTimestamps {
+            if describedTimestamp.timestamp > timestamp {
                 break
             }
             index += 1
         }
-        userData.appointments[appointmentIndex!].timestamps.insert(timestamp, at: index)
+        userData.appointments[appointmentIndex!].describedTimestamps.insert(DescribedTimestamp(timestamp: timestamp), at: index)
     }
     
     func delete(at offsets: IndexSet) {
-        userData.appointments[appointmentIndex!].timestamps.remove(atOffsets: offsets)
+        for index in offsets {
+            if let id = userData.appointments[appointmentIndex!].describedTimestamps[index].id {
+                if let questionsIndex = userData.questions.firstIndex(where: {$0.id == id}) {
+                    if let aptTimesIndex = userData.questions[questionsIndex].appointmentTimestamps.firstIndex(where: {$0.id == userData.appointments[appointmentIndex!].id}) {
+                        userData.questions[questionsIndex].appointmentTimestamps[aptTimesIndex].timestamps.removeAll(where: {$0 == userData.appointments[appointmentIndex!].describedTimestamps[index].timestamp})
+                    }
+                }
+            }
+        }
+        userData.appointments[appointmentIndex!].describedTimestamps.remove(atOffsets: offsets)
     }
     
     func sliderEditingChanged(editingStarted: Bool) {
@@ -104,10 +114,11 @@ struct AppointmentRecordingPlay: View {
                 AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing, isPlaying: $isPlaying)
                 HStack {
                     Button(action: {self.isPlaying ? self.pause() : self.play()}) {
-                        Image(systemName: self.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .foregroundColor(.red)
+                        Image(systemName: self.isPlaying ? "pause.fill" : "play.fill")
+                            .foregroundColor(Constants.itemColor)
                     }
-                    .scaleEffect(2.0)
+                    .scaleEffect(1.5)
+                    .frame(width: 20.0)
                     .padding()
                     Spacer()
                     Text("0")
@@ -115,17 +126,17 @@ struct AppointmentRecordingPlay: View {
                     Text(verbatim: String(format: "%.1f", duration))
                     Spacer()
                     Button(action: {self.mark(CMTimeGetSeconds(self.audioPlayer.currentTime()))}) {
-                        Image(systemName: "flag.circle.fill")
-                            .foregroundColor(.red)
+                        Image(systemName: "bookmark.fill")
+                            .foregroundColor(Constants.itemColor)
                     }
-                    .scaleEffect(2.0)
+                    .scaleEffect(1.25)
                     .padding()
                 }
                 .buttonStyle(BorderlessButtonStyle())
             }
-            ForEach(appointment.timestamps, id: \.self) { timestamp in
-                Button(action: {self.setTime(timestamp)}) {
-                    Text(verbatim: String(format: "%.1f", timestamp))
+            ForEach(appointment.describedTimestamps, id: \.self) { describedTimestamp in
+                Button(action: {self.setTime(describedTimestamp.timestamp)}) {
+                    Text(verbatim: String(format: "%.1f", describedTimestamp.timestamp))
                 }
             }
             .onDelete(perform: self.delete)
@@ -136,7 +147,7 @@ struct AppointmentRecordingPlay: View {
 
 // MARK: - UIKit
 
-class AudioPlayerUIView: UIView {
+private class AudioPlayerUIView: UIView {
     private let audioPlayer: Binding<AVPlayer>
     private let currentTime: Binding<TimeInterval>
     private let isEditing: Binding<Bool>
@@ -184,7 +195,7 @@ class AudioPlayerUIView: UIView {
     }
 }
 
-struct AudioPlayerView: UIViewRepresentable {
+private struct AudioPlayerView: UIViewRepresentable {
     @Binding var audioPlayer: AVPlayer
     @Binding var currentTime: TimeInterval
     @Binding var isEditing: Bool

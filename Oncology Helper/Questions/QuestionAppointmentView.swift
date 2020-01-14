@@ -17,7 +17,7 @@ struct QuestionAppointmentView: View {
     @State var showTimes = false
     let appointmentTimestamps: AppointmentTimestamps
     @Binding var audioPlayer: AVPlayer?
-    @Binding var playing: appointmentTimestampSingle?
+    @Binding var playing: IDTimestampSingle?
     
     var appointment: Appointment? {
         if let apt = userData.appointments.first(where: {$0.id == appointmentTimestamps.id}) {
@@ -43,7 +43,7 @@ struct QuestionAppointmentView: View {
         audioPlayer = AVPlayer(url: appointment.recordingURL)
         audioPlayer!.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
         audioPlayer!.play()
-        playing = appointmentTimestampSingle(appointmentId: appointment.id, timestamp: timestamp)
+        playing = IDTimestampSingle(id: appointment.id, timestamp: timestamp)
     }
     
     func stop(appointment: Appointment, timestamp: TimeInterval) -> Void {
@@ -100,7 +100,7 @@ struct QuestionAppointmentView: View {
                         Image(systemName: "doc.text")
                         Divider()
                         if self.playing != nil &&
-                            self.playing!.appointmentId == appointment.id &&
+                            self.playing!.id == appointment.id &&
                             self.playing!.timestamp == timestamp {
                             Button(action: {self.stop(appointment: appointment, timestamp: timestamp)}) {
                                 Image(systemName: "stop.fill")

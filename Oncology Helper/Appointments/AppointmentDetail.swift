@@ -16,6 +16,7 @@ struct AppointmentDetail: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.editMode) var mode
     @State private var editMode = false
+    @State var playPressed = false
     var id: Int
     
     var appointment: Appointment? {
@@ -41,16 +42,37 @@ struct AppointmentDetail: View {
         guard let appointment = self.appointment else {
                 return AnyView(Text("Appointment unavailable"))
         }
-        return AnyView(VStack {
-            List {
-                AppointmentRecording(appointment: appointment).environmentObject(self.userData)
+        let showModal = Binding<Bool>(get: {
+            return self.playPressed || self.editMode
+        }, set: { p in
+            self.playPressed = p
+            self.editMode = p
+        })
+        return AnyView(GeometryReader { geo in
+            VStack(spacing: 0) {
+                AppointmentRecording(appointment: appointment, playPressed: self.$playPressed).environmentObject(self.userData)
+                    .padding()
+                    .frame(width: geo.size.width, height: 60.0)
+                Spacer()
+                List {
+                    ForEach(appointment.questionIDs, id: \.self) { id in
+                        HStack {
+                            QuestionMarker()
+                                .environmentObject(self.userData)
+                        }
+                    }
+                }
             }
-            .navigationBarTitle(Text("\(appointment.doctor) | \(dateString!)"))
+            .navigationBarTitle(Text("\(appointment.doctor) | \(self.dateString!)"))
             .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
-            .sheet(isPresented: self.$editMode){
-                AppointmentEditor(appointment: appointment, selectedTime:  appointment.date).environmentObject(self.userData)
+            .sheet(isPresented: showModal){
+                if self.playPressed {
+                    AppointmentRecordingPlay(appointment: appointment)
+                        .environmentObject(self.userData)
+                } else {
+                    AppointmentEditor(appointment: appointment, selectedTime:  appointment.date).environmentObject(self.userData)
+                }
             }
-            Spacer()
         })
     }
 }

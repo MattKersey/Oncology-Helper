@@ -17,7 +17,7 @@ struct QuestionDetail: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.editMode) var mode
     @State var audioPlayer: AVPlayer?
-    @State var playing: appointmentTimestampSingle?
+    @State var playing: IDTimestampSingle?
     @State private var editMode = false
     @State var addAppointments = false
     let id: Int
@@ -107,9 +107,67 @@ struct QuestionDetail: View {
     }
 }
 
-struct appointmentTimestampSingle: Hashable, Codable {
-    var appointmentId: Int
-    var timestamp: TimeInterval
+// MARK: - UIKit
+
+private class AudioPlayerUIView: UIView {
+    private let audioPlayer: Binding<AVPlayer?>
+    private let playing: Binding<IDTimestampSingle?>
+    private var timeObserverToken: Any?
+    private var endObserverToken: Any?
+    
+    init(audioPlayer: Binding<AVPlayer?>, playing: Binding<IDTimestampSingle?>) {
+        self.audioPlayer = audioPlayer
+        self.playing = playing
+        super.init(frame: .zero)
+        
+//        let interval = CMTime(seconds: 0.02, preferredTimescale: 600)
+//        timeObserverToken = audioPlayer.wrappedValue?.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
+//            guard let self = self else {return}
+//              // Check here to see if the time is out of range, ie after the end of the clip
+//        }
+        
+        endObserverToken = NotificationCenter.default.addObserver(self, selector: #selector(self.didFinishPlaying(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func didFinishPlaying(note: NSNotification) {
+        self.audioPlayer.wrappedValue = nil
+        self.playing.wrappedValue = nil
+    }
+    
+    func removeObservers() {
+        if (timeObserverToken != nil) {
+            audioPlayer.wrappedValue?.removeTimeObserver(timeObserverToken!)
+            timeObserverToken = nil
+        }
+        if (endObserverToken != nil) {
+            NotificationCenter.default.removeObserver(endObserverToken!)
+            endObserverToken = nil
+        }
+    }
+}
+
+private struct AudioPlayerView: UIViewRepresentable {
+    @Binding var audioPlayer: AVPlayer?
+    @Binding var playing: IDTimestampSingle?
+    
+    func makeUIView(context: UIViewRepresentableContext<AudioPlayerView>) -> UIView {
+        let uiView = AudioPlayerUIView(audioPlayer: $audioPlayer, playing: $playing)
+        return uiView
+    }
+    
+    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<AudioPlayerView>) {
+    }
+    
+    static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
+        guard let audioPlayerUIView = uiView as? AudioPlayerUIView else {
+            return
+        }
+        audioPlayerUIView.removeObservers()
+    }
 }
 
 // MARK: - previews

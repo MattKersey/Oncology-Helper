@@ -16,6 +16,9 @@ struct Constants {
                                            green: 87.0 / 255,
                                            blue: 97.0 / 255,
                                            alpha: 1.0)
+    static let itemColor = Color(red: 63.0 / 255,
+                                 green: 87.0 / 255,
+                                 blue: 97.0 / 255)
     static let titleColor = Color(red: 59.0 / 255,
                                   green: 59.0 / 255,
                                   blue: 59.0 / 255)
