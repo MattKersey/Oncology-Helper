@@ -86,7 +86,7 @@ struct AppointmentRecording: View {
     }
     
     func mark() -> Void {
-        userData.appointments[appointmentIndex!].describedTimestamps.append(DescribedTimestamp(timestamp: audioRecorder!.currentTime))
+        userData.addTimestamp(appointmentID: appointment.id, timestamp: audioRecorder!.currentTime)
     }
     
     func end() -> Void {

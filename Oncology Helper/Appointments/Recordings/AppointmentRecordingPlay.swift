@@ -54,27 +54,13 @@ struct AppointmentRecordingPlay: View {
     }
     
     func mark(_ timestamp: TimeInterval) -> Void {
-        var index = 0
-        for describedTimestamp in userData.appointments[appointmentIndex!].describedTimestamps {
-            if describedTimestamp.timestamp > timestamp {
-                break
-            }
-            index += 1
-        }
-        userData.appointments[appointmentIndex!].describedTimestamps.insert(DescribedTimestamp(timestamp: timestamp), at: index)
+        userData.addTimestamp(appointmentID: appointment.id, timestamp: timestamp, sort: true)
     }
     
     func delete(at offsets: IndexSet) {
         for index in offsets {
-            if let id = userData.appointments[appointmentIndex!].describedTimestamps[index].id {
-                if let questionsIndex = userData.questions.firstIndex(where: {$0.id == id}) {
-                    if let aptTimesIndex = userData.questions[questionsIndex].appointmentTimestamps.firstIndex(where: {$0.id == userData.appointments[appointmentIndex!].id}) {
-                        userData.questions[questionsIndex].appointmentTimestamps[aptTimesIndex].timestamps.removeAll(where: {$0 == userData.appointments[appointmentIndex!].describedTimestamps[index].timestamp})
-                    }
-                }
-            }
+            userData.deleteTimestamp(appointmentID: appointment.id, timestamp: appointment.describedTimestamps[index].timestamp)
         }
-        userData.appointments[appointmentIndex!].describedTimestamps.remove(atOffsets: offsets)
     }
     
     func sliderEditingChanged(editingStarted: Bool) {
