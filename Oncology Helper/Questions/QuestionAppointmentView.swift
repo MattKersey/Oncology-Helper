@@ -18,7 +18,7 @@ struct QuestionAppointmentView: View {
     let appointmentID: Int
     let questionID: Int
     @Binding var audioPlayer: AVPlayer?
-    @Binding var playing: IDTimestampSingle?
+    @Binding var playing: DescribedTimestamp?
     
     lazy var questionIndex: Int? = {
         if let index = userData.questions.firstIndex(where: {$0.id == questionID}) {
@@ -34,19 +34,17 @@ struct QuestionAppointmentView: View {
         return nil
     }
     
-    var appointmentTimestamps: AppointmentTimestamps? {
-        var mutableSelf = self
-        guard let qIndex = mutableSelf.questionIndex else {
-            return nil
-        }
-        return userData.questions[qIndex].appointmentTimestamps.first(where: {$0.id == appointmentID})
+    var describedTimestamps: [DescribedTimestamp] {
+        guard let appointment = self.appointment else {return []}
+        return appointment.describedTimestamps.filter({$0.id == questionID})
     }
     
     var dateString: String {
+        guard let appointment = self.appointment else {return ""}
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "MMMM dd, yyyy"
-        return formatter.string(from: appointment!.date)
+        return formatter.string(from: appointment.date)
     }
     
     // MARK: - functions
@@ -58,10 +56,10 @@ struct QuestionAppointmentView: View {
         audioPlayer = AVPlayer(url: appointment.recordingURL)
         audioPlayer!.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
         audioPlayer!.play()
-        playing = IDTimestampSingle(id: appointment.id, timestamp: timestamp)
+        playing = DescribedTimestamp(id: appointment.id, timestamp: timestamp)
     }
     
-    func stop(appointment: Appointment, timestamp: TimeInterval) -> Void {
+    func stop(appointment: Appointment) {
         guard audioPlayer != nil else {
             return
         }
@@ -72,9 +70,8 @@ struct QuestionAppointmentView: View {
     
     func delete(at offsets: IndexSet) {
         for index in offsets {
-            print("\(appointment!.id): \(appointmentTimestamps!.timestamps[index])")
             userData.deleteTimestamp(appointmentID: appointment!.id,
-                                     timestamp: appointmentTimestamps!.timestamps[index])
+                                     timestamp: describedTimestamps[index].timestamp)
         }
     }
     
@@ -90,7 +87,7 @@ struct QuestionAppointmentView: View {
         }
         return AnyView(Group {
             HStack {
-                if !appointmentTimestamps!.timestamps.isEmpty {
+                if !describedTimestamps.isEmpty {
                     Button(action: {self.showTimes.toggle()}) {
                         Image(systemName: "chevron.right.circle")
                     }
@@ -119,21 +116,21 @@ struct QuestionAppointmentView: View {
             }
             .buttonStyle(BorderlessButtonStyle())
             if showTimes {
-                ForEach(appointmentTimestamps!.timestamps, id: \.self) { timestamp in
+                ForEach(describedTimestamps, id: \.self) { describedTimestamp in
                     HStack {
-                        Text(verbatim: String(format: "%.1f", timestamp))
+                        Text(verbatim: String(format: "%.1f", describedTimestamp.timestamp))
                             .padding(.leading)
                         Spacer()
                         Image(systemName: "doc.text")
                         Divider()
                         if self.playing != nil &&
                             self.playing!.id == appointment.id &&
-                            self.playing!.timestamp == timestamp {
-                            Button(action: {self.stop(appointment: appointment, timestamp: timestamp)}) {
+                            self.playing!.timestamp == describedTimestamp.timestamp {
+                            Button(action: {self.stop(appointment: appointment)}) {
                                 Image(systemName: "stop.fill")
                             }
                         } else {
-                            Button(action: {self.play(appointment: appointment, timestamp: timestamp)}) {
+                            Button(action: {self.play(appointment: appointment, timestamp: describedTimestamp.timestamp)}) {
                                 Image(systemName: "play.fill")
                             }
                         }

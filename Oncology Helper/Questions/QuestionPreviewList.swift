@@ -41,7 +41,7 @@ struct QuestionPreviewList: View {
                                            questionString: newQuestion,
                                            description: nil,
                                            pin: true,
-                                           appointmentTimestamps: []))
+                                           appointmentIDs: []))
         newQuestion = ""
     }
     

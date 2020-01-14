@@ -17,7 +17,7 @@ struct QuestionDetail: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.editMode) var mode
     @State var audioPlayer: AVPlayer?
-    @State var playing: IDTimestampSingle?
+    @State var playing: DescribedTimestamp?
     @State private var editMode = false
     @State var addAppointments = false
     let id: Int
@@ -79,8 +79,8 @@ struct QuestionDetail: View {
                     .frame(width: geo.size.width)
                     .background(Constants.backgroundColor)
                     List {
-                        ForEach(question.appointmentTimestamps, id: \.self) { appointmentTimestamps in
-                            QuestionAppointmentView(appointmentID: appointmentTimestamps.id,
+                        ForEach(question.appointmentIDs, id: \.self) { id in
+                            QuestionAppointmentView(appointmentID: id,
                                                     questionID: self.id,
                                                     audioPlayer: self.$audioPlayer,
                                                     playing: self.$playing)
@@ -112,11 +112,11 @@ struct QuestionDetail: View {
 
 private class AudioPlayerUIView: UIView {
     private let audioPlayer: Binding<AVPlayer?>
-    private let playing: Binding<IDTimestampSingle?>
+    private let playing: Binding<DescribedTimestamp?>
     private var timeObserverToken: Any?
     private var endObserverToken: Any?
     
-    init(audioPlayer: Binding<AVPlayer?>, playing: Binding<IDTimestampSingle?>) {
+    init(audioPlayer: Binding<AVPlayer?>, playing: Binding<DescribedTimestamp?>) {
         self.audioPlayer = audioPlayer
         self.playing = playing
         super.init(frame: .zero)
@@ -153,7 +153,7 @@ private class AudioPlayerUIView: UIView {
 
 private struct AudioPlayerView: UIViewRepresentable {
     @Binding var audioPlayer: AVPlayer?
-    @Binding var playing: IDTimestampSingle?
+    @Binding var playing: DescribedTimestamp?
     
     func makeUIView(context: UIViewRepresentableContext<AudioPlayerView>) -> UIView {
         let uiView = AudioPlayerUIView(audioPlayer: $audioPlayer, playing: $playing)

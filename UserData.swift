@@ -31,15 +31,15 @@ final class UserData: ObservableObject {
     
     public func deleteQuestion(index: Int) {
         let questionID = questions[index].id
-        for appointmentTimestamp in questions[index].appointmentTimestamps {
-            removeQAConnection(appointmentID: appointmentTimestamp.id, questionID: questionID)
+        for appointmentID in questions[index].appointmentIDs {
+            removeQAConnection(appointmentID: appointmentID, questionID: questionID)
         }
         questions.remove(at: index)
     }
     
     public func removeQAConnection(appointmentID: Int, questionID: Int) {
         if let qIndex = questions.firstIndex(where: {$0.id == questionID}) {
-            questions[qIndex].appointmentTimestamps.removeAll(where: {$0.id == appointmentID})
+            questions[qIndex].appointmentIDs.removeAll(where: {$0 == appointmentID})
         }
         if let aptIndex = appointments.firstIndex(where: {$0.id == appointmentID}) {
             appointments[aptIndex].questionIDs.removeAll(where: {$0 == questionID})
@@ -60,36 +60,12 @@ final class UserData: ObservableObject {
         if sort {
             var index = 0
             for describedTimestamp in appointments[aptIndex].describedTimestamps {
-                if describedTimestamp.timestamp > timestamp {
-                    break
-                }
+                if describedTimestamp.timestamp > timestamp {break}
                 index += 1
             }
             appointments[aptIndex].describedTimestamps.insert(describedTimestamp, at: index)
         } else {
             appointments[aptIndex].describedTimestamps.append(describedTimestamp)
-        }
-        
-        guard questionID != nil else {
-            return
-        }
-        guard let qIndex = questions.firstIndex(where: {$0.id == questionID!}) else {
-            return
-        }
-        guard let qAptIndex = questions[qIndex].appointmentTimestamps.firstIndex(where: {$0.id == appointmentID}) else {
-            return
-        }
-        if sort {
-            var index = 0
-            for qTimestamp in questions[qIndex].appointmentTimestamps[qAptIndex].timestamps {
-                if qTimestamp > timestamp {
-                    break
-                }
-                index += 1
-            }
-            questions[qIndex].appointmentTimestamps[qAptIndex].timestamps.insert(timestamp, at: index)
-        } else {
-            questions[qIndex].appointmentTimestamps[qAptIndex].timestamps.append(timestamp)
         }
     }
     
@@ -100,18 +76,7 @@ final class UserData: ObservableObject {
         guard let timeIndex = appointments[aptIndex].describedTimestamps.firstIndex(where: {$0.timestamp == timestamp}) else {
             return
         }
-        let id = appointments[aptIndex].describedTimestamps[timeIndex].id
         appointments[aptIndex].describedTimestamps.remove(at: timeIndex)
-        guard let questionID = id else {
-            return
-        }
-        guard let qIndex = questions.firstIndex(where: {$0.id == questionID}) else {
-            return
-        }
-        guard let qAptIndex = questions[qIndex].appointmentTimestamps.firstIndex(where: {$0.id == appointmentID}) else {
-            return
-        }
-        questions[qIndex].appointmentTimestamps[qAptIndex].timestamps.removeAll(where: {$0 == timestamp})
     }
     
     // MARK: - initializer

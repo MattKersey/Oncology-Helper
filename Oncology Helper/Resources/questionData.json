@@ -4,19 +4,9 @@
         "questionString": "What is the best treatment for this?",
         "description": "Where can I find more information?",
         "pin": true,
-        "appointmentTimestamps":[
-            {
-                "id": 1,
-                "timestamps":[
-                    3.41,
-                    6.78
-                ]
-            },
-            {
-                "id": 2,
-                "timestamps":[
-                ]
-            }
+        "appointmentIDs":[
+            1,
+            2
         ]
     }
 ]
