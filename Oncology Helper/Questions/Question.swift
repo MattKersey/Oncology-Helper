@@ -16,15 +16,5 @@ struct Question: Hashable, Codable, Identifiable {
     var questionString: String
     var description: String?
     var pin: Bool
-    var appointmentTimestamps: [AppointmentTimestamps]
-}
-
-struct AppointmentTimestamps: Hashable, Codable, Identifiable {
-    var id: Int
-    var timestamps: [TimeInterval]
-}
-
-struct IDTimestampSingle: Hashable, Codable {
-    var id: Int
-    var timestamp: TimeInterval
+    var appointmentIDs: [Int]
 }

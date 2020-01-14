@@ -68,13 +68,6 @@ struct AppointmentRecording: View {
     func reRecord() -> Void {
         userData.appointments[appointmentIndex!].hasRecording = false
         userData.appointments[appointmentIndex!].describedTimestamps = []
-        for id in userData.appointments[appointmentIndex!].questionIDs {
-            if let qIndex = userData.questions.firstIndex(where: {$0.id == id}) {
-                if let aptIndex = userData.questions[qIndex].appointmentTimestamps.firstIndex(where: {$0.id == appointment.id}) {
-                    userData.questions[qIndex].appointmentTimestamps[aptIndex].timestamps.removeAll()
-                }
-            }
-        }
         self.reRecordPressed = false
         self.record()
     }
