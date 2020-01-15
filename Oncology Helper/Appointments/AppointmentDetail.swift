@@ -63,6 +63,8 @@ struct AppointmentDetail: View {
                             QuestionMarker(questionID: id, appointmentID: self.id, audioRecorder: self.$audioRecorder)
                                 .environmentObject(self.userData)
                         }
+                        .listRowInsets(EdgeInsets())
+                        .padding()
                     }
                 }
             }
