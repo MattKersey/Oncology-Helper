@@ -21,6 +21,9 @@ final class UserData: ObservableObject {
     // MARK: - functions
     
     public func deleteAppointment(index: Int) {
+        do {
+            try FileManager.default.removeItem(at: appointments[index].recordingURL)
+        } catch {}
         let appointmentID = appointments[index].id
         let questionIDs = appointments[index].questionIDs
         appointments.remove(at: index)

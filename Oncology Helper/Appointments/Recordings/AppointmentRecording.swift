@@ -66,8 +66,10 @@ struct AppointmentRecording: View {
     }
     
     func reRecord() -> Void {
-        userData.appointments[appointmentIndex!].hasRecording = false
         userData.appointments[appointmentIndex!].describedTimestamps = []
+        do {
+            try FileManager.default.removeItem(at: userData.appointments[appointmentIndex!].recordingURL)
+        } catch {}
         self.reRecordPressed = false
         self.record()
     }
@@ -84,7 +86,6 @@ struct AppointmentRecording: View {
     func end() -> Void {
         self.isRecording = false
         self.endPressed = false
-        userData.appointments[appointmentIndex!].hasRecording = true
         audioRecorder!.stop()
         audioRecorder = nil
     }
@@ -182,18 +183,17 @@ struct AppointmentRecording: View {
                 .padding(.leading)
             }
             Spacer()
-            // If we have a recording, display the play button
-            if appointment.hasRecording {
-                Button(action: {self.playPressed.toggle()}) {
-                    Image(systemName: "play.fill")
-                        .foregroundColor(Constants.itemColor)
-                }
-                .scaleEffect(1.5)
-            } else if audioRecorder != nil {
+            if audioRecorder != nil {
                 // If we have started recording, regardless of if we pause, display a stop button
                 Button(action: {self.endPressed.toggle()}) {
                     Image(systemName: "stop.fill")
                         // Make it red if we are currently recording, gray if not
+                        .foregroundColor(Constants.itemColor)
+                }
+                .scaleEffect(1.5)
+            } else if appointment.hasRecording {
+                Button(action: {self.playPressed.toggle()}) {
+                    Image(systemName: "play.fill")
                         .foregroundColor(Constants.itemColor)
                 }
                 .scaleEffect(1.5)

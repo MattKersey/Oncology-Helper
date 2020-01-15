@@ -4,7 +4,6 @@
         "doctor": "Edward Jenner",
         "location": "Dartmouth-Hitchcock Medical Center",
         "RC3339date": "2020-01-05T16:30:00+03:00",
-        "hasRecording": false,
         "describedTimestamps":[
         ],
         "questionIDs":[
@@ -16,7 +15,6 @@
         "doctor": "Elizabeth Blackwell",
         "location": "Dana-Farber",
         "RC3339date": "2020-01-15T11:00:00+03:00",
-        "hasRecording": false,
         "describedTimestamps":[
         ],
         "questionIDs":[
@@ -28,7 +26,6 @@
         "doctor": "Daniel Hale Williams",
         "location": "Sloan-Kettering",
         "RC3339date": "2020-03-15T13:30:00+03:00",
-        "hasRecording": false,
         "describedTimestamps":[
         ],
         "questionIDs":[
@@ -39,7 +36,6 @@
         "doctor": "Sir Alexander Fleming",
         "location": "Mayo Clinic",
         "RC3339date": "2020-05-16T13:30:00+03:00",
-        "hasRecording": false,
         "describedTimestamps":[
         ],
         "questionIDs":[

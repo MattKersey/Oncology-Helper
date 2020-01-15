@@ -18,13 +18,16 @@ struct Appointment: Hashable, Codable, Identifiable {
     var doctor: String
     var location: String
     fileprivate var RC3339date: String
-    var hasRecording: Bool
     var describedTimestamps: [DescribedTimestamp]
     var questionIDs: [Int]
     
     // MARK: - computed properties
     
     static let `default` = UserData().appointments[0]
+    
+    var hasRecording: Bool {
+        return FileManager.default.fileExists(atPath: recordingURL.path)
+    }
     
     var recordingURL: URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("audioRecording\(self.id).m4a")
@@ -52,7 +55,6 @@ struct Appointment: Hashable, Codable, Identifiable {
         self.doctor = doctor
         self.location = location
         self.RC3339date = RC3339date
-        self.hasRecording = false
         self.describedTimestamps = []
         self.questionIDs = []
     }
