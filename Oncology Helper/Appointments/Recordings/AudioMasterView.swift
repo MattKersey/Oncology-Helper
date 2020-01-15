@@ -14,7 +14,7 @@
 import SwiftUI
 import AVFoundation
 
-struct AppointmentRecording: View {
+struct AudioMasterView: View {
 
     // MARK: - instance properties
     
@@ -22,11 +22,8 @@ struct AppointmentRecording: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let appointment: Appointment
     @Binding var audioRecorder: AVAudioRecorder?
-    @Binding var audioPlayer: AVPlayer?
-    @State var currentTime: TimeInterval = 0.0
+    @Binding var currentTime: TimeInterval
     @State var duration: TimeInterval = 0.0
-    @State var isEditing = false
-    @State var isPlaying = false
     @State var isRecording = false
     @State var endPressed = false
     @State var reRecordPressed = false
@@ -45,10 +42,9 @@ struct AppointmentRecording: View {
     
     func record() -> Void {
         // Check to see if we are erasing a file so we can warn the user
-        if (userData.appointments[appointmentIndex!].hasRecording) {
+        if userData.appointments[appointmentIndex!].hasRecording && audioRecorder == nil {
             self.reRecordPressed = true
         } else {
-            audioPlayer = nil
             // Check to see if we are beginning a new recording
             if (audioRecorder == nil) {
                 let settings = [
@@ -90,38 +86,6 @@ struct AppointmentRecording: View {
         audioRecorder = nil
     }
     
-    // MARK: - player functions
-    
-    func play() {
-        if audioPlayer == nil {
-            audioPlayer = AVPlayer(url: appointment.recordingURL)
-            duration = CMTimeGetSeconds(audioPlayer!.currentItem!.asset.duration)
-        }
-        audioPlayer!.play()
-        isPlaying = true
-    }
-    
-    func pausePlayback() {
-        
-    }
-    
-    func sliderEditingChanged(editingStarted: Bool) {
-        guard audioPlayer != nil else {return}
-        if editingStarted {
-            isEditing = true
-            pauseRecording()
-        } else {
-            audioPlayer!.seek(to: CMTime(seconds: self.currentTime, preferredTimescale: 600)) { _ in
-                self.isEditing = false
-                if self.isPlaying {
-                    self.play()
-                }
-            }
-        }
-    }
-    
-    // MARK: - shared functions
-    
     func mark(_ timestamp: TimeInterval) {
         userData.addTimestamp(appointmentID: appointment.id, timestamp: timestamp)
     }
@@ -130,10 +94,10 @@ struct AppointmentRecording: View {
     
     init(appointment: Appointment,
          audioRecorder: Binding<AVAudioRecorder?>,
-         audioPlayer: Binding<AVPlayer?>) {
+         currentTime: Binding<TimeInterval>) {
         self.appointment = appointment
         _audioRecorder = audioRecorder
-        _audioPlayer = audioPlayer
+        _currentTime = currentTime
     }
     
     // MARK: - body
@@ -198,10 +162,6 @@ struct AppointmentRecording: View {
         // MARK: - main view
         
         return AnyView(ZStack {
-            AudioPlayerView(audioPlayer: $audioPlayer,
-                            currentTime: $currentTime,
-                            isEditing: $isEditing,
-                            isPlaying: $isPlaying)
             HStack {
                 if audioRecorder != nil {
                     Button(action: {self.endPressed.toggle()}) {
@@ -209,6 +169,7 @@ struct AppointmentRecording: View {
                             .foregroundColor(Constants.warningColor)
                     }
                     .scaleEffect(1.5)
+                    .frame(width: 20)
                     Button(action: {self.mark(self.audioRecorder!.currentTime)}) {
                         Image(systemName: "bookmark.fill")
                             .foregroundColor(Constants.itemColor)
@@ -216,42 +177,22 @@ struct AppointmentRecording: View {
                     .scaleEffect(1.25)
                     .padding(.leading)
                 } else if appointment.hasRecording {
-                    if !isPlaying {
-                        Button(action: {self.play()}) {
-                            Image(systemName: "play.fill")
-                                .foregroundColor(Constants.itemColor)
-                        }
-                        .scaleEffect(1.5)
-                    } else {
-                        Button(action: {self.pausePlayback()}) {
-                            Image(systemName: "pause.fill")
-                                .foregroundColor(Constants.itemColor)
-                        }
-                        .scaleEffect(1.5)
-                    }
-                    Button(action: {self.mark(self.currentTime)}) {
-                        Image(systemName: "bookmark.fill")
-                            .foregroundColor(Constants.itemColor)
-                    }
-                    .scaleEffect(1.25)
-                    .padding(.leading)
+                    AudioPlaybackView(currentTime: $currentTime,
+                                      appointment: appointment)
+                        .environmentObject(self.userData)
                 } else {
                     Image(systemName: "play.fill")
                         .foregroundColor(Constants.subtitleColor)
                         .scaleEffect(1.5)
+                        .frame(width: 20)
                     Image(systemName: "bookmark.fill")
                         .foregroundColor(Constants.subtitleColor)
                         .scaleEffect(1.25)
-                        .padding(.leading)
+                        .padding([.leading, .trailing])
                 }
-//                Spacer()
-//                Text("0")
-                Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
-                    
-//                Text(verbatim: String(format: "%.1f", self.duration))
+                
                 Spacer()
                 if !self.isRecording {
-
                     Button(action: {self.record()}) {
                         ZStack {
                             Image(systemName: "circle.fill")
@@ -263,12 +204,14 @@ struct AppointmentRecording: View {
                         }
                     }
                     .scaleEffect(2.0)
+                    .frame(width: 20)
                 } else {
                     Button(action: {self.pauseRecording()}) {
                         Image(systemName: "pause.fill")
                             .foregroundColor(Constants.warningColor)
                     }
                     .scaleEffect(1.5)
+                    .frame(width: 20)
                 }
             }
             .padding()
@@ -277,92 +220,12 @@ struct AppointmentRecording: View {
     }
 }
 
-// MARK: - UIKit
-
-private class AudioPlayerUIView: UIView {
-    private let audioPlayer: Binding<AVPlayer?>
-    private let currentTime: Binding<TimeInterval>
-    private let isEditing: Binding<Bool>
-    private let isPlaying: Binding<Bool>
-    private var timeObserverToken: Any?
-    private var endObserverToken: Any?
-    
-    init(audioPlayer: Binding<AVPlayer?>, currentTime: Binding<TimeInterval>, isEditing: Binding<Bool>, isPlaying: Binding<Bool>) {
-        print("init")
-        if audioPlayer.wrappedValue != nil {
-            print("good")
-        } else {
-            print("bad")
-        }
-        self.audioPlayer = audioPlayer
-        self.currentTime = currentTime
-        self.isEditing = isEditing
-        self.isPlaying = isPlaying
-        super.init(frame: .zero)
-        
-        let interval = CMTime(seconds: 0.02, preferredTimescale: 600)
-        timeObserverToken = audioPlayer.wrappedValue?.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
-            guard let self = self else {return}
-            if !self.isEditing.wrappedValue {
-                self.currentTime.wrappedValue = time.seconds
-            }
-            
-        }
-        endObserverToken = NotificationCenter.default.addObserver(self, selector: #selector(self.didFinishPlaying(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc func didFinishPlaying(note: NSNotification) {
-        self.audioPlayer.wrappedValue?.pause()
-        self.audioPlayer.wrappedValue?.seek(to: CMTime(seconds: 0.0, preferredTimescale: 600))
-        self.isPlaying.wrappedValue = false
-    }
-    
-    func removeObservers() {
-        if (timeObserverToken != nil) {
-            if audioPlayer.wrappedValue != nil {
-                audioPlayer.wrappedValue!.removeTimeObserver(timeObserverToken!)
-                timeObserverToken = nil
-            }
-        }
-        if (endObserverToken != nil) {
-            NotificationCenter.default.removeObserver(endObserverToken!)
-            endObserverToken = nil
-        }
-    }
-}
-
-private struct AudioPlayerView: UIViewRepresentable {
-    @Binding var audioPlayer: AVPlayer?
-    @Binding var currentTime: TimeInterval
-    @Binding var isEditing: Bool
-    @Binding var isPlaying: Bool
-    
-    func makeUIView(context: UIViewRepresentableContext<AudioPlayerView>) -> UIView {
-        let uiView = AudioPlayerUIView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing, isPlaying: $isPlaying)
-        return uiView
-    }
-    
-    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<AudioPlayerView>) {
-    }
-    
-    static func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-        guard let audioPlayerUIView = uiView as? AudioPlayerUIView else {
-            return
-        }
-        audioPlayerUIView.removeObservers()
-    }
-}
-
 // MARK: - previews
 
 struct AppointmentRecording_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecording(appointment: UserData().appointments[0],
+        AudioMasterView(appointment: Appointment.default,
                              audioRecorder: .constant(nil),
-                             audioPlayer: .constant(nil)).environmentObject(UserData())
+                             currentTime: .constant(0.0)).environmentObject(UserData())
     }
 }

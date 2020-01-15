@@ -19,6 +19,7 @@ struct AppointmentDetail: View {
     @State var playPressed = false
     @State var audioRecorder: AVAudioRecorder?
     @State var audioPlayer: AVPlayer?
+    @State var currentTime: TimeInterval = 0.0
     var id: Int
     
     var appointment: Appointment? {
@@ -46,16 +47,16 @@ struct AppointmentDetail: View {
         }
         return AnyView(GeometryReader { geo in
             VStack(spacing: 0) {
-                AppointmentRecording(appointment: appointment,
+                AudioMasterView(appointment: appointment,
                                      audioRecorder: self.$audioRecorder,
-                                     audioPlayer: self.$audioPlayer)
+                                     currentTime: self.$currentTime)
                     .environmentObject(self.userData)
                     .frame(width: geo.size.width, height: 50.0)
                 Divider()
                 List {
                     ForEach(appointment.questionIDs, id: \.self) { id in
                         HStack {
-                            QuestionMarker(questionID: id, appointmentID: self.id, audioRecorder: self.$audioRecorder)
+                            QuestionMarker(questionID: id, appointmentID: self.id, audioRecorder: self.$audioRecorder, currentTime: self.$currentTime)
                                 .environmentObject(self.userData)
                         }
                         .listRowInsets(EdgeInsets())

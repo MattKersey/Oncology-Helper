@@ -1,26 +1,18 @@
-
 //
-//  AppointmentRecordingPlay.swift
+//  AudioMasterView.swift
 //  Oncology Helper
 //
-//  Audio player adapted from:
-//  https://medium.com/@chris.mash/avplayer-swiftui-b87af6d0553
-//
-//  Created by Matt Kersey on 12/18/19.
-//  Copyright © 2019 Matt Kersey. All rights reserved.
+//  Created by Matt Kersey on 1/15/20.
+//  Copyright © 2020 Matt Kersey. All rights reserved.
 //
 
 import SwiftUI
 import AVFoundation
 
-struct AppointmentRecordingPlay: View {
-    
-    // MARK: - instance properties
-    
+struct AudioPlaybackView: View {
     @EnvironmentObject var userData: UserData
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Binding var currentTime: TimeInterval
     @State var audioPlayer: AVPlayer
-    @State var currentTime: TimeInterval = 0.0
     @State var isEditing = false
     @State var isPlaying = false
     let appointment: Appointment
@@ -30,12 +22,9 @@ struct AppointmentRecordingPlay: View {
         if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
             return index
         } else {
-            self.presentationMode.wrappedValue.dismiss()
             return nil
         }
     }
-    
-    // MARK: - functions
     
     func play() -> Void {
         audioPlayer.play()
@@ -57,10 +46,11 @@ struct AppointmentRecordingPlay: View {
         userData.addTimestamp(appointmentID: appointment.id, timestamp: timestamp, sort: true)
     }
     
-    func delete(at offsets: IndexSet) {
-        for index in offsets {
-            userData.deleteTimestamp(appointmentID: appointment.id, timestamp: appointment.describedTimestamps[index].timestamp)
-        }
+    init(currentTime: Binding<TimeInterval>, appointment: Appointment) {
+        _currentTime = currentTime
+        self.appointment = appointment
+        _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
+        duration = CMTimeGetSeconds(_audioPlayer.wrappedValue.currentItem!.asset.duration)
     }
     
     func sliderEditingChanged(editingStarted: Bool) {
@@ -77,57 +67,45 @@ struct AppointmentRecordingPlay: View {
         }
     }
     
-    // MARK: - initializer
-    
-    init(appointment: Appointment) {
-        self.appointment = appointment
-        _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
-        duration = CMTimeGetSeconds(_audioPlayer.wrappedValue.currentItem!.asset.duration)
-    }
-    
-    // MARK: - body
-    
     var body: some View {
         guard appointmentIndex != nil else {
-            return AnyView(Text("Appointment unavailable"))
+            return AnyView(Text("Appointment not found"))
         }
-        guard duration > 0.0 else {
-            return AnyView(Text("Failed to initialize audio player"))
-        }
-        
-        return AnyView(List {
-            ZStack {
-                AudioPlayerView(audioPlayer: $audioPlayer, currentTime: $currentTime, isEditing: $isEditing, isPlaying: $isPlaying)
-                HStack {
-                    Button(action: {self.isPlaying ? self.pause() : self.play()}) {
-                        Image(systemName: self.isPlaying ? "pause.fill" : "play.fill")
+        return AnyView(ZStack {
+            AudioPlayerView(audioPlayer: $audioPlayer,
+                            currentTime: $currentTime,
+                            isEditing: $isEditing,
+                            isPlaying: $isPlaying)
+            HStack {
+                if !isPlaying {
+                    Button(action: {self.play()}) {
+                        Image(systemName: "play.fill")
                             .foregroundColor(Constants.itemColor)
                     }
                     .scaleEffect(1.5)
-                    .frame(width: 20.0)
-                    .padding()
-                    Spacer()
-                    Text("0")
-                    Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
-                    Text(verbatim: String(format: "%.1f", duration))
-                    Spacer()
-                    Button(action: {self.mark(CMTimeGetSeconds(self.audioPlayer.currentTime()))}) {
-                        Image(systemName: "bookmark.fill")
+                    .frame(width: 20)
+                } else {
+                    Button(action: {self.pause()}) {
+                        Image(systemName: "pause.fill")
                             .foregroundColor(Constants.itemColor)
                     }
-                    .scaleEffect(1.25)
-                    .padding()
+                    .scaleEffect(1.5)
+                    .frame(width: 20)
                 }
-                .buttonStyle(BorderlessButtonStyle())
-            }
-            ForEach(appointment.describedTimestamps, id: \.self) { describedTimestamp in
-                Button(action: {self.setTime(describedTimestamp.timestamp)}) {
-                    Text(verbatim: String(format: "%.1f", describedTimestamp.timestamp))
+                Button(action: {self.mark(self.currentTime)}) {
+                    Image(systemName: "bookmark.fill")
+                        .foregroundColor(Constants.itemColor)
                 }
+                .scaleEffect(1.25)
+                .padding([.leading, .trailing])
+                Spacer()
+                Text("0.0")
+                Slider(value: $currentTime, in: 0.0...duration, onEditingChanged: sliderEditingChanged)
+                Text(verbatim: String(format: "%.1f", duration))
+                    .frame(width: 40)
+                    .padding(.trailing)
             }
-            .onDelete(perform: self.delete)
-        }
-        .onDisappear(perform: pause))
+        })
     }
 }
 
@@ -203,11 +181,9 @@ private struct AudioPlayerView: UIViewRepresentable {
     }
 }
 
-// MARK: - previews
-
-struct AppointmentRecordingPlay_Previews: PreviewProvider {
+struct AudioPlaybackView_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecordingPlay(appointment: appointmentData[0])
-            .environmentObject(UserData())
+        AudioPlaybackView(currentTime: .constant(0.0), appointment: Appointment.default)
+        .environmentObject(UserData())
     }
 }
