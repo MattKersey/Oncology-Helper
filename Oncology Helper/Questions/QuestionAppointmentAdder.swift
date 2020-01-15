@@ -54,25 +54,27 @@ struct QuestionAppointmentAdder: View {
             Divider()
                 .padding(.top)
             if selectedDate != nil {
-                List {
-                    ForEach(self.userData.appointments) { appointment in
-                        if self.userCalendar.isDate(appointment.date, inSameDayAs: self.selectedDate!) {
-                            HStack {
-                                AppointmentRow(appointment: appointment)
-                                    .foregroundColor(self.questionAppointmentIds.contains(appointment.id) ? Constants.subtitleColor : Constants.titleColor)
-                                Spacer()
-                                if self.questionAppointmentIds.contains(appointment.id) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(Constants.subtitleColor)
-                                } else if self.newAppointmentIds.contains(appointment.id) {
-                                    Button(action: {self.removeAppointment(appointment: appointment)}) {
+                Group {
+                    List {
+                        ForEach(self.userData.appointments) { appointment in
+                            if self.userCalendar.isDate(appointment.date, inSameDayAs: self.selectedDate!) {
+                                HStack {
+                                    AppointmentRow(appointment: appointment)
+                                        .foregroundColor(self.questionAppointmentIds.contains(appointment.id) ? Constants.subtitleColor : Constants.titleColor)
+                                    Spacer()
+                                    if self.questionAppointmentIds.contains(appointment.id) {
                                         Image(systemName: "checkmark.circle.fill")
-                                            .foregroundColor(.green)
-                                    }
-                                } else {
-                                    Button(action: {self.addAppointment(appointment: appointment)}) {
-                                        Image(systemName: "circle")
-                                            .foregroundColor(Constants.titleColor)
+                                            .foregroundColor(Constants.subtitleColor)
+                                    } else if self.newAppointmentIds.contains(appointment.id) {
+                                        Button(action: {self.removeAppointment(appointment: appointment)}) {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.green)
+                                        }
+                                    } else {
+                                        Button(action: {self.addAppointment(appointment: appointment)}) {
+                                            Image(systemName: "circle")
+                                                .foregroundColor(Constants.titleColor)
+                                        }
                                     }
                                 }
                             }

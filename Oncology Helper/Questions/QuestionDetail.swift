@@ -98,7 +98,8 @@ struct QuestionDetail: View {
                     .navigationBarItems(trailing: Button(action: {self.editMode = true}) {Image(systemName: "square.and.pencil")})
                     .sheet(isPresented: showModal) {
                         if self.editMode {
-                            Text("Hello World")
+                            QuestionEditor(question: question)
+                                .environmentObject(self.userData)
                         } else {
                             QuestionAppointmentAdder(question: question)
                                 .environmentObject(self.userData)

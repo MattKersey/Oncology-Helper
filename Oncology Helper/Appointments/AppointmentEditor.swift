@@ -43,9 +43,7 @@ struct AppointmentEditor: View {
     }
     
     func save() -> Void {
-        guard let aptIndex = appointmentIndex else {
-            return
-        }
+        guard let aptIndex = appointmentIndex else {return}
         userData.appointments[aptIndex].doctor = appointment.doctor
         userData.appointments[aptIndex].location = appointment.location
         if (selectedDate != nil) {
@@ -62,24 +60,34 @@ struct AppointmentEditor: View {
     // MARK: - body
     
     var body: some View {
-        return VStack(spacing: 0) {
+        guard appointmentIndex != nil else {
+            return AnyView(Text("Appointment not found"))
+        }
+        return AnyView(VStack(spacing: 0) {
             List {
-                // Doctor name field
-                HStack {
+                VStack(alignment: .leading) {
                     Text("Doctor")
                         .font(.headline)
-                    Divider()
+                        .foregroundColor(Constants.titleColor)
+                        .padding(.top)
                     TextField("Doctor", text: $appointment.doctor)
-                }
-                // Location name field
-                HStack {
+                        .foregroundColor(Constants.bodyColor)
+                        .padding(.leading)
+                    Divider()
+                        .padding([.top, .bottom])
                     Text("Location")
                         .font(.headline)
-                    Divider()
+                        .foregroundColor(Constants.titleColor)
                     TextField("Location", text: $appointment.location)
+                        .foregroundColor(Constants.bodyColor)
+                        .padding(.leading)
+                    Divider()
+                    .padding([.top, .bottom])
+                    Text("Date")
+                        .font(.headline)
+                        .foregroundColor(Constants.titleColor)
+                    CalendarView(selectedDate: $selectedDate, dayInMonthDate: Date(), shouldHighlightSelection: true)
                 }
-                // Date picker for appointment
-                CalendarView(selectedDate: $selectedDate, dayInMonthDate: Date(), shouldHighlightSelection: true)
                 if (selectedDate != nil) {
                     DatePicker(selection: $selectedTime, displayedComponents: .hourAndMinute, label: {Text("Time")})
                 }
@@ -98,7 +106,19 @@ struct AppointmentEditor: View {
             .frame(height: 60)
             
             // Done button
-            Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+            if appointment.doctor != "" && appointment.location != "" {
+                Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+                    HStack {
+                        Spacer()
+                        Text("Done")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .frame(height: 60)
+                    .background(Constants.itemColor)
+                }
+            } else {
                 HStack {
                     Spacer()
                     Text("Done")
@@ -107,12 +127,12 @@ struct AppointmentEditor: View {
                     Spacer()
                 }
                 .frame(height: 60)
-                .background(Constants.itemColor)
+                .background(Constants.subtitleColor)
             }
         }
             .buttonStyle(BorderlessButtonStyle())
             // For ensuring that the array is sorted on a date change
-            .onDisappear(perform: {self.save(); self.userData.appointments.sort(by: {$0.date < $1.date})})
+            .onDisappear(perform: {self.save(); self.userData.appointments.sort(by: {$0.date < $1.date})}))
     }
 }
 

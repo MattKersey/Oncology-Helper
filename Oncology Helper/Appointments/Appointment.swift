@@ -30,7 +30,7 @@ struct Appointment: Hashable, Codable, Identifiable {
     }
     
     var recordingURL: URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("audioRecording\(self.id).m4a")
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("OHaudioRecording\(self.id).m4a")
     }
     
     var date: Date {

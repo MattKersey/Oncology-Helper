@@ -15,7 +15,6 @@ struct AppointmentDetail: View {
     
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @Environment(\.editMode) var mode
     @State private var editMode = false
     @State var playPressed = false
     @State var audioRecorder: AVAudioRecorder?

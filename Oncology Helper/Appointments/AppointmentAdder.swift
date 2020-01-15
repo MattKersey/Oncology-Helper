@@ -24,7 +24,7 @@ struct AppointmentAdder: View {
     
     // MARK: - functions
     
-    func done() -> Void {
+    func done() {
         // Find the proper index for the new appointment s.t. the array is sorted by date
         var index = 0
         for apt in userData.appointments {
@@ -51,33 +51,54 @@ struct AppointmentAdder: View {
     // MARK: - body
     
     var body: some View {
-        List {
-            // Doctor name field
-            HStack {
-                Text("Doctor")
-                    .font(.headline)
-                Divider()
-                TextField("Doctor", text: $doctorString)
+        VStack(spacing: 0) {
+            List {
+                // Doctor name field
+                VStack(alignment: .leading) {
+                    Text("Doctor")
+                        .font(.headline)
+                        .foregroundColor(Constants.titleColor)
+                        .padding(.top)
+                    TextField("Doctor", text: $doctorString)
+                        .foregroundColor(Constants.bodyColor)
+                        .padding(.leading)
+                    Divider()
+                        .padding([.top, .bottom])
+                    Text("Location")
+                        .font(.headline)
+                        .foregroundColor(Constants.titleColor)
+                    TextField("Location", text: $locationString)
+                        .foregroundColor(Constants.bodyColor)
+                        .padding(.leading)
+                    Divider()
+                        .padding([.top, .bottom])
+                    DatePicker(selection: $date, displayedComponents: .hourAndMinute, label: { Text("Time") })
+                }
             }
-            // Location name field
-            HStack {
-                Text("Location")
-                    .font(.headline)
-                Divider()
-                TextField("Location", text: $locationString)
-            }
-            // Date picker for appointment
-            DatePicker(selection: $date, displayedComponents: .hourAndMinute, label: { Text("Time") })
-            
+            Spacer()
             // Done button
-            Button(action: {self.done()}) {
+            if doctorString != "" && locationString != "" {
+                Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+                    HStack {
+                        Spacer()
+                        Text("Done")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .frame(height: 60)
+                    .background(Constants.itemColor)
+                }
+            } else {
                 HStack {
                     Spacer()
                     Text("Done")
                         .font(.headline)
-                        .foregroundColor(.blue)
+                        .foregroundColor(.white)
                     Spacer()
                 }
+                .frame(height: 60)
+                .background(Constants.subtitleColor)
             }
         }
     }
