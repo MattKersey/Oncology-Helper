@@ -33,18 +33,18 @@ struct AppointmentAdder: View {
             }
             index += 1
         }
-        var id = 1
+        var id = 0
         for apt in userData.appointments {
             id = apt.id > id ? apt.id : id
         }
+        id += 1
         // Insert new appointment from the bindings
-        userData.appointments.insert(Appointment(id: id + 1,
+        userData.appointments.insert(Appointment(id: id,
                                                  doctor: doctorString,
                                                  location: locationString,
                                                  RC3339date: "1995-01-01T12:00:00+00:00"),
                                      at: index)
         userData.appointments[index].date = date
-        print("Done saving")
         // Close sheet
         self.presentationMode.wrappedValue.dismiss()
     }

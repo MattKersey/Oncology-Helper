@@ -23,17 +23,6 @@ struct QuestionEditor: View {
         }
     }
     
-    func cancel() {
-        guard let qIndex = questionIndex else {return}
-        question.questionString = userData.questions[qIndex].questionString
-        if (userData.questions[qIndex].description == nil) {
-            description = ""
-        } else {
-            description = userData.questions[qIndex].description!
-        }
-        self.presentationMode.wrappedValue.dismiss()
-    }
-    
     func save() {
         guard let qIndex = questionIndex else {return}
         userData.questions[qIndex].questionString = question.questionString
@@ -42,6 +31,7 @@ struct QuestionEditor: View {
         } else {
             userData.questions[qIndex].description = description
         }
+        self.presentationMode.wrappedValue.dismiss()
     }
     
     init(question: Question) {
@@ -57,53 +47,50 @@ struct QuestionEditor: View {
         guard questionIndex != nil else {
             return AnyView(Text("Question not found"))
         }
-        return AnyView(GeometryReader { geo in
-            VStack(spacing: 0) {
-                VStack(alignment: .leading) {
-                    Text("Question")
-                            .font(.headline)
-                        .foregroundColor(Constants.titleColor)
-                    TextField("Question", text: self.$question.questionString)
-                        .foregroundColor(Constants.bodyColor)
-                        .padding(.leading)
-                    Divider()
-                        .padding([.top, .bottom])
-                    Text("Description")
+        return AnyView(VStack(spacing: 0) {
+            VStack(alignment: .leading) {
+                Text("Question")
                         .font(.headline)
-                        .foregroundColor(Constants.titleColor)
-                    TextField("Optional Description", text: self.$description)
-                        .foregroundColor(Constants.bodyColor)
-                        .padding(.leading)
-                }
-                .padding()
-                Spacer()
+                    .foregroundColor(Constants.titleColor)
+                TextField("Question", text: self.$question.questionString)
+                    .foregroundColor(Constants.bodyColor)
+                    .padding(.leading)
                 Divider()
-                Button(action: {self.cancel()}) {
-                    HStack {
-                        Spacer()
-                        Text("Cancel")
-                            .foregroundColor(.red)
-                        Spacer()
-                    }
+                    .padding([.top, .bottom])
+                Text("Optional Description")
+                    .font(.headline)
+                    .foregroundColor(Constants.titleColor)
+                TextField("Optional Description", text: self.$description)
+                    .foregroundColor(Constants.bodyColor)
+                    .padding(.leading)
+            }
+            .padding()
+            Spacer()
+            Divider()
+            Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+                HStack {
+                    Spacer()
+                    Text("Cancel")
+                        .foregroundColor(.red)
+                    Spacer()
+                }
+            }
+            .frame(height: 60)
+            
+            // Done button
+            Button(action: {self.save()}) {
+                HStack {
+                    Spacer()
+                    Text("Done")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    Spacer()
                 }
                 .frame(height: 60)
-                
-                // Done button
-                Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
-                    HStack {
-                        Spacer()
-                        Text("Done")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    .frame(height: 60)
-                    .background(Constants.itemColor)
-                }
+                .background(Constants.itemColor)
             }
-            .buttonStyle(BorderlessButtonStyle())
-            .onDisappear(perform: {self.save()})
-            }
+        }
+        .buttonStyle(BorderlessButtonStyle())
         )
     }
 }

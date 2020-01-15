@@ -33,11 +33,12 @@ struct QuestionPreviewList: View {
         guard newQuestion != "" else {
             return
         }
-        var id: Int = 1
+        var id = 0
         for question in userData.questions {
             id = question.id > id ? question.id : id
         }
-        userData.questions.append(Question(id: id + 1,
+        id += 1
+        userData.questions.append(Question(id: id,
                                            questionString: newQuestion,
                                            description: nil,
                                            pin: true,

@@ -36,6 +36,7 @@ struct QuestionAppointmentAdder: View {
                 userData.appointments[aptIndex].questionIDs.append(question.id)
             }
         }
+        self.presentationMode.wrappedValue.dismiss()
     }
     
     init(question: Question) {
@@ -84,7 +85,7 @@ struct QuestionAppointmentAdder: View {
             }
             Spacer()
             // Done button
-            Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+            Button(action: {self.save()}) {
                 HStack {
                     Spacer()
                     Text("Done")
@@ -97,7 +98,6 @@ struct QuestionAppointmentAdder: View {
             }
         }
         .buttonStyle(BorderlessButtonStyle())
-        .onDisappear(perform: {self.save()})
     }
 }
 

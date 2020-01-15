@@ -31,17 +31,6 @@ struct AppointmentEditor: View {
     
     // MARK: - functions
     
-    func cancel() -> Void {
-        guard let aptIndex = appointmentIndex else {
-            return
-        }
-        appointment.doctor = userData.appointments[aptIndex].doctor
-        appointment.location = userData.appointments[aptIndex].location
-        selectedDate = nil
-        selectedTime = userData.appointments[aptIndex].date
-        self.presentationMode.wrappedValue.dismiss()
-    }
-    
     func save() -> Void {
         guard let aptIndex = appointmentIndex else {return}
         userData.appointments[aptIndex].doctor = appointment.doctor
@@ -55,6 +44,8 @@ struct AppointmentEditor: View {
         } else {
             userData.appointments[aptIndex].date = appointment.date
         }
+        self.userData.appointments.sort(by: {$0.date < $1.date})
+        self.presentationMode.wrappedValue.dismiss()
     }
     
     // MARK: - body
@@ -95,7 +86,7 @@ struct AppointmentEditor: View {
             Spacer()
             Divider()
             // Cancel button
-            Button(action: {self.cancel()}) {
+            Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
                 HStack {
                     Spacer()
                     Text("Cancel")
@@ -107,7 +98,7 @@ struct AppointmentEditor: View {
             
             // Done button
             if appointment.doctor != "" && appointment.location != "" {
-                Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+                Button(action: {self.save()}) {
                     HStack {
                         Spacer()
                         Text("Done")
@@ -130,9 +121,7 @@ struct AppointmentEditor: View {
                 .background(Constants.subtitleColor)
             }
         }
-            .buttonStyle(BorderlessButtonStyle())
-            // For ensuring that the array is sorted on a date change
-            .onDisappear(perform: {self.save(); self.userData.appointments.sort(by: {$0.date < $1.date})}))
+        .buttonStyle(BorderlessButtonStyle()))
     }
 }
 
