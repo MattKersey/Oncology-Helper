@@ -19,13 +19,20 @@ struct Constants {
     static let itemColor = Color(red: 63.0 / 255,
                                  green: 87.0 / 255,
                                  blue: 97.0 / 255)
-    static let titleColor = Color(red: 59.0 / 255,
-                                  green: 59.0 / 255,
-                                  blue: 59.0 / 255)
-    static let subtitleColor = Color(red: 140.0 / 255,
-                                     green: 140.0 / 255,
-                                     blue: 140.0 / 255)
-    static let bodyColor = Color(red: 90.0 / 255,
-                                 green: 90.0 / 255,
-                                 blue: 90.0 / 255)
+    static let titleColor = Color(red: 39.0 / 255,
+                                  green: 39.0 / 255,
+                                  blue: 39.0 / 255)
+    static let titleUIColor = UIColor(red: 39.0 / 255,
+                                      green: 39.0 / 255,
+                                      blue: 39.0 / 255,
+                                      alpha: 1.0)
+    static let subtitleColor = Color(red: 150.0 / 255,
+                                     green: 150.0 / 255,
+                                     blue: 150.0 / 255)
+    static let bodyColor = Color(red: 85.0 / 255,
+                                 green: 85.0 / 255,
+                                 blue: 85.0 / 255)
+    static let warningColor = Color(red: 202.0 / 255,
+                                    green: 32.0 / 255,
+                                    blue: 32.0 / 255)
 }

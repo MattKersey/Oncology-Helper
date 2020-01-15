@@ -26,6 +26,7 @@ struct QuestionMarker: View {
         }
         return AnyView(HStack {
             Text(question.questionString)
+                .foregroundColor(Constants.titleColor)
             Spacer()
             if (audioRecorder != nil) {
                 Button(action: {self.userData.addTimestamp(appointmentID: self.appointmentID,
@@ -35,6 +36,12 @@ struct QuestionMarker: View {
                         .foregroundColor(Constants.itemColor)
                 }
                 .scaleEffect(1.25)
+                .padding([.leading])
+            } else {
+                Image(systemName: "bookmark.fill")
+                    .foregroundColor(Constants.subtitleColor)
+                    .scaleEffect(1.25)
+                    .padding([.leading])
             }
         }
         .buttonStyle(BorderlessButtonStyle())

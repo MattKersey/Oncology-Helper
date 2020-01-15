@@ -50,6 +50,7 @@ struct AppointmentList: View {
     init(selectedDate: Date) {
         self.selectedDate = selectedDate
         UINavigationBar.appearance().backgroundColor = Constants.backgroundUIColor
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: Constants.titleUIColor]
     }
     
     // MARK: - body

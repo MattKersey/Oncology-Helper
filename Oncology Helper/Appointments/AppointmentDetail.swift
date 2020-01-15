@@ -56,9 +56,8 @@ struct AppointmentDetail: View {
                                      audioRecorder: self.$audioRecorder,
                                      playPressed: self.$playPressed)
                     .environmentObject(self.userData)
-                    .padding()
-                    .frame(width: geo.size.width, height: 60.0)
-                Spacer()
+                    .frame(width: geo.size.width, height: 50.0)
+                Divider()
                 List {
                     ForEach(appointment.questionIDs, id: \.self) { id in
                         HStack {

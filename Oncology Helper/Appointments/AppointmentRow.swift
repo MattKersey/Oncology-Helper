@@ -36,6 +36,7 @@ struct AppointmentRow: View {
             }
             Spacer()
         }
+        .foregroundColor(Constants.titleColor)
     }
 }
 

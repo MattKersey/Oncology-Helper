@@ -62,7 +62,7 @@ struct AppointmentEditor: View {
     // MARK: - body
     
     var body: some View {
-        return VStack {
+        return VStack(spacing: 0) {
             List {
                 // Doctor name field
                 HStack {
@@ -71,7 +71,6 @@ struct AppointmentEditor: View {
                     Divider()
                     TextField("Doctor", text: $appointment.doctor)
                 }
-
                 // Location name field
                 HStack {
                     Text("Location")
@@ -79,7 +78,6 @@ struct AppointmentEditor: View {
                     Divider()
                     TextField("Location", text: $appointment.location)
                 }
-
                 // Date picker for appointment
                 CalendarView(selectedDate: $selectedDate, dayInMonthDate: Date(), shouldHighlightSelection: true)
                 if (selectedDate != nil) {
@@ -87,19 +85,7 @@ struct AppointmentEditor: View {
                 }
             }
             Spacer()
-            // Done button
-            Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
-                HStack {
-                    Spacer()
-                    Text("Done")
-                        .font(.headline)
-                        .foregroundColor(.blue)
-                    Spacer()
-                }
-            }
-            
             Divider()
-            
             // Cancel button
             Button(action: {self.cancel()}) {
                 HStack {
@@ -109,7 +95,20 @@ struct AppointmentEditor: View {
                     Spacer()
                 }
             }
-            .padding(.bottom)
+            .frame(height: 60)
+            
+            // Done button
+            Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+                HStack {
+                    Spacer()
+                    Text("Done")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .frame(height: 60)
+                .background(Constants.itemColor)
+            }
         }
             .buttonStyle(BorderlessButtonStyle())
             // For ensuring that the array is sorted on a date change

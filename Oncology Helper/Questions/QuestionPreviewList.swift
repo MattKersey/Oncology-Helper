@@ -57,14 +57,23 @@ struct QuestionPreviewList: View {
                     .padding()
                 Spacer()
                 
-                Button(action: self.submitNewQuestion) {
+                if (newQuestion == "") {
                     Text("Submit")
                         .foregroundColor(.white)
                         .font(.headline)
+                        .padding()
+                        .frame(height: 50)
+                        .background(Constants.subtitleColor)
+                } else {
+                    Button(action: self.submitNewQuestion) {
+                        Text("Submit")
+                            .foregroundColor(.white)
+                            .font(.headline)
+                            .padding()
+                            .frame(height: 50)
+                            .background(Constants.itemColor)
+                    }
                 }
-                .padding()
-                .frame(height: 50)
-                .background(Constants.itemColor)
             }
             .frame(height: 50)
             .buttonStyle(BorderlessButtonStyle())

@@ -107,36 +107,48 @@ struct AppointmentRecording: View {
             return AnyView(Text("Could not find appointment"))
         }
         guard !self.endPressed else {
-            return AnyView(HStack {
+            return AnyView(HStack(spacing: 0) {
                 Text("End recording?")
-                    .foregroundColor(.red)
+                    .font(.headline)
+                    .foregroundColor(Constants.warningColor)
+                    .padding()
                 Spacer()
-                Button(action: {self.endPressed.toggle()}) {
-                    Text("No")
-                        .foregroundColor(.blue)
-                        .font(.headline)
-                }
                 Divider()
                 Button(action: {self.end()}) {
                     Text("Yes")
-                        .foregroundColor(.red)
+                        .foregroundColor(Constants.warningColor)
+                        .padding()
+                }
+                Button(action: {self.endPressed.toggle()}) {
+                    Text("No")
+                        .foregroundColor(.white)
+                        .font(.headline)
+                        .padding()
+                        .frame(height: 50)
+                        .background(Constants.itemColor)
                 }
             })
         }
         guard !self.reRecordPressed else {
-            return AnyView(HStack {
-                Text("Delete previous recording.")
-                    .foregroundColor(.red)
+            return AnyView(HStack(spacing: 0) {
+                Text("Delete previous recording?")
+                    .font(.headline)
+                    .foregroundColor(Constants.warningColor)
+                    .padding()
                 Spacer()
-                Button(action: {self.reRecordPressed.toggle()}) {
-                    Text("No")
-                        .foregroundColor(.blue)
-                        .font(.headline)
-                }
                 Divider()
                 Button(action: {self.reRecord()}) {
                     Text("Yes")
-                        .foregroundColor(.red)
+                        .foregroundColor(Constants.warningColor)
+                        .padding()
+                }
+                Button(action: {self.reRecordPressed.toggle()}) {
+                    Text("No")
+                        .foregroundColor(.white)
+                        .font(.headline)
+                        .padding()
+                        .frame(height: 50)
+                        .background(Constants.itemColor)
                 }
             })
         }

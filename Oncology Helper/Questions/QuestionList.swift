@@ -13,6 +13,7 @@ struct QuestionList: View {
     
     init() {
         UINavigationBar.appearance().backgroundColor = Constants.backgroundUIColor
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: Constants.titleUIColor]
     }
     
     var body: some View {

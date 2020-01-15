@@ -48,9 +48,11 @@ struct QuestionAppointmentAdder: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             CalendarView(selectedDate: $selectedDate, dayInMonthDate: Date(), shouldHighlightSelection: true)
                 .environmentObject(self.userData)
+            Divider()
+                .padding(.top)
             if selectedDate != nil {
                 List {
                     ForEach(self.userData.appointments) { appointment in
@@ -85,9 +87,11 @@ struct QuestionAppointmentAdder: View {
                     Spacer()
                     Text("Done")
                         .font(.headline)
-                        .foregroundColor(.blue)
+                        .foregroundColor(.white)
                     Spacer()
                 }
+                .frame(height: 60)
+                .background(Constants.itemColor)
             }
         }
         .buttonStyle(BorderlessButtonStyle())

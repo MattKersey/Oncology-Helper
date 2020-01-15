@@ -36,6 +36,7 @@ struct QuestionDetail: View {
     init(id: Int) {
         self.id = id
         UINavigationBar.appearance().backgroundColor = Constants.backgroundUIColor
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: Constants.titleUIColor]
     }
     
     // MARK: - body
@@ -52,53 +53,56 @@ struct QuestionDetail: View {
         })
 
         return AnyView(GeometryReader { geo in
-            VStack(alignment: .leading, spacing: 0) {
-                Group {
-                    HStack {
-                        Text(question.questionString)
-                            .font(.headline)
-                            .foregroundColor(Constants.titleColor)
-                            .multilineTextAlignment(.leading)
-                            .padding()
-                        Spacer()
-                    }
-                    if (question.description != nil) {
+            ZStack {
+                AudioPlayerView(audioPlayer: self.$audioPlayer, playing: self.$playing)
+                VStack(alignment: .leading, spacing: 0) {
+                    Group {
                         HStack {
-                            Text(question.description!)
-                                .font(.subheadline)
-                                .foregroundColor(Constants.bodyColor)
+                            Text(question.questionString)
+                                .font(.headline)
+                                .foregroundColor(Constants.titleColor)
                                 .multilineTextAlignment(.leading)
-                                .padding([.leading, .trailing])
-                                .padding(.top, -10)
-                                .padding(.bottom, 10.0)
+                                .padding()
                             Spacer()
                         }
+                        if (question.description != nil) {
+                            HStack {
+                                Text(question.description!)
+                                    .font(.subheadline)
+                                    .foregroundColor(Constants.bodyColor)
+                                    .multilineTextAlignment(.leading)
+                                    .padding([.leading, .trailing])
+                                    .padding(.top, -10)
+                                    .padding(.bottom, 10.0)
+                                Spacer()
+                            }
+                        }
                     }
-                }
-                .frame(width: geo.size.width)
-                .background(Constants.backgroundColor)
-                List {
-                    ForEach(question.appointmentIDs, id: \.self) { id in
-                        QuestionAppointmentView(appointmentID: id,
-                                                questionID: self.id,
-                                                audioPlayer: self.$audioPlayer,
-                                                playing: self.$playing)
-                            .environmentObject(self.userData)
+                    .frame(width: geo.size.width)
+                    .background(Constants.backgroundColor)
+                    List {
+                        ForEach(question.appointmentIDs, id: \.self) { id in
+                            QuestionAppointmentView(appointmentID: id,
+                                                    questionID: self.id,
+                                                    audioPlayer: self.$audioPlayer,
+                                                    playing: self.$playing)
+                                .environmentObject(self.userData)
+                        }
+                        Button(action: {self.addAppointments = true}) {
+                            Text("Add more appointments")
+                                .foregroundColor(.blue)
+                                .font(.callout)
+                        }
                     }
-                    Button(action: {self.addAppointments = true}) {
-                        Text("Add more appointments")
-                            .foregroundColor(.blue)
-                            .font(.callout)
-                    }
-                }
-                .navigationBarTitle(Text(""), displayMode: .inline)
-                .navigationBarItems(trailing: Button(action: {self.editMode = true}) {Image(systemName: "square.and.pencil")})
-                .sheet(isPresented: showModal) {
-                    if self.editMode {
-                        Text("Hello World")
-                    } else {
-                        QuestionAppointmentAdder(question: question)
-                            .environmentObject(self.userData)
+                    .navigationBarTitle(Text(""), displayMode: .inline)
+                    .navigationBarItems(trailing: Button(action: {self.editMode = true}) {Image(systemName: "square.and.pencil")})
+                    .sheet(isPresented: showModal) {
+                        if self.editMode {
+                            Text("Hello World")
+                        } else {
+                            QuestionAppointmentAdder(question: question)
+                                .environmentObject(self.userData)
+                        }
                     }
                 }
             }
@@ -133,6 +137,7 @@ private class AudioPlayerUIView: UIView {
     }
     
     @objc func didFinishPlaying(note: NSNotification) {
+        print("Finished")
         self.audioPlayer.wrappedValue = nil
         self.playing.wrappedValue = nil
     }
