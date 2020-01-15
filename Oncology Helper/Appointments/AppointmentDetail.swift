@@ -18,6 +18,7 @@ struct AppointmentDetail: View {
     @State private var editMode = false
     @State var playPressed = false
     @State var audioRecorder: AVAudioRecorder?
+    @State var audioPlayer: AVPlayer?
     var id: Int
     
     var appointment: Appointment? {
@@ -43,17 +44,11 @@ struct AppointmentDetail: View {
         guard let appointment = self.appointment else {
                 return AnyView(Text("Appointment unavailable"))
         }
-        let showModal = Binding<Bool>(get: {
-            return self.playPressed || self.editMode
-        }, set: { p in
-            self.playPressed = p
-            self.editMode = p
-        })
         return AnyView(GeometryReader { geo in
             VStack(spacing: 0) {
                 AppointmentRecording(appointment: appointment,
                                      audioRecorder: self.$audioRecorder,
-                                     playPressed: self.$playPressed)
+                                     audioPlayer: self.$audioPlayer)
                     .environmentObject(self.userData)
                     .frame(width: geo.size.width, height: 50.0)
                 Divider()
@@ -70,13 +65,8 @@ struct AppointmentDetail: View {
             }
             .navigationBarTitle(Text("\(appointment.doctor) | \(self.dateString!)"))
             .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
-            .sheet(isPresented: showModal){
-                if self.playPressed {
-                    AppointmentRecordingPlay(appointment: appointment)
-                        .environmentObject(self.userData)
-                } else {
-                    AppointmentEditor(appointment: appointment, selectedTime:  appointment.date).environmentObject(self.userData)
-                }
+            .sheet(isPresented: self.$editMode) {
+                AppointmentEditor(appointment: appointment, selectedTime:  appointment.date).environmentObject(self.userData)
             }
         })
     }
