@@ -44,6 +44,7 @@ struct AppointmentAdder: View {
                                                  RC3339date: "1995-01-01T12:00:00+00:00"),
                                      at: index)
         userData.appointments[index].date = date
+        print("Done saving")
         // Close sheet
         self.presentationMode.wrappedValue.dismiss()
     }
@@ -71,14 +72,14 @@ struct AppointmentAdder: View {
                         .foregroundColor(Constants.bodyColor)
                         .padding(.leading)
                     Divider()
-                        .padding([.top, .bottom])
+                        .padding(.top)
                     DatePicker(selection: $date, displayedComponents: .hourAndMinute, label: { Text("Time") })
                 }
             }
             Spacer()
             // Done button
             if doctorString != "" && locationString != "" {
-                Button(action: {self.presentationMode.wrappedValue.dismiss()}) {
+                Button(action: {self.done()}) {
                     HStack {
                         Spacer()
                         Text("Done")
