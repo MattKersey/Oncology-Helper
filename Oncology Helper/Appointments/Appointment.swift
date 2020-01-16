@@ -19,7 +19,7 @@ class Appointment: Hashable, Codable, Identifiable {
     var id: Int
     var doctor: String
     var location: String
-    fileprivate var RC3339date: String
+    private var RC3339date: String
     var describedTimestamps: [DescribedTimestamp]
     var questionIDs: [Int]
     

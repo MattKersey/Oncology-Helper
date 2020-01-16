@@ -19,7 +19,6 @@ struct HomePage: View {
     @State var selectedDate: Date? = nil
     @State var selectedQuestion: Question? = nil
     @State var seeAllQuestions: Bool = false
-    var todayDate = Date()
     
     // MARK: - body
     
@@ -44,7 +43,7 @@ struct HomePage: View {
                     .offset(y: -75.0)
                     .padding(.bottom, -75.0)
                 CalendarView(selectedDate: self.$selectedDate,
-                             dayInMonthDate: self.todayDate,
+                             dayInMonthDate: Date(),
                              shouldHighlightSelection: false)
                     .environmentObject(self.userData)
                     .frame(width: geo.size.width)
