@@ -11,11 +11,11 @@ import SwiftUI
 struct QuestionList: View {
     @EnvironmentObject var userData: UserData
     @State private var isAddingQuestion = false
+    @State private var reload = false
     
-    func pinToggle(id: Int) {
-        if let index = userData.questions.firstIndex(where: {$0.id == id}) {
-            userData.questions[index].pin.toggle()
-        }
+    func pinToggle(question: Question) {
+        question.pin.toggle()
+        reload.toggle()
     }
     
     init() {
@@ -24,12 +24,13 @@ struct QuestionList: View {
     }
     
     var body: some View {
-        NavigationView {
+        if reload {}
+        return NavigationView {
             List {
                 ForEach(userData.questions) { question in
-                    NavigationLink(destination: QuestionDetail(question: question).environmentObject(self.userData)) {
+                    NavigationLink(destination: QuestionDetail(question: question, reload: self.$reload).environmentObject(self.userData)) {
                         HStack {
-                            Button(action: {self.pinToggle(id: question.id)}) {
+                            Button(action: {self.pinToggle(question: question)}) {
                                 Image(systemName: question.pin ? "pin.fill" : "pin")
                                     .foregroundColor(question.pin ? Constants.itemColor : Constants.subtitleColor)
                             }

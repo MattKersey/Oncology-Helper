@@ -19,6 +19,7 @@ struct QuestionAppointmentView: View {
     let question: Question
     @Binding var audioPlayer: AVPlayer?
     @Binding var playing: DescribedTimestamp?
+    @Binding var reload: Bool
     
     var appointment: Appointment? {
         if let apt = userData.appointments.first(where: {$0.id == appointmentID}) {
@@ -91,7 +92,7 @@ struct QuestionAppointmentView: View {
                             .padding(.trailing)
                     }
                 }
-                NavigationLink(destination: AppointmentDetail(appointment: appointment)
+                NavigationLink(destination: AppointmentDetail(appointment: appointment, reload: self.$reload)
                     .environmentObject(self.userData)) {
                         VStack(alignment: .leading) {
                             Text(appointment.doctor)
@@ -139,7 +140,8 @@ struct QuestionAppointmentView_Previews: PreviewProvider {
         QuestionAppointmentView(appointmentID: 1,
                                 question: Question.default,
                                 audioPlayer: .constant(nil),
-                                playing: .constant(nil))
+                                playing: .constant(nil),
+                                reload: .constant(false))
             .environmentObject(UserData())
     }
 }
