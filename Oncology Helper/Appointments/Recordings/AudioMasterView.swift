@@ -14,7 +14,7 @@
 import SwiftUI
 import AVFoundation
 
-struct AppointmentRecording: View {
+struct AudioMasterView: View {
 
     // MARK: - instance properties
     
@@ -22,11 +22,13 @@ struct AppointmentRecording: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let appointment: Appointment
     @Binding var audioRecorder: AVAudioRecorder?
-    
+    @Binding var audioPlayer: AVPlayer?
+    @Binding var currentTime: TimeInterval
+    @Binding var isPlaying: Bool
+    @State var duration: TimeInterval = 0.0
     @State var isRecording = false
     @State var endPressed = false
     @State var reRecordPressed = false
-    @Binding var playPressed: Bool
     
     var appointmentIndex: Int? {
         if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
@@ -38,15 +40,16 @@ struct AppointmentRecording: View {
         }
     }
     
-    // MARK: - functions
+    // MARK: - recorder functions
     
     func record() -> Void {
         // Check to see if we are erasing a file so we can warn the user
-        if (userData.appointments[appointmentIndex!].hasRecording) {
+        if userData.appointments[appointmentIndex!].hasRecording && audioRecorder == nil {
             self.reRecordPressed = true
         } else {
             // Check to see if we are beginning a new recording
             if (audioRecorder == nil) {
+                audioPlayer = nil
                 let settings = [
                     AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
                     AVSampleRateKey: 12000,
@@ -65,7 +68,7 @@ struct AppointmentRecording: View {
         }
     }
     
-    func reRecord() -> Void {
+    func reRecord() {
         userData.appointments[appointmentIndex!].describedTimestamps = []
         do {
             try FileManager.default.removeItem(at: userData.appointments[appointmentIndex!].recordingURL)
@@ -74,33 +77,29 @@ struct AppointmentRecording: View {
         self.record()
     }
     
-    func pause() -> Void {
+    func pauseRecording() {
         self.isRecording = false
         audioRecorder!.pause()
     }
     
-    func mark() -> Void {
-        userData.addTimestamp(appointmentID: appointment.id, timestamp: audioRecorder!.currentTime)
-    }
-    
-    func end() -> Void {
+    func endRecording() {
         self.isRecording = false
         self.endPressed = false
         audioRecorder!.stop()
+        audioPlayer = AVPlayer(url: appointment.recordingURL)
         audioRecorder = nil
     }
     
-    // MARK: - initializer
-    
-    init(appointment: Appointment, audioRecorder: Binding<AVAudioRecorder?>, playPressed: Binding<Bool>) {
-        self.appointment = appointment
-        _audioRecorder = audioRecorder
-        _playPressed = playPressed
+    func mark(_ timestamp: TimeInterval) {
+        userData.addTimestamp(appointmentID: appointment.id, timestamp: timestamp)
     }
     
     // MARK: - body
     
     var body: some View {
+        
+        // MARK: - guards
+        
         guard userData.audioSession != nil else {
             return AnyView(Text("Permission to record denied"))
         }
@@ -115,7 +114,7 @@ struct AppointmentRecording: View {
                     .padding()
                 Spacer()
                 Divider()
-                Button(action: {self.end()}) {
+                Button(action: {self.endRecording()}) {
                     Text("Yes")
                         .foregroundColor(Constants.warningColor)
                         .padding()
@@ -153,54 +152,67 @@ struct AppointmentRecording: View {
                 }
             })
         }
-        return AnyView(HStack {
-            if !self.isRecording {
-                // If not currently recording, display a record button
-                Button(action: {self.record()}) {
-                    ZStack {
-                        Image(systemName: "circle.fill")
-                            .foregroundColor(Constants.subtitleColor)
-
-                        Image(systemName: "circle.fill")
-                            .foregroundColor(.red)
-                            .scaleEffect(0.35)
+        
+        // MARK: - main view
+        
+        return AnyView(ZStack {
+            HStack {
+                if audioRecorder != nil {
+                    Button(action: {self.endPressed.toggle()}) {
+                        Image(systemName: "stop.fill")
+                            .foregroundColor(Constants.warningColor)
                     }
-                }
-                .scaleEffect(2.0)
-            } else {
-                // If currently recording, display a pause button
-                Button(action: {self.pause()}) {
-                    Image(systemName: "pause.fill")
-                        .foregroundColor(Constants.itemColor)
-                }
-                .scaleEffect(1.5)
-                // And a marker button (for marking the time for later)
-                Button(action: {self.mark()}) {
-                    Image(systemName: "bookmark.fill")
-                        .foregroundColor(Constants.itemColor)
-                }
-                .scaleEffect(1.25)
-                .padding(.leading)
-            }
-            Spacer()
-            if audioRecorder != nil {
-                // If we have started recording, regardless of if we pause, display a stop button
-                Button(action: {self.endPressed.toggle()}) {
-                    Image(systemName: "stop.fill")
-                        // Make it red if we are currently recording, gray if not
-                        .foregroundColor(Constants.itemColor)
-                }
-                .scaleEffect(1.5)
-            } else if appointment.hasRecording {
-                Button(action: {self.playPressed.toggle()}) {
+                    .scaleEffect(1.5)
+                    .frame(width: 20)
+                    Button(action: {self.mark(self.audioRecorder!.currentTime)}) {
+                        Image(systemName: "bookmark.fill")
+                            .foregroundColor(Constants.itemColor)
+                    }
+                    .scaleEffect(1.25)
+                    .padding(.leading)
+                } else if appointment.hasRecording {
+                    AudioPlaybackView(currentTime: $currentTime,
+                                      audioPlayer: $audioPlayer,
+                                      isPlaying: $isPlaying,
+                                      appointment: appointment)
+                        .environmentObject(self.userData)
+                } else {
                     Image(systemName: "play.fill")
-                        .foregroundColor(Constants.itemColor)
+                        .foregroundColor(Constants.subtitleColor)
+                        .scaleEffect(1.5)
+                        .frame(width: 20)
+                    Image(systemName: "bookmark.fill")
+                        .foregroundColor(Constants.subtitleColor)
+                        .scaleEffect(1.25)
+                        .padding([.leading, .trailing])
                 }
-                .scaleEffect(1.5)
+                
+                Spacer()
+                if !self.isRecording {
+                    Button(action: {self.record()}) {
+                        ZStack {
+                            Image(systemName: "circle.fill")
+                                .foregroundColor(Constants.subtitleColor)
+
+                            Image(systemName: "circle.fill")
+                                .foregroundColor(Constants.warningColor)
+                                .scaleEffect(0.35)
+                        }
+                    }
+                    .scaleEffect(2.0)
+                    .frame(width: 20)
+                } else {
+                    Button(action: {self.pauseRecording()}) {
+                        Image(systemName: "pause.fill")
+                            .foregroundColor(Constants.warningColor)
+                    }
+                    .scaleEffect(1.5)
+                    .frame(width: 20)
+                }
             }
-        }
-        .padding()
-        .buttonStyle(BorderlessButtonStyle()))
+            .padding()
+            .buttonStyle(BorderlessButtonStyle())
+        })
     }
 }
 
@@ -208,8 +220,11 @@ struct AppointmentRecording: View {
 
 struct AppointmentRecording_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRecording(appointment: UserData().appointments[0],
+        AudioMasterView(appointment: Appointment.default,
                              audioRecorder: .constant(nil),
-                             playPressed: .constant(false)).environmentObject(UserData())
+                             audioPlayer: .constant(nil),
+                             currentTime: .constant(0.0),
+                             isPlaying: .constant(false))
+            .environmentObject(UserData())
     }
 }

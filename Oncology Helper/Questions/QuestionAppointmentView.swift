@@ -102,7 +102,7 @@ struct QuestionAppointmentView: View {
                             .padding(.trailing)
                     }
                 }
-                NavigationLink(destination: AppointmentDetail(id: appointment.id)
+                NavigationLink(destination: AppointmentDetail(appointment: appointment)
                     .environmentObject(self.userData)) {
                         VStack(alignment: .leading) {
                             Text(appointment.doctor)
@@ -119,23 +119,23 @@ struct QuestionAppointmentView: View {
                 ForEach(describedTimestamps, id: \.self) { describedTimestamp in
                     HStack {
                         Text(verbatim: String(format: "%.1f", describedTimestamp.timestamp))
+                            .foregroundColor(Constants.titleColor)
                             .padding(.leading)
                         Spacer()
-                        Image(systemName: "doc.text")
-                        Divider()
                         if self.playing != nil &&
                             self.playing!.id == appointment.id &&
                             self.playing!.timestamp == describedTimestamp.timestamp {
                             Button(action: {self.stop(appointment: appointment)}) {
                                 Image(systemName: "stop.fill")
+                                    .foregroundColor(Constants.itemColor)
                             }
                         } else {
                             Button(action: {self.play(appointment: appointment, timestamp: describedTimestamp.timestamp)}) {
                                 Image(systemName: "play.fill")
+                                    .foregroundColor(Constants.itemColor)
                             }
                         }
                     }
-                    .foregroundColor(Constants.bodyColor)
                 }
                 .onDelete(perform: self.delete)
             }
