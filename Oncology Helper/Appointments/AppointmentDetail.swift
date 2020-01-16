@@ -21,6 +21,7 @@ struct AppointmentDetail: View {
     @State var audioPlayer: AVPlayer?
     @State var isPlaying = false
     @State var currentTime: TimeInterval = 0.0
+    @State var showTimes = false
     var id: Int
     
     var appointment: Appointment? {
@@ -32,6 +33,11 @@ struct AppointmentDetail: View {
         }
     }
     
+    var describedTimestamps: [DescribedTimestamp] {
+        guard let appointment = self.appointment else {return []}
+        return appointment.describedTimestamps.filter({$0.id == nil})
+    }
+    
     var dateString: String? {
         guard appointment != nil else {return nil}
         let formatter = DateFormatter()
@@ -40,10 +46,23 @@ struct AppointmentDetail: View {
         return formatter.string(from: appointment!.date)
     }
     
+    func setTime(_ timestamp: TimeInterval) {
+        guard audioPlayer != nil else {return}
+        audioPlayer!.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
+        audioPlayer!.play()
+        isPlaying = true
+    }
+    
+    func delete(at offsets: IndexSet) {
+        for index in offsets {
+            userData.deleteTimestamp(appointmentID: appointment!.id,
+                                     timestamp: describedTimestamps[index].timestamp)
+        }
+    }
+    
     init(appointment: Appointment) {
         self.id = appointment.id
         if appointment.hasRecording {
-            print("has recording")
             _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
         }
     }
@@ -73,6 +92,47 @@ struct AppointmentDetail: View {
                                        currentTime: self.$currentTime,
                                        isPlaying: self.$isPlaying)
                             .environmentObject(self.userData)
+                        .listRowInsets(EdgeInsets())
+                        .padding()
+                    }
+                    if (!self.describedTimestamps.isEmpty) {
+                        Group {
+                            HStack{
+                                Button(action: {self.showTimes.toggle()}) {
+                                    Image(systemName: "chevron.right.circle")
+                                }
+                                .scaleEffect(1.5)
+                                .rotationEffect(Angle(degrees: self.showTimes ? 90.0 : 0.0))
+                                Text("Misc")
+                                    .foregroundColor(Constants.titleColor)
+                                    .padding(.leading)
+                                Spacer()
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                            if self.showTimes {
+                                ForEach(self.describedTimestamps, id: \.self) { describedTimestamp in
+                                    HStack {
+                                        Text(verbatim: String(format: "%.1f", describedTimestamp.timestamp))
+                                            .padding(.leading)
+                                            .foregroundColor(Constants.titleColor)
+                                        Spacer()
+                                        if (self.audioPlayer != nil) {
+                                            Button(action: {self.setTime(describedTimestamp.timestamp)}) {
+                                                Image(systemName: "play.fill")
+                                                    .foregroundColor(Constants.itemColor)
+                                            }
+                                        } else {
+                                            Button(action: {}) {
+                                                Image(systemName: "play.fill")
+                                                    .foregroundColor(Constants.subtitleColor)
+                                            }
+                                        }
+                                    }
+                                    .buttonStyle(BorderlessButtonStyle())
+                                }
+                                .onDelete(perform: self.delete)
+                            }
+                        }
                         .listRowInsets(EdgeInsets())
                         .padding()
                     }

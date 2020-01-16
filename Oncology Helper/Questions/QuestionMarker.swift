@@ -41,9 +41,7 @@ struct QuestionMarker: View {
     }
     
     func setTime(_ timestamp: TimeInterval) {
-        if audioPlayer == nil {
-            audioPlayer = AVPlayer(url: appointment!.recordingURL)
-        }
+        guard audioPlayer != nil else {return}
         audioPlayer!.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
         audioPlayer!.play()
         isPlaying = true
