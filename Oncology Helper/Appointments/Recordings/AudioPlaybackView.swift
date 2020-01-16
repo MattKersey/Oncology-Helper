@@ -12,9 +12,9 @@ import AVFoundation
 struct AudioPlaybackView: View {
     @EnvironmentObject var userData: UserData
     @Binding var currentTime: TimeInterval
-    @State var audioPlayer: AVPlayer
+    @Binding var audioPlayer: AVPlayer?
+    @Binding var isPlaying: Bool
     @State var isEditing = false
-    @State var isPlaying = false
     let appointment: Appointment
     let duration: TimeInterval
     
@@ -27,30 +27,17 @@ struct AudioPlaybackView: View {
     }
     
     func play() -> Void {
-        audioPlayer.play()
+        audioPlayer!.play()
         isPlaying = true
     }
     
     func pause() -> Void {
-        audioPlayer.pause()
+        audioPlayer!.pause()
         isPlaying = false
-    }
-    
-    func setTime(_ timestamp: TimeInterval) {
-        audioPlayer.seek(to: CMTime(seconds: timestamp, preferredTimescale: 600))
-        audioPlayer.play()
-        isPlaying = true
     }
     
     func mark(_ timestamp: TimeInterval) -> Void {
         userData.addTimestamp(appointmentID: appointment.id, timestamp: timestamp, sort: true)
-    }
-    
-    init(currentTime: Binding<TimeInterval>, appointment: Appointment) {
-        _currentTime = currentTime
-        self.appointment = appointment
-        _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
-        duration = CMTimeGetSeconds(_audioPlayer.wrappedValue.currentItem!.asset.duration)
     }
     
     func sliderEditingChanged(editingStarted: Bool) {
@@ -58,7 +45,10 @@ struct AudioPlaybackView: View {
             isEditing = true
             pause()
         } else {
-            audioPlayer.seek(to: CMTime(seconds: self.currentTime, preferredTimescale: 600)) { _ in
+            if audioPlayer == nil {
+                audioPlayer = AVPlayer(url: appointment.recordingURL)
+            }
+            audioPlayer!.seek(to: CMTime(seconds: self.currentTime, preferredTimescale: 600)) { _ in
                 self.isEditing = false
                 if self.isPlaying {
                     self.play()
@@ -67,9 +57,24 @@ struct AudioPlaybackView: View {
         }
     }
     
+    init(currentTime: Binding<TimeInterval>, audioPlayer: Binding<AVPlayer?>, isPlaying: Binding<Bool>, appointment: Appointment) {
+        _currentTime = currentTime
+        _audioPlayer = audioPlayer
+        _isPlaying = isPlaying
+        self.appointment = appointment
+        if _audioPlayer.wrappedValue != nil {
+            duration = CMTimeGetSeconds(_audioPlayer.wrappedValue!.currentItem!.asset.duration)
+        } else {
+            duration = 0.0
+        }
+    }
+    
     var body: some View {
         guard appointmentIndex != nil else {
             return AnyView(Text("Appointment not found"))
+        }
+        guard audioPlayer != nil else {
+            return AnyView(Text("Audio player not initialized"))
         }
         return AnyView(ZStack {
             AudioPlayerView(audioPlayer: $audioPlayer,
@@ -105,21 +110,22 @@ struct AudioPlaybackView: View {
                     .frame(width: 40)
                     .padding(.trailing)
             }
-        })
+        }
+        .onDisappear(perform: {self.audioPlayer = nil}))
     }
 }
 
 // MARK: - UIKit
 
 private class AudioPlayerUIView: UIView {
-    private let audioPlayer: Binding<AVPlayer>
+    private let audioPlayer: Binding<AVPlayer?>
     private let currentTime: Binding<TimeInterval>
     private let isEditing: Binding<Bool>
     private let isPlaying: Binding<Bool>
     private var timeObserverToken: Any?
     private var endObserverToken: Any?
     
-    init(audioPlayer: Binding<AVPlayer>, currentTime: Binding<TimeInterval>, isEditing: Binding<Bool>, isPlaying: Binding<Bool>) {
+    init(audioPlayer: Binding<AVPlayer?>, currentTime: Binding<TimeInterval>, isEditing: Binding<Bool>, isPlaying: Binding<Bool>) {
         self.audioPlayer = audioPlayer
         self.currentTime = currentTime
         self.isEditing = isEditing
@@ -127,7 +133,7 @@ private class AudioPlayerUIView: UIView {
         super.init(frame: .zero)
         
         let interval = CMTime(seconds: 0.02, preferredTimescale: 600)
-        timeObserverToken = audioPlayer.wrappedValue.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
+        timeObserverToken = audioPlayer.wrappedValue?.addPeriodicTimeObserver(forInterval: interval, queue: nil) { [weak self] time in
             guard let self = self else {return}
             if !self.isEditing.wrappedValue {
                 self.currentTime.wrappedValue = time.seconds
@@ -142,14 +148,14 @@ private class AudioPlayerUIView: UIView {
     }
     
     @objc func didFinishPlaying(note: NSNotification) {
-        self.audioPlayer.wrappedValue.pause()
-        self.audioPlayer.wrappedValue.seek(to: CMTime(seconds: 0.0, preferredTimescale: 600))
+        self.audioPlayer.wrappedValue?.pause()
+        self.audioPlayer.wrappedValue?.seek(to: CMTime(seconds: 0.0, preferredTimescale: 600))
         self.isPlaying.wrappedValue = false
     }
     
     func removeObservers() {
         if (timeObserverToken != nil) {
-            audioPlayer.wrappedValue.removeTimeObserver(timeObserverToken!)
+            audioPlayer.wrappedValue?.removeTimeObserver(timeObserverToken!)
             timeObserverToken = nil
         }
         if (endObserverToken != nil) {
@@ -160,7 +166,7 @@ private class AudioPlayerUIView: UIView {
 }
 
 private struct AudioPlayerView: UIViewRepresentable {
-    @Binding var audioPlayer: AVPlayer
+    @Binding var audioPlayer: AVPlayer?
     @Binding var currentTime: TimeInterval
     @Binding var isEditing: Bool
     @Binding var isPlaying: Bool
@@ -183,7 +189,7 @@ private struct AudioPlayerView: UIViewRepresentable {
 
 struct AudioPlaybackView_Previews: PreviewProvider {
     static var previews: some View {
-        AudioPlaybackView(currentTime: .constant(0.0), appointment: Appointment.default)
+        AudioPlaybackView(currentTime: .constant(0.0), audioPlayer: .constant(nil), isPlaying: .constant(false), appointment: Appointment.default)
         .environmentObject(UserData())
     }
 }

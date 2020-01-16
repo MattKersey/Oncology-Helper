@@ -66,7 +66,7 @@ struct AppointmentList: View {
                     // Otherwise, show appointments
                     ForEach(self.userData.appointments) { appointment in
                         if self.userCalendar.isDate(appointment.date, inSameDayAs: self.selectedDate) {
-                            NavigationLink(destination: AppointmentDetail(id: appointment.id).environmentObject(self.userData)) {
+                            NavigationLink(destination: AppointmentDetail(appointment: appointment).environmentObject(self.userData)) {
                                 AppointmentRow(appointment: appointment)
                             }
                         }

@@ -19,6 +19,7 @@ struct AppointmentDetail: View {
     @State var playPressed = false
     @State var audioRecorder: AVAudioRecorder?
     @State var audioPlayer: AVPlayer?
+    @State var isPlaying = false
     @State var currentTime: TimeInterval = 0.0
     var id: Int
     
@@ -39,6 +40,14 @@ struct AppointmentDetail: View {
         return formatter.string(from: appointment!.date)
     }
     
+    init(appointment: Appointment) {
+        self.id = appointment.id
+        if appointment.hasRecording {
+            print("has recording")
+            _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
+        }
+    }
+    
     // MARK: - body
     
     var body: some View {
@@ -49,16 +58,21 @@ struct AppointmentDetail: View {
             VStack(spacing: 0) {
                 AudioMasterView(appointment: appointment,
                                      audioRecorder: self.$audioRecorder,
-                                     currentTime: self.$currentTime)
+                                     audioPlayer: self.$audioPlayer,
+                                     currentTime: self.$currentTime,
+                                     isPlaying: self.$isPlaying)
                     .environmentObject(self.userData)
                     .frame(width: geo.size.width, height: 50.0)
                 Divider()
                 List {
                     ForEach(appointment.questionIDs, id: \.self) { id in
-                        HStack {
-                            QuestionMarker(questionID: id, appointmentID: self.id, audioRecorder: self.$audioRecorder, currentTime: self.$currentTime)
-                                .environmentObject(self.userData)
-                        }
+                        QuestionMarker(questionID: id,
+                                       appointmentID: self.id,
+                                       audioRecorder: self.$audioRecorder,
+                                       audioPlayer: self.$audioPlayer,
+                                       currentTime: self.$currentTime,
+                                       isPlaying: self.$isPlaying)
+                            .environmentObject(self.userData)
                         .listRowInsets(EdgeInsets())
                         .padding()
                     }
@@ -77,6 +91,6 @@ struct AppointmentDetail: View {
 
 struct AppointmentDetail_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentDetail(id: 1).environmentObject(UserData())
+        AppointmentDetail(appointment: Appointment.default).environmentObject(UserData())
     }
 }

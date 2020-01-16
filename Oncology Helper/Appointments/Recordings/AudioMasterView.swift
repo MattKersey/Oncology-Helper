@@ -22,7 +22,9 @@ struct AudioMasterView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let appointment: Appointment
     @Binding var audioRecorder: AVAudioRecorder?
+    @Binding var audioPlayer: AVPlayer?
     @Binding var currentTime: TimeInterval
+    @Binding var isPlaying: Bool
     @State var duration: TimeInterval = 0.0
     @State var isRecording = false
     @State var endPressed = false
@@ -47,6 +49,7 @@ struct AudioMasterView: View {
         } else {
             // Check to see if we are beginning a new recording
             if (audioRecorder == nil) {
+                audioPlayer = nil
                 let settings = [
                     AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
                     AVSampleRateKey: 12000,
@@ -83,21 +86,12 @@ struct AudioMasterView: View {
         self.isRecording = false
         self.endPressed = false
         audioRecorder!.stop()
+        audioPlayer = AVPlayer(url: appointment.recordingURL)
         audioRecorder = nil
     }
     
     func mark(_ timestamp: TimeInterval) {
         userData.addTimestamp(appointmentID: appointment.id, timestamp: timestamp)
-    }
-    
-    // MARK: - initializer
-    
-    init(appointment: Appointment,
-         audioRecorder: Binding<AVAudioRecorder?>,
-         currentTime: Binding<TimeInterval>) {
-        self.appointment = appointment
-        _audioRecorder = audioRecorder
-        _currentTime = currentTime
     }
     
     // MARK: - body
@@ -178,6 +172,8 @@ struct AudioMasterView: View {
                     .padding(.leading)
                 } else if appointment.hasRecording {
                     AudioPlaybackView(currentTime: $currentTime,
+                                      audioPlayer: $audioPlayer,
+                                      isPlaying: $isPlaying,
                                       appointment: appointment)
                         .environmentObject(self.userData)
                 } else {
@@ -226,6 +222,9 @@ struct AppointmentRecording_Previews: PreviewProvider {
     static var previews: some View {
         AudioMasterView(appointment: Appointment.default,
                              audioRecorder: .constant(nil),
-                             currentTime: .constant(0.0)).environmentObject(UserData())
+                             audioPlayer: .constant(nil),
+                             currentTime: .constant(0.0),
+                             isPlaying: .constant(false))
+            .environmentObject(UserData())
     }
 }
