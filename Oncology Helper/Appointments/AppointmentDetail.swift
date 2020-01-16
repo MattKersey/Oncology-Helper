@@ -22,6 +22,7 @@ struct AppointmentDetail: View {
     @State var isPlaying = false
     @State var currentTime: TimeInterval = 0.0
     @State var showTimes = false
+    @State var addQuestions = false
     var id: Int
     
     var appointment: Appointment? {
@@ -53,10 +54,16 @@ struct AppointmentDetail: View {
         isPlaying = true
     }
     
-    func delete(at offsets: IndexSet) {
+    func deleteTimestamp(at offsets: IndexSet) {
         for index in offsets {
             userData.deleteTimestamp(appointmentID: appointment!.id,
                                      timestamp: describedTimestamps[index].timestamp)
+        }
+    }
+    
+    func deleteQuestion(at offsets: IndexSet) {
+        for index in offsets {
+            userData.removeQAConnection(appointmentID: appointment!.id, questionID: appointment!.questionIDs[index])
         }
     }
     
@@ -73,6 +80,13 @@ struct AppointmentDetail: View {
         guard let appointment = self.appointment else {
                 return AnyView(Text("Appointment unavailable"))
         }
+        let showModal = Binding<Bool>(get: {
+            return self.editMode || self.addQuestions
+        }, set: { p in
+            self.editMode = p
+            self.addQuestions = p
+        })
+        
         return AnyView(GeometryReader { geo in
             VStack(spacing: 0) {
                 AudioMasterView(appointment: appointment,
@@ -95,6 +109,7 @@ struct AppointmentDetail: View {
                         .listRowInsets(EdgeInsets())
                         .padding()
                     }
+                    .onDelete(perform: self.deleteQuestion)
                     if (!self.describedTimestamps.isEmpty) {
                         Group {
                             HStack{
@@ -130,18 +145,28 @@ struct AppointmentDetail: View {
                                     }
                                     .buttonStyle(BorderlessButtonStyle())
                                 }
-                                .onDelete(perform: self.delete)
+                                .onDelete(perform: self.deleteTimestamp)
                             }
                         }
                         .listRowInsets(EdgeInsets())
                         .padding()
                     }
+                    Button(action: {self.addQuestions = true}) {
+                        Text("Add more questions")
+                            .foregroundColor(.blue)
+                            .font(.callout)
+                    }
                 }
             }
             .navigationBarTitle(Text("\(appointment.doctor) | \(self.dateString!)"))
             .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
-            .sheet(isPresented: self.$editMode) {
-                AppointmentEditor(appointment: appointment, selectedTime:  appointment.date).environmentObject(self.userData)
+            .sheet(isPresented: showModal) {
+                if self.editMode {
+                    AppointmentEditor(appointment: appointment, selectedTime:  appointment.date).environmentObject(self.userData)
+                } else {
+                    AppointmentQuestionAdder(appointment: appointment)
+                        .environmentObject(self.userData)
+                }
             }
         })
     }

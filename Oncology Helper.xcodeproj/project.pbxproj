@@ -83,6 +83,9 @@
 		B2EB449B23A99DCE0096DA95 /* RecordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = B2EB449A23A99DCE0096DA95 /* RecordButton.png */; };
 		B2EB449C23A99DCE0096DA95 /* RecordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = B2EB449A23A99DCE0096DA95 /* RecordButton.png */; };
 		B2EB449D23A99DCE0096DA95 /* RecordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = B2EB449A23A99DCE0096DA95 /* RecordButton.png */; };
+		B2F1FFB823CFF64E00489445 /* AppointmentQuestionAdder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F1FFB723CFF64E00489445 /* AppointmentQuestionAdder.swift */; };
+		B2F1FFB923CFF64E00489445 /* AppointmentQuestionAdder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F1FFB723CFF64E00489445 /* AppointmentQuestionAdder.swift */; };
+		B2F1FFBA23CFF64E00489445 /* AppointmentQuestionAdder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F1FFB723CFF64E00489445 /* AppointmentQuestionAdder.swift */; };
 		B2FD547523C80DA0004B2DB1 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD547423C80DA0004B2DB1 /* Question.swift */; };
 		B2FD547D23C81563004B2DB1 /* questionData.json in Resources */ = {isa = PBXBuildFile; fileRef = B2FD547C23C81563004B2DB1 /* questionData.json */; };
 		B2FD547E23C81A79004B2DB1 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FD547423C80DA0004B2DB1 /* Question.swift */; };
@@ -151,6 +154,7 @@
 		B2E8ABD423CBF8070068D618 /* QuestionAppointmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionAppointmentView.swift; sourceTree = "<group>"; };
 		B2E8ABD823CCB0E30068D618 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B2EB449A23A99DCE0096DA95 /* RecordButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordButton.png; sourceTree = "<group>"; };
+		B2F1FFB723CFF64E00489445 /* AppointmentQuestionAdder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentQuestionAdder.swift; sourceTree = "<group>"; };
 		B2FD547423C80DA0004B2DB1 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		B2FD547823C814D9004B2DB1 /* QuestionPreviewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionPreviewList.swift; sourceTree = "<group>"; };
 		B2FD547C23C81563004B2DB1 /* questionData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questionData.json; sourceTree = "<group>"; };
@@ -266,6 +270,7 @@
 				B239986C23C2B30100B912FF /* AppointmentList.swift */,
 				B2447AAF23A81654004AAD1F /* AppointmentRow.swift */,
 				B2447AB323A8243D004AAD1F /* AppointmentDetail.swift */,
+				B2F1FFB723CFF64E00489445 /* AppointmentQuestionAdder.swift */,
 				B26AB12023A8799C00359769 /* AppointmentEditor.swift */,
 				B2D4055223AC5A1200605D6D /* AppointmentAdder.swift */,
 			);
@@ -450,6 +455,7 @@
 			files = (
 				B2A9882223CF7115003EE1D9 /* QuestionAdder.swift in Sources */,
 				B2447AB823A93D92004AAD1F /* CalendarView.swift in Sources */,
+				B2F1FFB823CFF64E00489445 /* AppointmentQuestionAdder.swift in Sources */,
 				B2447A6A23A7F2AB004AAD1F /* AppDelegate.swift in Sources */,
 				B2E8ABD523CBF8070068D618 /* QuestionAppointmentView.swift in Sources */,
 				B2FD547523C80DA0004B2DB1 /* Question.swift in Sources */,
@@ -503,6 +509,7 @@
 				B239986E23C2B30100B912FF /* AppointmentList.swift in Sources */,
 				B2E8ABDA23CCB0E40068D618 /* Constants.swift in Sources */,
 				B2447AB223A816D5004AAD1F /* AppointmentRow.swift in Sources */,
+				B2F1FFB923CFF64E00489445 /* AppointmentQuestionAdder.swift in Sources */,
 				B2447AA123A7F7F0004AAD1F /* UserData.swift in Sources */,
 				B2447AAB23A80893004AAD1F /* Data.swift in Sources */,
 				B2447AAD23A80A87004AAD1F /* Appointment.swift in Sources */,
@@ -535,6 +542,7 @@
 				B239986F23C2B30100B912FF /* AppointmentList.swift in Sources */,
 				B2E8ABDB23CCB0E40068D618 /* Constants.swift in Sources */,
 				B2447AB123A816D4004AAD1F /* AppointmentRow.swift in Sources */,
+				B2F1FFBA23CFF64E00489445 /* AppointmentQuestionAdder.swift in Sources */,
 				B2447AA223A7F7F1004AAD1F /* UserData.swift in Sources */,
 				B2447AAC23A80894004AAD1F /* Data.swift in Sources */,
 				B2447AAE23A80A88004AAD1F /* Appointment.swift in Sources */,
