@@ -15,6 +15,7 @@ struct AppointmentDetail: View {
     
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Binding var reload: Bool
     @State private var editMode = false
     @State var playPressed = false
     @State var audioRecorder: AVAudioRecorder?
@@ -56,8 +57,9 @@ struct AppointmentDetail: View {
         }
     }
     
-    init(appointment: Appointment) {
+    init(appointment: Appointment, reload: Binding<Bool>) {
         self.appointment = appointment
+        _reload = reload
         if appointment.hasRecording {
             _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
         }
@@ -154,6 +156,7 @@ struct AppointmentDetail: View {
                         .environmentObject(self.userData)
                 }
             }
+            .onDisappear(perform: {self.reload.toggle()})
         }
     }
 }
@@ -162,6 +165,8 @@ struct AppointmentDetail: View {
 
 struct AppointmentDetail_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentDetail(appointment: Appointment.default).environmentObject(UserData())
+        AppointmentDetail(appointment: Appointment.default,
+                          reload: .constant(false))
+            .environmentObject(UserData())
     }
 }

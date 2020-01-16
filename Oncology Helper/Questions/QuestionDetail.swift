@@ -20,12 +20,14 @@ struct QuestionDetail: View {
     @State var playing: DescribedTimestamp?
     @State private var editMode = false
     @State var addAppointments = false
+    @Binding var reload: Bool
     let question: Question
     
     // MARK: - initializer
     
-    init(question: Question) {
+    init(question: Question, reload: Binding<Bool>) {
         self.question = question
+        _reload = reload
         UINavigationBar.appearance().backgroundColor = Constants.backgroundUIColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: Constants.titleUIColor]
     }
@@ -33,6 +35,7 @@ struct QuestionDetail: View {
     // MARK: - body
     
     var body: some View {
+        if reload {}
         let showModal = Binding<Bool>(get: {
             return self.editMode || self.addAppointments
         }, set: { p in
@@ -73,7 +76,8 @@ struct QuestionDetail: View {
                             QuestionAppointmentView(appointmentID: id,
                                                     question: self.question,
                                                     audioPlayer: self.$audioPlayer,
-                                                    playing: self.$playing)
+                                                    playing: self.$playing,
+                                                    reload: self.$reload)
                                 .environmentObject(self.userData)
                         }
                         Button(action: {self.addAppointments = true}) {
@@ -93,6 +97,7 @@ struct QuestionDetail: View {
                                 .environmentObject(self.userData)
                         }
                     }
+                    .onDisappear(perform: {self.reload.toggle()})
                 }
             }
         })
@@ -126,7 +131,6 @@ private class AudioPlayerUIView: UIView {
     }
     
     @objc func didFinishPlaying(note: NSNotification) {
-        print("Finished")
         self.audioPlayer.wrappedValue = nil
         self.playing.wrappedValue = nil
     }
@@ -167,7 +171,7 @@ private struct AudioPlayerView: UIViewRepresentable {
 
 struct QuestionDetail_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionDetail(question: Question.default)
+        QuestionDetail(question: Question.default, reload: .constant(false))
             .environmentObject(UserData())
     }
 }
