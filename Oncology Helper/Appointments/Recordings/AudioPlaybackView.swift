@@ -18,14 +18,6 @@ struct AudioPlaybackView: View {
     let appointment: Appointment
     let duration: TimeInterval
     
-    var appointmentIndex: Int? {
-        if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
-            return index
-        } else {
-            return nil
-        }
-    }
-    
     func play() -> Void {
         audioPlayer!.play()
         isPlaying = true
@@ -70,9 +62,6 @@ struct AudioPlaybackView: View {
     }
     
     var body: some View {
-        guard appointmentIndex != nil else {
-            return AnyView(Text("Appointment not found"))
-        }
         guard audioPlayer != nil else {
             return AnyView(Text("Audio player not initialized"))
         }

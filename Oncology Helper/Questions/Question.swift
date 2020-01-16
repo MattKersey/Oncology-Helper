@@ -8,13 +8,33 @@
 
 import SwiftUI
 
-struct Question: Hashable, Codable, Identifiable {
+class Question: Hashable, Codable, Identifiable {
     
-    // MARK: - properties from JSON file
+    static let `default` = UserData().questions[0]
     
-    var id: Int
+    // MARK: - instance properties
+    
+    let id: Int
     var questionString: String
     var description: String?
     var pin: Bool
     var appointmentIDs: [Int]
+    
+    // MARK: - functions
+    
+    static func == (lhs: Question, rhs: Question) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    init(id: Int, questionString: String, description: String?, pin: Bool, appointmentIDs: [Int]) {
+        self.id = id
+        self.questionString = questionString
+        self.description = description
+        self.pin = pin
+        self.appointmentIDs = appointmentIDs
+    }
 }

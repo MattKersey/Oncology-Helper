@@ -16,44 +16,38 @@ struct AppointmentEditor: View {
     
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @State var appointment: Appointment                // Temporary storage for possible cancellation
     @State var selectedDate: Date? = nil
     @State var selectedTime: Date
+    @State var doctor: String
+    @State var location: String
+    var appointment: Appointment
     
-    var appointmentIndex: Int? {
-        if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
-            return index
-        } else {
-            self.presentationMode.wrappedValue.dismiss()
-            return nil
-        }
+    init(appointment: Appointment, selectedTime: Date) {
+        self.appointment = appointment
+        _selectedTime = State(initialValue: selectedTime)
+        _doctor = State(initialValue: appointment.doctor)
+        _location = State(initialValue: appointment.location)
     }
     
     // MARK: - functions
     
     func save() -> Void {
-        guard let aptIndex = appointmentIndex else {return}
-        userData.appointments[aptIndex].doctor = appointment.doctor
-        userData.appointments[aptIndex].location = appointment.location
+        appointment.doctor = doctor
+        appointment.location = location
         if (selectedDate != nil) {
             let calendar = Calendar.current
             var components = calendar.dateComponents([.year, .month, .day], from: selectedDate!)
             components.hour = calendar.component(.hour, from: selectedTime)
             components.minute = calendar.component(.minute, from: selectedTime)
-            userData.appointments[aptIndex].date = calendar.date(from: components)!
-        } else {
-            userData.appointments[aptIndex].date = appointment.date
+            appointment.date = calendar.date(from: components)!
+            self.userData.appointments.sort(by: {$0.date < $1.date})
         }
-        self.userData.appointments.sort(by: {$0.date < $1.date})
         self.presentationMode.wrappedValue.dismiss()
     }
     
     // MARK: - body
     
     var body: some View {
-        guard appointmentIndex != nil else {
-            return AnyView(Text("Appointment not found"))
-        }
         return AnyView(VStack(spacing: 0) {
             List {
                 VStack(alignment: .leading) {
@@ -61,7 +55,7 @@ struct AppointmentEditor: View {
                         .font(.headline)
                         .foregroundColor(Constants.titleColor)
                         .padding(.top)
-                    TextField("Doctor", text: $appointment.doctor)
+                    TextField("Doctor", text: $doctor)
                         .foregroundColor(Constants.bodyColor)
                         .padding(.leading)
                     Divider()
@@ -69,7 +63,7 @@ struct AppointmentEditor: View {
                     Text("Location")
                         .font(.headline)
                         .foregroundColor(Constants.titleColor)
-                    TextField("Location", text: $appointment.location)
+                    TextField("Location", text: $location)
                         .foregroundColor(Constants.bodyColor)
                         .padding(.leading)
                     Divider()
@@ -97,7 +91,7 @@ struct AppointmentEditor: View {
             .frame(height: 60)
             
             // Done button
-            if appointment.doctor != "" && appointment.location != "" {
+            if doctor != "" && location != "" {
                 Button(action: {self.save()}) {
                     HStack {
                         Spacer()
@@ -129,6 +123,6 @@ struct AppointmentEditor: View {
 
 struct AppointmentEditor_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentEditor(appointment: UserData().appointments[0], selectedTime: UserData().appointments[0].date).environmentObject(UserData())
+        AppointmentEditor(appointment: Appointment.default, selectedTime: UserData().appointments[0].date).environmentObject(UserData())
     }
 }

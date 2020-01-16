@@ -30,21 +30,11 @@ struct AudioMasterView: View {
     @State var endPressed = false
     @State var reRecordPressed = false
     
-    var appointmentIndex: Int? {
-        if let index = userData.appointments.firstIndex(where: {$0.id == appointment.id}) {
-            return index
-        } else {
-            print("index of appointment is nil")
-            self.presentationMode.wrappedValue.dismiss()
-            return nil
-        }
-    }
-    
     // MARK: - recorder functions
     
     func record() -> Void {
         // Check to see if we are erasing a file so we can warn the user
-        if userData.appointments[appointmentIndex!].hasRecording && audioRecorder == nil {
+        if appointment.hasRecording && audioRecorder == nil {
             self.reRecordPressed = true
         } else {
             // Check to see if we are beginning a new recording
@@ -69,9 +59,9 @@ struct AudioMasterView: View {
     }
     
     func reRecord() {
-        userData.appointments[appointmentIndex!].describedTimestamps = []
+        appointment.describedTimestamps = []
         do {
-            try FileManager.default.removeItem(at: userData.appointments[appointmentIndex!].recordingURL)
+            try FileManager.default.removeItem(at: appointment.recordingURL)
         } catch {}
         self.reRecordPressed = false
         self.record()
@@ -102,9 +92,6 @@ struct AudioMasterView: View {
         
         guard userData.audioSession != nil else {
             return AnyView(Text("Permission to record denied"))
-        }
-        guard self.appointmentIndex != nil else {
-            return AnyView(Text("Could not find appointment"))
         }
         guard !self.endPressed else {
             return AnyView(HStack(spacing: 0) {
@@ -221,10 +208,10 @@ struct AudioMasterView: View {
 struct AppointmentRecording_Previews: PreviewProvider {
     static var previews: some View {
         AudioMasterView(appointment: Appointment.default,
-                             audioRecorder: .constant(nil),
-                             audioPlayer: .constant(nil),
-                             currentTime: .constant(0.0),
-                             isPlaying: .constant(false))
+                        audioRecorder: .constant(nil),
+                        audioPlayer: .constant(nil),
+                        currentTime: .constant(0.0),
+                        isPlaying: .constant(false))
             .environmentObject(UserData())
     }
 }

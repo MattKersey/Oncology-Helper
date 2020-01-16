@@ -10,9 +10,11 @@
 
 import SwiftUI
 
-struct Appointment: Hashable, Codable, Identifiable {
+class Appointment: Hashable, Codable, Identifiable {
 
-    // MARK: - properties from JSON file
+    static let `default` = UserData().appointments[0]
+    
+    // MARK: - instance properties
     
     var id: Int
     var doctor: String
@@ -21,16 +23,12 @@ struct Appointment: Hashable, Codable, Identifiable {
     var describedTimestamps: [DescribedTimestamp]
     var questionIDs: [Int]
     
-    // MARK: - computed properties
-    
-    static let `default` = UserData().appointments[0]
+    var recordingURL: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("OHaudioRecording\(id).m4a")
+    }
     
     var hasRecording: Bool {
         return FileManager.default.fileExists(atPath: recordingURL.path)
-    }
-    
-    var recordingURL: URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("OHaudioRecording\(self.id).m4a")
     }
     
     var date: Date {
@@ -46,6 +44,16 @@ struct Appointment: Hashable, Codable, Identifiable {
             formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
             RC3339date = formatter.string(from: newDate)
         }
+    }
+    
+    // MARK: - functions
+    
+    static func == (lhs: Appointment, rhs: Appointment) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
     // MARK: - initializer

@@ -69,7 +69,7 @@ struct HomePage: View {
                         .environmentObject(self.userData)
                 } else if self.selectedQuestion != nil {
                     NavigationView {
-                        QuestionDetail(id: self.selectedQuestion!.id)
+                        QuestionDetail(question: self.selectedQuestion!)
                             .environmentObject(self.userData)
                     }
                 } else {

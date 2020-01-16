@@ -25,11 +25,8 @@ struct AppointmentQuestionAdder: View {
     }
     
     func save() {
-        guard let index = userData.appointments.firstIndex(of: appointment) else {
-            return
-        }
         while !newQuestionIDs.isEmpty {
-            userData.appointments[index].questionIDs.append(newQuestionIDs.removeFirst())
+            appointment.questionIDs.append(newQuestionIDs.removeFirst())
         }
         self.presentationMode.wrappedValue.dismiss()
     }
@@ -69,7 +66,6 @@ struct AppointmentQuestionAdder: View {
                 }
             }
             Spacer()
-            // Done button
             Button(action: {self.save()}) {
                 HStack {
                     Spacer()

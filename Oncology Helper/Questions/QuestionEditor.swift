@@ -11,31 +11,23 @@ import SwiftUI
 struct QuestionEditor: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @State var question: Question
+    let question: Question
+    @State var questionString: String
     @State var description: String
     
-    var questionIndex: Int? {
-        if let index = userData.questions.firstIndex(where: {$0.id == question.id}) {
-            return index
-        } else {
-            self.presentationMode.wrappedValue.dismiss()
-            return nil
-        }
-    }
-    
     func save() {
-        guard let qIndex = questionIndex else {return}
-        userData.questions[qIndex].questionString = question.questionString
+        question.questionString = questionString
         if description == "" {
-            userData.questions[qIndex].description = nil
+            question.description = nil
         } else {
-            userData.questions[qIndex].description = description
+            question.description = description
         }
         self.presentationMode.wrappedValue.dismiss()
     }
     
     init(question: Question) {
-        _question = State(initialValue: question)
+        self.question = question
+        _questionString = State(initialValue: question.questionString)
         if question.description == nil {
             _description = State(initialValue: "")
         } else {
@@ -44,15 +36,12 @@ struct QuestionEditor: View {
     }
     
     var body: some View {
-        guard questionIndex != nil else {
-            return AnyView(Text("Question not found"))
-        }
         return AnyView(VStack(spacing: 0) {
             VStack(alignment: .leading) {
                 Text("Question")
                         .font(.headline)
                     .foregroundColor(Constants.titleColor)
-                TextField("Question", text: self.$question.questionString)
+                TextField("Question", text: self.$questionString)
                     .foregroundColor(Constants.bodyColor)
                     .padding(.leading)
                 Divider()
@@ -78,7 +67,19 @@ struct QuestionEditor: View {
             .frame(height: 60)
             
             // Done button
-            Button(action: {self.save()}) {
+            if questionString != "" {
+                Button(action: {self.save()}) {
+                    HStack {
+                        Spacer()
+                        Text("Done")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .frame(height: 60)
+                    .background(Constants.itemColor)
+                }
+            } else {
                 HStack {
                     Spacer()
                     Text("Done")
@@ -87,7 +88,7 @@ struct QuestionEditor: View {
                     Spacer()
                 }
                 .frame(height: 60)
-                .background(Constants.itemColor)
+                .background(Constants.subtitleColor)
             }
         }
         .buttonStyle(BorderlessButtonStyle())
@@ -97,7 +98,7 @@ struct QuestionEditor: View {
 
 struct QuestionEditor_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionEditor(question: UserData().questions[0])
+        QuestionEditor(question: Question.default)
             .environmentObject(UserData())
     }
 }
