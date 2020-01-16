@@ -26,13 +26,10 @@ struct QuestionAppointmentAdder: View {
     }
     
     func save() -> Void {
-        guard let index = userData.questions.firstIndex(of: question) else {
-            return
-        }
         while !newAppointmentIds.isEmpty {
             let newAppointmentID = newAppointmentIds.removeFirst()
             if let aptIndex = userData.appointments.firstIndex(where: {$0.id == newAppointmentID}) {
-                userData.questions[index].appointmentIDs.append(newAppointmentID)
+                question.appointmentIDs.append(newAppointmentID)
                 userData.appointments[aptIndex].questionIDs.append(question.id)
             }
         }
@@ -103,6 +100,6 @@ struct QuestionAppointmentAdder: View {
 
 struct QuestionAppointmentAdder_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionAppointmentAdder(question: UserData().questions[0]).environmentObject(UserData())
+        QuestionAppointmentAdder(question: Question.default).environmentObject(UserData())
     }
 }

@@ -20,21 +20,12 @@ struct QuestionDetail: View {
     @State var playing: DescribedTimestamp?
     @State private var editMode = false
     @State var addAppointments = false
-    let id: Int
-    
-    var question: Question? {
-        if let question = userData.questions.first(where: {$0.id == id}) {
-            return question
-        } else {
-            self.presentationMode.wrappedValue.dismiss()
-            return nil
-        }
-    }
+    let question: Question
     
     // MARK: - initializer
     
-    init(id: Int) {
-        self.id = id
+    init(question: Question) {
+        self.question = question
         UINavigationBar.appearance().backgroundColor = Constants.backgroundUIColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: Constants.titleUIColor]
     }
@@ -42,9 +33,6 @@ struct QuestionDetail: View {
     // MARK: - body
     
     var body: some View {
-        guard let question = self.question else {
-            return AnyView(Text("Question unavailable").foregroundColor(Constants.subtitleColor))
-        }
         let showModal = Binding<Bool>(get: {
             return self.editMode || self.addAppointments
         }, set: { p in
@@ -58,16 +46,16 @@ struct QuestionDetail: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Group {
                         HStack {
-                            Text(question.questionString)
+                            Text(self.question.questionString)
                                 .font(.headline)
                                 .foregroundColor(Constants.titleColor)
                                 .multilineTextAlignment(.leading)
                                 .padding()
                             Spacer()
                         }
-                        if (question.description != nil) {
+                        if (self.question.description != nil) {
                             HStack {
-                                Text(question.description!)
+                                Text(self.question.description!)
                                     .font(.subheadline)
                                     .foregroundColor(Constants.bodyColor)
                                     .multilineTextAlignment(.leading)
@@ -81,9 +69,9 @@ struct QuestionDetail: View {
                     .frame(width: geo.size.width)
                     .background(Constants.backgroundColor)
                     List {
-                        ForEach(question.appointmentIDs, id: \.self) { id in
+                        ForEach(self.question.appointmentIDs, id: \.self) { id in
                             QuestionAppointmentView(appointmentID: id,
-                                                    questionID: self.id,
+                                                    question: self.question,
                                                     audioPlayer: self.$audioPlayer,
                                                     playing: self.$playing)
                                 .environmentObject(self.userData)
@@ -98,10 +86,10 @@ struct QuestionDetail: View {
                     .navigationBarItems(trailing: Button(action: {self.editMode = true}) {Image(systemName: "square.and.pencil")})
                     .sheet(isPresented: showModal) {
                         if self.editMode {
-                            QuestionEditor(question: question)
+                            QuestionEditor(question: self.question)
                                 .environmentObject(self.userData)
                         } else {
-                            QuestionAppointmentAdder(question: question)
+                            QuestionAppointmentAdder(question: self.question)
                                 .environmentObject(self.userData)
                         }
                     }
@@ -179,7 +167,7 @@ private struct AudioPlayerView: UIViewRepresentable {
 
 struct QuestionDetail_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionDetail(id: 1)
+        QuestionDetail(question: Question.default)
             .environmentObject(UserData())
     }
 }

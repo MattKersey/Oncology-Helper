@@ -27,7 +27,7 @@ struct QuestionList: View {
         NavigationView {
             List {
                 ForEach(userData.questions) { question in
-                    NavigationLink(destination: QuestionDetail(id: question.id).environmentObject(self.userData)) {
+                    NavigationLink(destination: QuestionDetail(question: question).environmentObject(self.userData)) {
                         HStack {
                             Button(action: {self.pinToggle(id: question.id)}) {
                                 Image(systemName: question.pin ? "pin.fill" : "pin")

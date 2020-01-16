@@ -43,9 +43,7 @@ struct AppointmentRow: View {
 // MARK: - previews
 
 struct AppointmentRow_Previews: PreviewProvider {
-
     static var previews: some View {
-        
-        AppointmentRow(appointment: appointmentData[0])
+        AppointmentRow(appointment: Appointment.default)
     }
 }

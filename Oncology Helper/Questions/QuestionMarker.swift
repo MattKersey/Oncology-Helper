@@ -13,7 +13,7 @@ struct QuestionMarker: View {
     
     @EnvironmentObject var userData: UserData
     let questionID: Int
-    let appointmentID: Int
+    let appointment: Appointment
     @Binding var audioRecorder: AVAudioRecorder?
     @Binding var audioPlayer: AVPlayer?
     @Binding var currentTime: TimeInterval
@@ -24,18 +24,13 @@ struct QuestionMarker: View {
         return userData.questions.first(where: {$0.id == questionID})
     }
     
-    var appointment: Appointment? {
-        return userData.appointments.first(where: {$0.id == appointmentID})
-    }
-    
     var describedTimestamps: [DescribedTimestamp] {
-        guard let appointment = self.appointment else {return []}
         return appointment.describedTimestamps.filter({$0.id == questionID})
     }
     
     func mark() {
         let timestamp = audioRecorder != nil ? audioRecorder!.currentTime : currentTime
-        userData.addTimestamp(appointmentID: appointmentID,
+        userData.addTimestamp(appointmentID: appointment.id,
                               questionID: questionID,
                               timestamp: timestamp)
     }
@@ -49,16 +44,13 @@ struct QuestionMarker: View {
     
     func delete(at offsets: IndexSet) {
         for index in offsets {
-            userData.deleteTimestamp(appointmentID: appointment!.id,
+            userData.deleteTimestamp(appointmentID: appointment.id,
                                      timestamp: describedTimestamps[index].timestamp)
         }
     }
     
     var body: some View {
         guard let question = self.question else {
-            return AnyView(Text(""))
-        }
-        guard let appointment = self.appointment else {
             return AnyView(Text(""))
         }
         return AnyView(Group {
@@ -127,7 +119,7 @@ struct QuestionMarker: View {
 struct QuestionMarker_Previews: PreviewProvider {
     static var previews: some View {
         QuestionMarker(questionID: 1,
-                       appointmentID: 1,
+                       appointment: Appointment.default,
                        audioRecorder: .constant(nil),
                        audioPlayer: .constant(nil),
                        currentTime: .constant(0.0),

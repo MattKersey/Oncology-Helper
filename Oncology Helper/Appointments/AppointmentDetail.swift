@@ -23,28 +23,17 @@ struct AppointmentDetail: View {
     @State var currentTime: TimeInterval = 0.0
     @State var showTimes = false
     @State var addQuestions = false
-    var id: Int
-    
-    var appointment: Appointment? {
-        if let apt = userData.appointments.first(where: {$0.id == id}) {
-            return apt
-        } else {
-            self.presentationMode.wrappedValue.dismiss()
-            return nil
-        }
-    }
+    let appointment: Appointment
     
     var describedTimestamps: [DescribedTimestamp] {
-        guard let appointment = self.appointment else {return []}
         return appointment.describedTimestamps.filter({$0.id == nil})
     }
     
     var dateString: String? {
-        guard appointment != nil else {return nil}
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "MM/dd/yy"
-        return formatter.string(from: appointment!.date)
+        return formatter.string(from: appointment.date)
     }
     
     func setTime(_ timestamp: TimeInterval) {
@@ -56,19 +45,19 @@ struct AppointmentDetail: View {
     
     func deleteTimestamp(at offsets: IndexSet) {
         for index in offsets {
-            userData.deleteTimestamp(appointmentID: appointment!.id,
+            userData.deleteTimestamp(appointmentID: appointment.id,
                                      timestamp: describedTimestamps[index].timestamp)
         }
     }
     
     func deleteQuestion(at offsets: IndexSet) {
         for index in offsets {
-            userData.removeQAConnection(appointmentID: appointment!.id, questionID: appointment!.questionIDs[index])
+            userData.removeQAConnection(appointmentID: appointment.id, questionID: appointment.questionIDs[index])
         }
     }
     
     init(appointment: Appointment) {
-        self.id = appointment.id
+        self.appointment = appointment
         if appointment.hasRecording {
             _audioPlayer = State(initialValue: AVPlayer(url: appointment.recordingURL))
         }
@@ -77,9 +66,6 @@ struct AppointmentDetail: View {
     // MARK: - body
     
     var body: some View {
-        guard let appointment = self.appointment else {
-                return AnyView(Text("Appointment unavailable"))
-        }
         let showModal = Binding<Bool>(get: {
             return self.editMode || self.addQuestions
         }, set: { p in
@@ -87,20 +73,20 @@ struct AppointmentDetail: View {
             self.addQuestions = p
         })
         
-        return AnyView(GeometryReader { geo in
-            VStack(spacing: 0) {
-                AudioMasterView(appointment: appointment,
-                                     audioRecorder: self.$audioRecorder,
-                                     audioPlayer: self.$audioPlayer,
-                                     currentTime: self.$currentTime,
-                                     isPlaying: self.$isPlaying)
+        return GeometryReader { geo in
+            VStack(spacing: 0.0) {
+                AudioMasterView(appointment: self.appointment,
+                                audioRecorder: self.$audioRecorder,
+                                audioPlayer: self.$audioPlayer,
+                                currentTime: self.$currentTime,
+                                isPlaying: self.$isPlaying)
                     .environmentObject(self.userData)
                     .frame(width: geo.size.width, height: 50.0)
                 Divider()
                 List {
-                    ForEach(appointment.questionIDs, id: \.self) { id in
+                    ForEach(self.appointment.questionIDs, id: \.self) { id in
                         QuestionMarker(questionID: id,
-                                       appointmentID: self.id,
+                                       appointment: self.appointment,
                                        audioRecorder: self.$audioRecorder,
                                        audioPlayer: self.$audioPlayer,
                                        currentTime: self.$currentTime,
@@ -158,17 +144,17 @@ struct AppointmentDetail: View {
                     }
                 }
             }
-            .navigationBarTitle(Text("\(appointment.doctor) | \(self.dateString!)"))
+            .navigationBarTitle(Text("\(self.appointment.doctor) | \(self.dateString!)"))
             .navigationBarItems(trailing: Button(action: {self.editMode = true}){Image(systemName: "square.and.pencil")})
             .sheet(isPresented: showModal) {
                 if self.editMode {
-                    AppointmentEditor(appointment: appointment, selectedTime:  appointment.date).environmentObject(self.userData)
+                    AppointmentEditor(appointment: self.appointment, selectedTime:  self.appointment.date).environmentObject(self.userData)
                 } else {
-                    AppointmentQuestionAdder(appointment: appointment)
+                    AppointmentQuestionAdder(appointment: self.appointment)
                         .environmentObject(self.userData)
                 }
             }
-        })
+        }
     }
 }
 

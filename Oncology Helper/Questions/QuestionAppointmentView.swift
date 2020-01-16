@@ -16,16 +16,9 @@ struct QuestionAppointmentView: View {
     @EnvironmentObject var userData: UserData
     @State var showTimes = false
     let appointmentID: Int
-    let questionID: Int
+    let question: Question
     @Binding var audioPlayer: AVPlayer?
     @Binding var playing: DescribedTimestamp?
-    
-    lazy var questionIndex: Int? = {
-        if let index = userData.questions.firstIndex(where: {$0.id == questionID}) {
-            return index
-        }
-        return nil
-    }()
     
     var appointment: Appointment? {
         if let apt = userData.appointments.first(where: {$0.id == appointmentID}) {
@@ -36,7 +29,7 @@ struct QuestionAppointmentView: View {
     
     var describedTimestamps: [DescribedTimestamp] {
         guard let appointment = self.appointment else {return []}
-        return appointment.describedTimestamps.filter({$0.id == questionID})
+        return appointment.describedTimestamps.filter({$0.id == question.id})
     }
     
     var dateString: String {
@@ -78,11 +71,7 @@ struct QuestionAppointmentView: View {
     // MARK: - body
     
     var body: some View {
-        var mutableSelf = self
         guard let appointment = self.appointment else {
-            return AnyView(Text(""))
-        }
-        guard mutableSelf.questionIndex != nil else {
             return AnyView(Text(""))
         }
         return AnyView(Group {
@@ -148,7 +137,7 @@ struct QuestionAppointmentView: View {
 struct QuestionAppointmentView_Previews: PreviewProvider {
     static var previews: some View {
         QuestionAppointmentView(appointmentID: 1,
-                                questionID: 1,
+                                question: Question.default,
                                 audioPlayer: .constant(nil),
                                 playing: .constant(nil))
             .environmentObject(UserData())
